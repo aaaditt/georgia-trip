@@ -1,13 +1,24 @@
 "use client";
 
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
 import { getVoteCounts } from "@/lib/hooks";
 import VoteSummary from "./VoteSummary";
 
 export default function RegionCard({ region, votes, experiences, index }) {
+  const { currentUser } = useUser();
   const regionExperiences = experiences.filter(
     (e) => e.regionId === region.id
   );
+
+  const votedIds = new Set(
+    votes
+      .filter((v) => currentUser && v.user_id === currentUser.id)
+      .map((v) => v.experience_id)
+  );
+  const leftToVote = regionExperiences.filter(
+    (e) => !votedIds.has(e.id)
+  ).length;
 
   const totalGoVotes = regionExperiences.reduce((sum, exp) => {
     return sum + getVoteCounts(votes, exp.id).go;
@@ -47,6 +58,14 @@ export default function RegionCard({ region, votes, experiences, index }) {
           <div className="stat">
             ✅ {totalGoVotes} vote{totalGoVotes !== 1 ? "s" : ""} to go
           </div>
+        </div>
+
+        <div
+          className={`vote-progress-chip ${leftToVote === 0 ? "all-done" : ""}`}
+        >
+          {leftToVote === 0
+            ? "🎉 You've voted on everything here!"
+            : `🗳️ ${leftToVote} place${leftToVote !== 1 ? "s" : ""} left for you to vote`}
         </div>
 
         {regionVoteCounts.total > 0 && (
