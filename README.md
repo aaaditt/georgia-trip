@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🇬🇪 Georgia Trip Planner 2026
 
-## Getting Started
+Collaborative trip planning app for our Georgia adventure (Aug 8–20, 2026).  
+Vote, rate, and comment on 38+ experiences across 7 regions to build the perfect itinerary together.
 
-First, run the development server:
+## Features
+
+- **🗺️ Browse Regions** — Tbilisi, Mtskheta, Kakheti, Kazbegi, Borjomi, Kutaisi, Uplistsikhe
+- **🗳️ Vote** — Want to go / Maybe / Skip on every experience
+- **⭐ Rate** — 1–5 stars on how appealing each place sounds
+- **💬 Comment** — Add notes, tips, or concerns
+- **📊 Consensus** — See group favorites ranked by popularity, filter by region/tag
+- **📋 Day Plan** — Read-only locked itinerary
+- **🔄 Real-time** — Everyone sees each other's votes live via Supabase
+
+## Tech Stack
+
+- **Next.js 14** (App Router)
+- **Supabase** (PostgreSQL + Realtime)
+- **Vanilla CSS** (custom design system)
+- **Vercel** (deployment)
+
+## Setup
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Create Supabase project
+
+1. Go to [supabase.com](https://supabase.com) and create a free project
+2. In the SQL Editor, paste and run the contents of `supabase/schema.sql`
+3. Copy your **Project URL** and **anon/public key** from Settings > API
+
+### 3. Configure environment
+
+```bash
+cp .env.local.example .env.local
+# Edit .env.local with your Supabase credentials
+```
+
+### 4. Run locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 5. Deploy to Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push to GitHub
+2. Import the repo at [vercel.com](https://vercel.com)
+3. Add environment variables in Vercel dashboard
+4. Deploy!
 
-## Learn More
+## Updating User Names
 
-To learn more about Next.js, take a look at the following resources:
+Edit the `USERS` array in `src/lib/data.js` to set real names and emojis for each trip member.  
+Then re-run the SQL `INSERT INTO users ...` in `supabase/schema.sql` (or update directly in Supabase Table Editor).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Currency
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All prices shown in ₾ (Georgian Lari), ₹ (Indian Rupee), and AED.  
+Rate: ₾1 ≈ ₹36 ≈ AED 1.37 — reconfirm before the trip.

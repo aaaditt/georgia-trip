@@ -1,66 +1,80 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
+import { USERS, TRIP_INFO } from "@/lib/data";
+
+export default function LoginPage() {
+  const { currentUser, login, isLoaded } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded && currentUser) {
+      router.push("/dashboard");
+    }
+  }, [isLoaded, currentUser, router]);
+
+  if (!isLoaded) {
+    return (
+      <div className="loading-spinner">
+        <div className="spinner" />
+      </div>
+    );
+  }
+
+  if (currentUser) return null;
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
+    <div className="login-page">
+      <div className="login-card">
+        <span className="flag" style={{ fontSize: "3.5rem", display: "block", marginBottom: "var(--space-sm)" }}>🇬🇪</span>
+        <h1 style={{
+          background: "linear-gradient(135deg, var(--wine), var(--terra))",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          marginBottom: "var(--space-xs)",
+          fontFamily: "var(--font-heading)",
+          fontSize: "2rem",
+          fontWeight: 700,
+        }}>
+          {TRIP_INFO.title}
+        </h1>
+
+        <div className="trip-dates">{TRIP_INFO.dates}</div>
+
+        <p style={{ color: "var(--charcoal-mid)", marginBottom: "var(--space-xs)", fontSize: "0.9rem" }}>
+          {TRIP_INFO.group}
+        </p>
+        <p style={{ color: "var(--charcoal-light)", marginBottom: "var(--space-xl)", fontSize: "0.82rem" }}>
+          {TRIP_INFO.style}
+        </p>
+
+        <h2>Who are you?</h2>
+
+        <div className="user-grid">
+          {USERS.map((user) => (
+            <button
+              key={user.id}
+              className="user-pick-btn"
+              onClick={() => login(user)}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <span className="pick-emoji">{user.emoji}</span>
+              <span className="pick-name">{user.name}</span>
+              {!user.is_adult && (
+                <span style={{ fontSize: "0.65rem", color: "var(--terra)" }}>
+                  (kid)
+                </span>
+              )}
+            </button>
+          ))}
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+        <p style={{ fontSize: "0.75rem", color: "var(--charcoal-light)", fontStyle: "italic" }}>
+          Pick your name to start voting & commenting
+        </p>
+      </div>
     </div>
   );
 }
