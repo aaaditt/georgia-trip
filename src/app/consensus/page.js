@@ -4,15 +4,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
-import { REGIONS, EXPERIENCES, TAG_MAP } from "@/lib/data";
+import { REGIONS, TAG_MAP } from "@/lib/data";
 import {
   useVotes,
   useRatings,
   useComments,
+  useExperiences,
   getVoteCounts,
   getAverageRating,
   getCommentsForExperience,
 } from "@/lib/hooks";
+import { getMapsUrl } from "@/lib/links";
 import Navbar from "@/components/Navbar";
 import VoteSummary from "@/components/VoteSummary";
 import TagPill from "@/components/TagPill";
@@ -23,6 +25,7 @@ export default function ConsensusPage() {
   const { votes } = useVotes();
   const { ratings } = useRatings();
   const { comments } = useComments();
+  const { experiences } = useExperiences();
   const [regionFilter, setRegionFilter] = useState("all");
   const [tagFilter, setTagFilter] = useState("all");
 
@@ -41,7 +44,7 @@ export default function ConsensusPage() {
   }
 
   // Filter & sort experiences
-  let filtered = [...EXPERIENCES];
+  let filtered = [...experiences];
 
   if (regionFilter !== "all") {
     filtered = filtered.filter((e) => e.regionId === regionFilter);
@@ -185,6 +188,14 @@ export default function ConsensusPage() {
                     <span style={{ fontFamily: "var(--font-heading)", fontSize: "0.75rem", color: "var(--charcoal-light)" }}>
                       ⏱️ {exp.time}
                     </span>
+                    <a
+                      href={getMapsUrl(exp)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="maps-link"
+                    >
+                      📍 Map
+                    </a>
                     {avgRating > 0 && (
                       <span style={{ fontFamily: "var(--font-heading)", fontSize: "0.75rem", color: "var(--gold)" }}>
                         ★ {avgRating.toFixed(1)}

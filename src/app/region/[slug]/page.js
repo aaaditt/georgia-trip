@@ -4,10 +4,11 @@ import { useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
-import { REGIONS, EXPERIENCES } from "@/lib/data";
-import { useVotes, useRatings, useComments } from "@/lib/hooks";
+import { REGIONS } from "@/lib/data";
+import { useVotes, useRatings, useComments, useExperiences } from "@/lib/hooks";
 import Navbar from "@/components/Navbar";
 import ExperienceCard from "@/components/ExperienceCard";
+import AddPlaceForm from "@/components/AddPlaceForm";
 
 export default function RegionPage() {
   const { currentUser, isLoaded } = useUser();
@@ -16,6 +17,7 @@ export default function RegionPage() {
   const { votes } = useVotes();
   const { ratings } = useRatings();
   const { comments } = useComments();
+  const { experiences, refetch: refetchExperiences } = useExperiences();
 
   useEffect(() => {
     if (isLoaded && !currentUser) {
@@ -24,7 +26,7 @@ export default function RegionPage() {
   }, [isLoaded, currentUser, router]);
 
   const region = REGIONS.find((r) => r.id === params.slug);
-  const regionExperiences = EXPERIENCES.filter(
+  const regionExperiences = experiences.filter(
     (e) => e.regionId === params.slug
   );
 
@@ -105,6 +107,8 @@ export default function RegionPage() {
             />
           </div>
         ))}
+
+        <AddPlaceForm regionId={params.slug} onAdded={refetchExperiences} />
       </main>
     </>
   );

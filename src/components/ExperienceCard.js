@@ -12,6 +12,9 @@ import {
   getUserRating,
   getAverageRating,
 } from "@/lib/hooks";
+import { useState } from "react";
+import { EXPERIENCE_IMAGES } from "@/lib/images";
+import { getMapsUrl, getPhotosUrl } from "@/lib/links";
 import TagPill from "./TagPill";
 import VoteButtons from "./VoteButtons";
 import StarRating from "./StarRating";
@@ -54,12 +57,36 @@ export default function ExperienceCard({
   };
 
   const voteClass = currentVote ? `voted-${currentVote}` : "";
+  const [imageBroken, setImageBroken] = useState(false);
+  const imageUrl = EXPERIENCE_IMAGES[experience.id];
 
   return (
     <div className={`card experience-card ${voteClass}`}>
+      {imageUrl && !imageBroken && (
+        <a
+          href={getPhotosUrl(experience)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="experience-image-link"
+          title="See more photos"
+        >
+          <img
+            src={imageUrl}
+            alt={experience.name}
+            className="experience-image"
+            loading="lazy"
+            onError={() => setImageBroken(true)}
+          />
+        </a>
+      )}
       <div className="experience-header">
         <div>
-          <h3 className="experience-name">{experience.name}</h3>
+          <h3 className="experience-name">
+            {experience.name}
+            {experience.custom && (
+              <span className="new-place-badge">🆕 family pick</span>
+            )}
+          </h3>
           <p className="experience-description">{experience.description}</p>
         </div>
         {experience.tags.length > 0 && (
@@ -98,6 +125,22 @@ export default function ExperienceCard({
             </span>
           </div>
         )}
+        <a
+          href={getMapsUrl(experience)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="maps-link"
+        >
+          📍 Open in Maps
+        </a>
+        <a
+          href={getPhotosUrl(experience)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="maps-link"
+        >
+          🖼️ Photos
+        </a>
       </div>
 
       {/* Interactions */}

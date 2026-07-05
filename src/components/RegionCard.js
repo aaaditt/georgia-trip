@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { EXPERIENCES } from "@/lib/data";
 import { getVoteCounts } from "@/lib/hooks";
 import VoteSummary from "./VoteSummary";
 
-export default function RegionCard({ region, votes, index }) {
-  const regionExperiences = EXPERIENCES.filter(
+export default function RegionCard({ region, votes, experiences, index }) {
+  const regionExperiences = experiences.filter(
     (e) => e.regionId === region.id
   );
 

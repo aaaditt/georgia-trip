@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
-import { REGIONS, EXPERIENCES, TRIP_INFO } from "@/lib/data";
-import { useVotes } from "@/lib/hooks";
+import { REGIONS, TRIP_INFO } from "@/lib/data";
+import { useVotes, useExperiences } from "@/lib/hooks";
 import Navbar from "@/components/Navbar";
 import RegionCard from "@/components/RegionCard";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import Link from "next/link";
 export default function DashboardPage() {
   const { currentUser, isLoaded } = useUser();
   const { votes, loading } = useVotes();
+  const { experiences } = useExperiences();
   const router = useRouter();
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function DashboardPage() {
   }
 
   // Calculate progress
-  const totalExperiences = EXPERIENCES.length;
+  const totalExperiences = experiences.length;
   const votedExperiences = new Set(
     votes
       .filter((v) => v.user_id === currentUser.id)
@@ -95,6 +96,7 @@ export default function DashboardPage() {
               key={region.id}
               region={region}
               votes={votes}
+              experiences={experiences}
               index={i}
             />
           ))}

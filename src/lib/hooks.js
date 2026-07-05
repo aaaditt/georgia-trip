@@ -2,6 +2,87 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "./supabase";
+import { EXPERIENCES } from "./data";
+
+// Map a DB experiences row to the shape the UI uses
+function mapDbExperience(row) {
+  return {
+    id: row.id,
+    regionId: row.region_id,
+    name: row.name,
+    description: row.description || "",
+    time: row.time_needed || "—",
+    priceLari: row.price_lari || "—",
+    priceRupee: row.price_rupee || "—",
+    priceAED: row.price_aed || "—",
+    tags: row.tags || [],
+    custom: true,
+  };
+}
+
+// All experiences: the static master list + any places the family added.
+// Custom places live in the Supabase `experiences` table (ids not in the
+// static list) so they sync to everyone, and votes/ratings/comments work
+// on them exactly like the built-in ones.
+export function useExperiences() {
+  const [customExperiences, setCustomExperiences] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchExperiences = useCallback(async () => {
+    const { data, error } = await supabase.from("experiences").select("*");
+    if (!error && data) {
+      const staticIds = new Set(EXPERIENCES.map((e) => e.id));
+      setCustomExperiences(
+        data.filter((row) => !staticIds.has(row.id)).map(mapDbExperience)
+      );
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    fetchExperiences();
+
+    const channel = supabase
+      .channel("experiences-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "experiences" },
+        () => fetchExperiences()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchExperiences]);
+
+  return {
+    experiences: [...EXPERIENCES, ...customExperiences],
+    loading,
+    refetch: fetchExperiences,
+  };
+}
+
+// Add a new place suggested by a family member
+export async function addExperience({ regionId, name, description, time, priceLari }) {
+  const slug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 40);
+  const id = `custom-${slug}-${Date.now().toString(36)}`;
+  const { error } = await supabase.from("experiences").insert({
+    id,
+    region_id: regionId,
+    name: name.trim(),
+    description: description?.trim() || null,
+    time_needed: time?.trim() || null,
+    price_lari: priceLari?.trim() || null,
+    tags: [],
+    sort_order: 999,
+  });
+  return { id, error };
+}
 
 // Fetch all votes for all experiences
 export function useVotes() {
