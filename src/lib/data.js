@@ -151,7 +151,7 @@ export const EXPERIENCES = [
     description: "2-min ride up + walls/views",
     time: "45 min",
     priceLari: "2.5/ride",
-    priceRupee: "₹90 / AED 3",
+    priceRupee: "₹90",
     priceAED: "AED 3",
     tags: ["scenic", "kids"],
   },
