@@ -1468,3 +1468,145 @@ a:hover { color: var(--wine-light); }
   font-size: 0.82rem;
   color: var(--charcoal-mid);
 }
+
+/* --- Admin gate modal --- */
+.admin-gate-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(44, 44, 44, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  animation: fadeIn var(--duration-fast) var(--ease-out);
+}
+
+.admin-gate-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-xl);
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+  animation: fadeSlideUp 0.3s var(--ease-out);
+}
+
+/* --- Admin dashboard --- */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.admin-stat-tile {
+  background: var(--white);
+  border: 1px solid var(--stone-mid);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--wine);
+  margin-bottom: var(--space-xs);
+  word-break: break-word;
+}
+
+.admin-stat-label {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  color: var(--charcoal-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-person-card {
+  margin-bottom: var(--space-md);
+}
+
+.admin-person-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.admin-person-name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.admin-person-tallies {
+  display: flex;
+  gap: var(--space-md);
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+}
+
+.admin-tally { color: var(--maybe); font-weight: 600; }
+.admin-tally-done { color: var(--go); font-weight: 600; }
+
+.admin-remaining {
+  margin-top: var(--space-sm);
+  font-size: 0.85rem;
+}
+
+.admin-remaining summary {
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  color: var(--wine);
+  font-weight: 500;
+}
+
+.admin-remaining-group {
+  margin-top: var(--space-sm);
+  padding-left: var(--space-md);
+}
+
+.admin-remaining-region {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--charcoal-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-remaining-names {
+  font-size: 0.85rem;
+  color: var(--charcoal-mid);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.admin-table th {
+  text-align: left;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--charcoal-light);
+  padding: var(--space-sm);
+  border-bottom: 1px solid var(--stone-mid);
+}
+
+.admin-table td {
+  padding: var(--space-sm);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  color: var(--charcoal-mid);
+}

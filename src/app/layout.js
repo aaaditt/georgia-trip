@@ -1,5 +1,6 @@
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
+import { AdminProvider } from "@/context/AdminContext";
 
 export const metadata = {
   title: "🇬🇪 Georgia Trip 2026 — Plan Together",
@@ -11,7 +12,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <UserProvider>{children}</UserProvider>
+        <UserProvider>
+          <AdminProvider>{children}</AdminProvider>
+        </UserProvider>
       </body>
     </html>
   );

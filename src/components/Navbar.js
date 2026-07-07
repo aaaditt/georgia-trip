@@ -1,12 +1,24 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
+import { useAdmin } from "@/context/AdminContext";
+import AdminGateModal from "./AdminGateModal";
+
+const TAP_COUNT_TO_UNLOCK = 5;
+const TAP_WINDOW_MS = 2000;
 
 export default function Navbar() {
   const { currentUser, logout } = useUser();
+  const { isAdmin } = useAdmin();
   const pathname = usePathname();
+  const router = useRouter();
+  const [gateOpen, setGateOpen] = useState(false);
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef(null);
 
   if (!currentUser) return null;
 
@@ -14,15 +26,42 @@ export default function Navbar() {
     { href: "/dashboard", label: "Regions", icon: "🗺️" },
     { href: "/consensus", label: "Consensus", icon: "📊" },
     { href: "/plan", label: "Day Plan", icon: "📋" },
+    ...(isAdmin ? [{ href: "/admin", label: "Admin", icon: "🔒" }] : []),
   ];
+
+  const handleBrandClick = (e) => {
+    tapCountRef.current += 1;
+    clearTimeout(tapTimerRef.current);
+
+    if (tapCountRef.current >= TAP_COUNT_TO_UNLOCK) {
+      e.preventDefault();
+      tapCountRef.current = 0;
+      setGateOpen(true);
+      return;
+    }
+
+    tapTimerRef.current = setTimeout(() => {
+      tapCountRef.current = 0;
+    }, TAP_WINDOW_MS);
+  };
 
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <Link href="/dashboard" className="navbar-brand">
+        <Link href="/dashboard" className="navbar-brand" onClick={handleBrandClick}>
           <span className="brand-flag">🇬🇪</span>
           Georgia 2026
         </Link>
+
+        {gateOpen && (
+          <AdminGateModal
+            onClose={() => setGateOpen(false)}
+            onUnlocked={() => {
+              setGateOpen(false);
+              router.push("/admin");
+            }}
+          />
+        )}
 
         <div className="navbar-links">
           {links.map((link) => (
