@@ -275,13 +275,16 @@ export default function CalendarPage() {
     return regionPlaces
       .map((e) => {
         const avg = getAverageRating(ratings, e.id);
+        const counts = getVoteCounts(votes, e.id);
+        // go = 2 pts, maybe = 1 pt, skip = 0 pts
+        const voteScore = counts.go * 2 + counts.maybe;
         return {
           key: e.id,
           label: e.name,
           emoji: null,
           color: REGION_COLORS[activeTab] || "#8B7355",
           avg,
-          goVotes: getVoteCounts(votes, e.id).go,
+          voteScore,
           scheduled: scheduledIds.has(e.id),
           payload: {
             kind: "place",
@@ -292,7 +295,10 @@ export default function CalendarPage() {
           },
         };
       })
-      .sort((a, b) => b.avg - a.avg || b.goVotes - a.goVotes || a.label.localeCompare(b.label));
+      .sort(
+        (a, b) =>
+          b.voteScore - a.voteScore || b.avg - a.avg || a.label.localeCompare(b.label)
+      );
   }, [activeTab, experiences, ratings, votes, scheduledIds]);
 
   const selectedItem = blocks.find((b) => b.id === selectedId) || null;
@@ -623,8 +629,8 @@ export default function CalendarPage() {
                   <span className="cal-chip-dot" />
                 )}
                 <span className="cal-chip-name">{chip.label}</span>
-                {chip.avg > 0 && (
-                  <span className="cal-chip-rating">★ {chip.avg.toFixed(1)}</span>
+                {chip.voteScore > 0 && (
+                  <span className="cal-chip-rating">{chip.voteScore} pts</span>
                 )}
                 {chip.scheduled && <span className="cal-chip-check">✓</span>}
               </div>
