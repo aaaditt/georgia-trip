@@ -557,7 +557,7 @@ export default function CalendarPage() {
         <div className="page-header">
           <h1>🗓️ Trip Calendar</h1>
           <p className="page-subtitle">
-            Drag places onto the days (3–20 Aug), stretch them to set how long,
+            Drag places onto the days (3–16 Aug), stretch them to set how long,
             and slot in the car / taxi legs. It saves live for the whole family.
           </p>
         </div>

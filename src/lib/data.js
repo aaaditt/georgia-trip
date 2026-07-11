@@ -4,7 +4,7 @@
 export const TRIP_INFO = {
   title: "Georgia Trip 2026",
   subtitle: "🇬🇪 The Master Plan",
-  dates: "~8–20 August 2026",
+  dates: "3–16 August 2026",
   group: "8 people (5 adults + 3 kids under 18)",
   style: "Mid-range/value · Cool & comfortable · Light activity",
   currencyNote: "₾1 ≈ ₹36 ≈ AED 1.37 (late-June 2026 — reconfirm on the day)",

@@ -1,13 +1,17 @@
 // Mock plan generator — turns the family's votes into a dated draft
-// itinerary for 3–20 August. Pure functions: same votes in, same plan
+// itinerary for 3–16 August. Pure functions: same votes in, same plan
 // out, so the page recomputes live as votes and ratings change.
 //
 // How it decides:
 //  · Points follow the app convention: ✅ go = 2, 🤔 maybe = 1, ❌ skip = 0.
 //    A place makes the cut when it has points AND skips don't outnumber
 //    the people who want it. Ratings break ties.
+//  · The same activity offered in several regions (rafting, horse rides,
+//    tastings, show caves…) is done ONCE, at whichever venue the votes
+//    rank highest — the rest are cut. Cable cars are exempt: they
+//    connect places and ride along with the visit.
 //  · The route is the fixed loop the group already agreed on
-//    (Tbilisi → Kakheti → Kazbegi → Gori → Borjomi → Kutaisi → Svaneti
+//    (Tbilisi → Kakheti → Kazbegi → Gori/Borjomi → Kutaisi → Svaneti
 //    → back), pinned to real dates. Votes decide what fills each day.
 //  · Time of day comes from the tags: cool/cave places take the hot
 //    midday, evening/lit-up places take the night, exposed scenic spots
@@ -110,8 +114,34 @@ function durationFor(exp) {
 }
 
 // ---------------------------------------------------------------------------
-// Vote scoring
+// Vote scoring + activity dedup
 // ---------------------------------------------------------------------------
+
+// The same activity offered in several regions — the votes pick ONE
+// venue, the rest get cut. Cable cars / funiculars are deliberately NOT
+// grouped: they connect two places and integrate into the visit itself
+// (Narikala, Mtatsminda, Borjomi park, Hatsvali all stay independent).
+const ACTIVITY_GROUPS = [
+  {
+    label: "River rafting / paddling",
+    ids: ["mtskheta-aragvi-raft", "mtskheta-zhinvali-kayak", "borjomi-raft"],
+  },
+  { label: "Horse riding", ids: ["kazbegi-horse", "svaneti-horse"] },
+  { label: "Wine tasting", ids: ["kakheti-winery-tasting", "kakheti-khareba"] },
+  { label: "Show cave", ids: ["imereti-prometheus", "imereti-sataplia"] },
+  { label: "Canyon visit", ids: ["imereti-martvili", "imereti-okatse"] },
+  { label: "Airborne thrill", ids: ["kazbegi-paragliding", "imereti-martvili-zip"] },
+];
+
+// The Ushguli excursion fell off the 14-day route, so its experiences
+// can't WIN a dedup group (a venue we don't visit shouldn't knock out
+// one we do). They stay selected and appear under "didn't fit".
+const OFF_ROUTE = new Set([
+  "svaneti-ushguli",
+  "svaneti-lamaria",
+  "svaneti-shkhara",
+  "svaneti-horse",
+]);
 
 export function scorePlaces(experiences, votes, ratings) {
   const scored = experiences.map((exp) => {
@@ -124,11 +154,28 @@ export function scorePlaces(experiences, votes, ratings) {
   const byRank = (a, b) =>
     b.points - a.points || b.avgRating - a.avgRating || b.counts.go - a.counts.go;
 
+  // In: has points and isn't skip-vetoed (more ❌ than ✅+🤔 = cut)
+  const ranked = scored
+    .filter((s) => s.points > 0 && s.counts.skip <= s.counts.go + s.counts.maybe)
+    .sort(byRank);
+
+  // One venue per activity: the highest-ranked on-route member wins,
+  // the rest are cut with a pointer to the winner.
+  const deduped = [];
+  for (const group of ACTIVITY_GROUPS) {
+    const members = ranked.filter((s) => group.ids.includes(s.exp.id));
+    const winner = members.find((s) => !OFF_ROUTE.has(s.exp.id));
+    if (!winner) continue;
+    for (const loser of members) {
+      if (loser === winner || OFF_ROUTE.has(loser.exp.id)) continue;
+      deduped.push({ ...loser, winner: winner.exp, groupLabel: group.label });
+    }
+  }
+  const dedupedIds = new Set(deduped.map((s) => s.exp.id));
+
   return {
-    // In: has points and isn't skip-vetoed (more ❌ than ✅+🤔 = cut)
-    selected: scored
-      .filter((s) => s.points > 0 && s.counts.skip <= s.counts.go + s.counts.maybe)
-      .sort(byRank),
+    selected: ranked.filter((s) => !dedupedIds.has(s.exp.id)),
+    deduped,
     cut: scored
       .filter((s) => s.counts.total > 0 && (s.points === 0 || s.counts.skip > s.counts.go + s.counts.maybe))
       .sort(byRank),
@@ -138,9 +185,12 @@ export function scorePlaces(experiences, votes, ratings) {
 
 // ---------------------------------------------------------------------------
 // The route skeleton — fixed dates, vote-driven contents.
-// Constraints from the group: Tbilisi is 1 day at the start (nothing
-// before 3pm on arrival day) + 2 days at the end; the loop in between
-// starts and ends in Tbilisi.
+// Constraints from the group: fly home on the 16th, so — Tbilisi is
+// 1 day at the start (nothing before 3pm on arrival day) + the 14th
+// and 15th at the end, and the loop (Aug 4–13) starts and ends in
+// Tbilisi. The Ushguli day trip doesn't survive the shorter window
+// (it would force one ~9 hr drive day) — it shows up under "didn't
+// fit" as a swap option instead.
 // ---------------------------------------------------------------------------
 //
 // pools: where a day draws its places from.
@@ -149,6 +199,8 @@ export function scorePlaces(experiences, votes, ratings) {
 //   { regionId, exclude: [ids] } → the rest of the region's pool
 //   notBefore: minute-of-day     → pool is at the day's destination, so
 //                                   nothing from it before the drive lands
+//   notAfter: minute-of-day      → pool is at the day's origin, so its
+//                                   places must END before the drive leaves
 // mode "enroute": places go down in geographic order with drive gaps,
 // instead of by time-of-day preference.
 
@@ -170,32 +222,23 @@ const DAY_TEMPLATES = [
     base: "Sighnaghi",
     icon: "🍇",
     driveNote: "~2.5 hr",
-    maxPlaces: 4,
+    maxPlaces: 5,
     fixed: [
       { startMin: 9 * H, durationMin: 150, emoji: "🚗", name: "Drive Tbilisi → Sighnaghi", note: "~2.5 hr" },
     ],
-    pools: [{ regionId: "kakheti" }],
+    pools: [{ regionId: "kakheti", notBefore: 11 * H + 30 }],
   },
   {
     date: "2026-08-05",
-    title: "Kakheti — vineyards & valley views",
-    base: "Sighnaghi",
-    icon: "🍷",
-    maxPlaces: 5,
-    fixed: [],
-    pools: [{ regionId: "kakheti" }],
-  },
-  {
-    date: "2026-08-06",
     title: "The Military Highway — Kakheti → Kazbegi",
     base: "Stepantsminda",
     icon: "🏔️",
     driveNote: "~5–6 hr broken by the stops",
     mode: "enroute",
     driveGap: 60,
-    maxPlaces: 6,
+    maxPlaces: 5,
     fixed: [
-      { startMin: 9 * H, durationMin: 90, emoji: "🚗", name: "Drive Sighnaghi → Military Highway", note: "first leg" },
+      { startMin: 8 * H + 30, durationMin: 120, emoji: "🚗", name: "Drive Sighnaghi → Military Highway", note: "first leg" },
     ],
     enrouteStart: 10 * H + 30,
     pools: [
@@ -210,77 +253,54 @@ const DAY_TEMPLATES = [
     ],
   },
   {
-    date: "2026-08-07",
+    date: "2026-08-06",
     title: "Kazbegi — the crown jewel",
     base: "Stepantsminda",
     icon: "⛰️",
-    maxPlaces: 4,
-    fixed: [],
-    pools: [{ regionId: "gudauri-kazbegi" }],
-  },
-  {
-    date: "2026-08-08",
-    title: "Kazbegi day two — valleys & thrills",
-    base: "Stepantsminda",
-    icon: "🪂",
     maxPlaces: 5,
     fixed: [],
     pools: [{ regionId: "gudauri-kazbegi" }],
   },
   {
-    date: "2026-08-09",
-    title: "Back down — Mtskheta & Gori",
-    base: "Gori",
+    date: "2026-08-07",
+    title: "Back down — Mtskheta, Gori & Uplistsikhe",
+    base: "Borjomi",
     icon: "⛪",
-    driveNote: "~4 hr + stops",
+    driveNote: "~5.5 hr total + stops",
     mode: "enroute",
     driveGap: 45,
     maxPlaces: 4,
     fixed: [
-      { startMin: 9 * H, durationMin: 120, emoji: "🚗", name: "Drive Stepantsminda → Mtskheta", note: "back down the highway" },
+      { startMin: 8 * H + 30, durationMin: 120, emoji: "🚗", name: "Drive Stepantsminda → Mtskheta", note: "back down the highway" },
+      { startMin: 17 * H, durationMin: 120, emoji: "🚗", name: "Drive Uplistsikhe → Borjomi", note: "~2 hr" },
     ],
-    enrouteStart: 11 * H,
+    enrouteStart: 10 * H + 30,
     pools: [
       { regionId: "mtskheta", exclude: ["mtskheta-aragvi-raft", "mtskheta-zhinvali-kayak", "mtskheta-ananuri"] },
-      { regionId: "uplistsikhe", exclude: ["uplistsikhe-cave"] },
+      { regionId: "uplistsikhe", only: ["uplistsikhe-gori", "uplistsikhe-cave"] },
     ],
   },
   {
-    date: "2026-08-10",
-    title: "Uplistsikhe → Borjomi",
-    base: "Borjomi",
-    icon: "🌿",
-    driveNote: "~2 hr",
-    maxPlaces: 4,
-    fixed: [
-      { startMin: 12 * H, durationMin: 120, emoji: "🚗", name: "Drive Gori → Borjomi", note: "~2 hr" },
-    ],
-    pools: [
-      { regionId: "uplistsikhe", only: ["uplistsikhe-cave"] },
-      { regionId: "borjomi", notBefore: 14 * H },
-    ],
-  },
-  {
-    date: "2026-08-11",
-    title: "Borjomi → Kutaisi",
+    date: "2026-08-08",
+    title: "Borjomi morning → Kutaisi",
     base: "Kutaisi",
-    icon: "🌊",
+    icon: "🌿",
     driveNote: "~2.5 hr",
-    maxPlaces: 4,
+    maxPlaces: 5,
     fixed: [
-      { startMin: 13 * H, durationMin: 150, emoji: "🚗", name: "Drive Borjomi → Kutaisi", note: "~2.5 hr" },
+      { startMin: 14 * H, durationMin: 150, emoji: "🚗", name: "Drive Borjomi → Kutaisi", note: "~2.5 hr" },
     ],
     pools: [
-      { regionId: "borjomi" },
+      { regionId: "borjomi", notAfter: 14 * H },
       {
         regionId: "kutaisi-imereti",
         only: ["imereti-white-bridge", "imereti-bazaar"],
-        notBefore: 16 * H,
+        notBefore: 17 * H,
       },
     ],
   },
   {
-    date: "2026-08-12",
+    date: "2026-08-09",
     title: "Imereti — caves, canyons & water",
     base: "Kutaisi",
     icon: "🪨",
@@ -289,7 +309,7 @@ const DAY_TEMPLATES = [
     pools: [{ regionId: "kutaisi-imereti", exclude: ["imereti-cooking-class"] }],
   },
   {
-    date: "2026-08-13",
+    date: "2026-08-10",
     title: "The climb to Svaneti — Kutaisi → Mestia",
     base: "Mestia",
     icon: "🗼",
@@ -301,10 +321,11 @@ const DAY_TEMPLATES = [
     pools: [{ regionId: "svaneti", only: ["svaneti-towers", "svaneti-kubdari"] }],
   },
   {
-    date: "2026-08-14",
+    date: "2026-08-11",
     title: "Mestia — towers, cable car & glacier",
     base: "Mestia",
     icon: "🏔️",
+    note: "Want Ushguli instead? It needs this day + a ~9 hr drive day after — see the swap list below the plan.",
     maxPlaces: 5,
     fixed: [],
     pools: [
@@ -315,27 +336,7 @@ const DAY_TEMPLATES = [
     ],
   },
   {
-    date: "2026-08-15",
-    title: "Ushguli day trip (UNESCO)",
-    base: "Mestia",
-    icon: "🐎",
-    driveNote: "~2 hr rough road each way",
-    mode: "enroute",
-    driveGap: 15,
-    maxPlaces: 4,
-    fixed: [
-      { startMin: 17 * H, durationMin: 120, emoji: "🚙", name: "4×4 back Ushguli → Mestia", note: "~2 hr" },
-    ],
-    enrouteStart: 9 * H,
-    pools: [
-      {
-        regionId: "svaneti",
-        only: ["svaneti-ushguli", "svaneti-lamaria", "svaneti-shkhara", "svaneti-horse"],
-      },
-    ],
-  },
-  {
-    date: "2026-08-16",
+    date: "2026-08-12",
     title: "Mestia → Kutaisi",
     base: "Kutaisi",
     icon: "🍲",
@@ -344,22 +345,25 @@ const DAY_TEMPLATES = [
     fixed: [
       { startMin: 9 * H + 30, durationMin: 300, emoji: "🚗", name: "Drive Mestia → Kutaisi", note: "~5 hr" },
     ],
-    pools: [{ regionId: "kutaisi-imereti" }],
+    pools: [{ regionId: "kutaisi-imereti", notBefore: 14 * H + 30 }],
   },
   {
-    date: "2026-08-17",
+    date: "2026-08-13",
     title: "Kutaisi → Tbilisi",
     base: "Tbilisi",
     icon: "🏙️",
     driveNote: "~3.5 hr expressway",
-    maxPlaces: 3,
+    maxPlaces: 4,
     fixed: [
       { startMin: 10 * H, durationMin: 210, emoji: "🚗", name: "Drive Kutaisi → Tbilisi", note: "~3.5 hr expressway" },
     ],
-    pools: [{ regionId: "tbilisi", notBefore: 14 * H }],
+    pools: [
+      { regionId: "kutaisi-imereti" },
+      { regionId: "tbilisi", notBefore: 14 * H },
+    ],
   },
   {
-    date: "2026-08-18",
+    date: "2026-08-14",
     title: "Tbilisi — the city, properly",
     base: "Tbilisi",
     icon: "🏙️",
@@ -368,7 +372,7 @@ const DAY_TEMPLATES = [
     pools: [{ regionId: "tbilisi" }],
   },
   {
-    date: "2026-08-19",
+    date: "2026-08-15",
     title: "Tbilisi — last day & farewell supra",
     base: "Tbilisi",
     icon: "🥂",
@@ -377,11 +381,11 @@ const DAY_TEMPLATES = [
     pools: [{ regionId: "tbilisi" }],
   },
   {
-    date: "2026-08-20",
+    date: "2026-08-16",
     title: "Departure",
     base: "✈️ Home",
     icon: "✈️",
-    note: "Check out, last khachapuri, airport. Safe travels! 🇬🇪",
+    note: "Kept empty for the travel home. Check out, last khachapuri, airport. Safe travels! 🇬🇪",
     maxPlaces: 0,
     fixed: [{ startMin: 9 * H, durationMin: 180, emoji: "✈️", name: "Check out & head to the airport" }],
     pools: [],
@@ -418,7 +422,7 @@ function poolMatches(pool, scoredPlace) {
 // ---------------------------------------------------------------------------
 
 export function buildMockPlan(experiences, votes, ratings) {
-  const { selected, cut, unvoted } = scorePlaces(experiences, votes, ratings);
+  const { selected, deduped, cut, unvoted } = scorePlaces(experiences, votes, ratings);
 
   // Places still waiting for a day, keyed for quick removal
   const remaining = new Map(selected.map((s) => [s.exp.id, s]));
@@ -437,13 +441,19 @@ export function buildMockPlan(experiences, votes, ratings) {
       if (pool.only) {
         matches.sort((a, b) => pool.only.indexOf(a.exp.id) - pool.only.indexOf(b.exp.id));
       }
-      candidates.push(...matches.map((s) => ({ s, notBefore: pool.notBefore ?? 0 })));
+      candidates.push(
+        ...matches.map((s) => ({
+          s,
+          notBefore: pool.notBefore ?? 0,
+          notAfter: pool.notAfter ?? DAY_END,
+        }))
+      );
     }
 
     let placed = 0;
     let cursor = tpl.enrouteStart ?? dayStart;
 
-    for (const { s, notBefore } of candidates) {
+    for (const { s, notBefore, notAfter } of candidates) {
       if (placed >= tpl.maxPlaces) break;
       const duration = durationFor(s.exp);
       let startMin = null;
@@ -463,7 +473,8 @@ export function buildMockPlan(experiences, votes, ratings) {
         for (const w of tryOrder) {
           const win = WINDOWS[w];
           const from = Math.max(win.start, dayStart, notBefore);
-          startMin = findSlot(busy, from, win.end - SNAP, duration);
+          const latestStart = Math.min(win.end - SNAP, notAfter - duration);
+          startMin = findSlot(busy, from, latestStart, duration);
           if (startMin !== null) break;
         }
         // Be honest when it didn't land in its first-choice window
@@ -511,6 +522,7 @@ export function buildMockPlan(experiences, votes, ratings) {
   return {
     days,
     selected,
+    deduped, // same activity elsewhere scored higher
     cut,
     unvoted,
     leftover: [...remaining.values()], // made the cut but no day had room

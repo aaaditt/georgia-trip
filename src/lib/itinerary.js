@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "./supabase";
 
-// Trip window: flights land Aug 3, flying home Aug 20.
+// Trip window: flights land Aug 3, flying home Aug 16.
 export const TRIP_START = "2026-08-03";
-export const TRIP_DAYS_COUNT = 18;
+export const TRIP_DAYS_COUNT = 14;
 
 export const SLOT_MIN = 30; // grid snaps to half-hour slots
 export const DAY_SLOTS = (24 * 60) / SLOT_MIN;
@@ -16,7 +16,7 @@ export const TRANSPORT_MODES = [
   { id: "public", emoji: "🚌", label: "Public transport" },
 ];
 
-// The 18 trip days as ISO date strings (2026-08-03 … 2026-08-20)
+// The 14 trip days as ISO date strings (2026-08-03 … 2026-08-16)
 export const TRIP_DAYS = Array.from({ length: TRIP_DAYS_COUNT }, (_, i) => {
   const d = new Date(Date.UTC(2026, 7, 3 + i));
   return d.toISOString().slice(0, 10);

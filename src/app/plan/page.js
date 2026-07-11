@@ -85,7 +85,7 @@ export default function PlanPage() {
           <span className="flag">📋</span>
           <h1>The Master Plan</h1>
           <p className="subtitle">
-            3–20 August · built live from the family calendar
+            3–16 August · built live from the family calendar
           </p>
         </div>
 

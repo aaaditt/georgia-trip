@@ -53,7 +53,7 @@ export default function MockPlanPage() {
     );
   }
 
-  const { days, selected, cut, unvoted, leftover } = plan;
+  const { days, selected, deduped, cut, unvoted, leftover } = plan;
   const stops = routeStops(days);
   const votedOn = selected.length + cut.length;
 
@@ -65,7 +65,7 @@ export default function MockPlanPage() {
           <span className="flag">🧭</span>
           <h1>The Mock Plan</h1>
           <p className="subtitle">
-            3–20 August · drafted automatically from everyone&apos;s votes
+            3–16 August · drafted automatically from everyone&apos;s votes
           </p>
         </div>
 
@@ -81,10 +81,12 @@ export default function MockPlanPage() {
             ❌ than support cuts it), ratings break ties, and each pick lands
             on the day the route passes it, at the hour that suits it —
             ❄️ cool caves take the midday heat, 🌙 lit-up spots take the
-            evening, ☀️ exposed viewpoints get mornings. Change your votes on
-            the <Link href="/dashboard">regions</Link> pages and this plan
-            redraws itself. When it looks right, copy days onto the{" "}
-            <Link href="/calendar">calendar</Link> to make them official.
+            evening, ☀️ exposed viewpoints get mornings. Repeated activities
+            (rafting, horses, tastings…) happen once, at the top-voted venue
+            — cable cars stay, they&apos;re part of getting there. Change your
+            votes on the <Link href="/dashboard">regions</Link> pages and
+            this plan redraws itself. When it looks right, copy days onto
+            the <Link href="/calendar">calendar</Link> to make them official.
           </p>
         </div>
 
@@ -214,6 +216,34 @@ export default function MockPlanPage() {
                     {s.exp.name}{" "}
                     <span className="plan-item-note">
                       — {regionName(s.exp.regionId)}
+                    </span>
+                    <VoteChips
+                      counts={s.counts}
+                      points={s.points}
+                      avgRating={s.avgRating}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {deduped.length > 0 && (
+          <div className="mock-list-section">
+            <h3 className="mock-list-title">🔁 Same activity, better spot</h3>
+            <p className="mock-day-note">
+              These repeat an activity the votes ranked higher somewhere else,
+              so the plan does it once — at the winning venue.
+            </p>
+            <ul className="plan-items">
+              {deduped.map((s) => (
+                <li key={s.exp.id} className="plan-item mock-cut">
+                  <div>
+                    {s.exp.name}{" "}
+                    <span className="plan-item-note">
+                      — {s.groupLabel.toLowerCase()} covered by{" "}
+                      <strong>{s.winner.name}</strong>
                     </span>
                     <VoteChips
                       counts={s.counts}
