@@ -6,6 +6,7 @@ import { useUser } from "@/context/UserContext";
 import { useAdmin } from "@/context/AdminContext";
 import { USERS } from "@/lib/data";
 import { useVotes, useRatings, useComments, useExperiences } from "@/lib/hooks";
+import { useCalendarAccess, hasCompletedVoting } from "@/lib/access";
 import { getPersonProgress, getCustomPlaces, getOverallStats } from "@/lib/adminStats";
 import Navbar from "@/components/Navbar";
 import AdminGateModal from "@/components/AdminGateModal";
@@ -19,6 +20,7 @@ export default function AdminPage() {
   const { ratings, loading: ratingsLoading } = useRatings();
   const { comments, loading: commentsLoading } = useComments();
   const { experiences, loading: experiencesLoading } = useExperiences();
+  const { grantedIds, grantAccess, revokeAccess } = useCalendarAccess();
 
   useEffect(() => {
     if (isLoaded && !currentUser) {
@@ -90,6 +92,41 @@ export default function AdminPage() {
             <div className="admin-stat-value">{overall.customCount}</div>
             <div className="admin-stat-label">Custom places added</div>
           </div>
+        </div>
+
+        {/* Calendar edit access */}
+        <div className="section-divider">
+          <span className="section-divider-text">Calendar Access</span>
+        </div>
+
+        <div className="card" style={{ marginBottom: "var(--space-lg)" }}>
+          <p style={{ fontSize: "0.82rem", color: "var(--charcoal-light)", marginBottom: "var(--space-md)" }}>
+            The calendar unlocks by itself once someone has voted on every
+            place. Use these switches to unlock someone early — it applies
+            instantly on their phone.
+          </p>
+          {USERS.map((u) => {
+            const votedAll = hasCompletedVoting(votes, experiences, u.id);
+            const granted = grantedIds.has(u.id);
+            return (
+              <div key={u.id} className="admin-access-row">
+                <span className="admin-person-name">
+                  {u.emoji} {u.name}
+                </span>
+                {votedAll ? (
+                  <span className="admin-tally-done">✅ Unlocked (voting done)</span>
+                ) : granted ? (
+                  <button className="admin-access-btn revoke" onClick={() => revokeAccess(u.id)}>
+                    🔓 Granted — tap to revoke
+                  </button>
+                ) : (
+                  <button className="admin-access-btn" onClick={() => grantAccess(u.id)}>
+                    🔒 Locked — tap to grant
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Per-person progress */}
