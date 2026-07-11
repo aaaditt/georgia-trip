@@ -22,6 +22,7 @@ import {
 } from "@/lib/itinerary";
 import { useCalendarAccess, hasCompletedVoting } from "@/lib/access";
 import Navbar from "@/components/Navbar";
+import RouteStrip from "@/components/RouteStrip";
 import Link from "next/link";
 
 // Grid geometry (keep in sync with the .cal-* styles in globals.css)
@@ -554,6 +555,8 @@ export default function CalendarPage() {
             and slot in the car / taxi legs. It saves live for the whole family.
           </p>
         </div>
+
+        <RouteStrip items={items} experiences={experiences} />
 
         {fetchError && (
           <div className="cal-warning">

@@ -14,6 +14,7 @@ import {
 } from "@/lib/itinerary";
 import { getMapsUrl } from "@/lib/links";
 import Navbar from "@/components/Navbar";
+import RouteStrip from "@/components/RouteStrip";
 
 // The plan is generated live from the shared drag-and-drop calendar —
 // every block someone places there shows up here, day by day.
@@ -102,6 +103,10 @@ export default function PlanPage() {
             for everyone instantly.
           </p>
         </div>
+
+        {!loading && totalItems > 0 && (
+          <RouteStrip items={items} experiences={experiences} />
+        )}
 
         {loading ? (
           <div className="loading-spinner">
