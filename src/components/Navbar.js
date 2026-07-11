@@ -25,7 +25,7 @@ export default function Navbar() {
   const links = [
     { href: "/dashboard", label: "Regions", icon: "🗺️" },
     { href: "/consensus", label: "Consensus", icon: "📊" },
-    { href: "/mockplan", label: "Mock Plan", icon: "🧭" },
+    { href: "/mockplan", label: "Proposal", icon: "🧭" },
     { href: "/plan", label: "Day Plan", icon: "📋" },
     { href: "/calendar", label: "Calendar", icon: "🗓️" },
     ...(isAdmin ? [{ href: "/admin", label: "Admin", icon: "🔒" }] : []),

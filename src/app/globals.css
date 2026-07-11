@@ -2264,3 +2264,21 @@ a:hover { color: var(--wine-light); }
 .mock-cut {
   opacity: 0.75;
 }
+
+/* --- Proposed Plan travel legs --- */
+.travel-leg {
+  padding: 2px 0 2px var(--space-md);
+  font-size: 0.82rem;
+  color: var(--charcoal-light);
+  border-left: 2px dashed var(--stone-dark);
+  margin-left: 3px;
+}
+
+.travel-leg-route {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.mock-watchlist {
+  border: 1px solid var(--gold);
+}
