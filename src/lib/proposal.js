@@ -23,6 +23,8 @@
 // tripadvisor.com (Borjomi ropeway, cave closures), viator/getyourguide
 // (cave tour logistics).
 
+import { queryFor, getRouteUrl } from "./links";
+
 export const TRAVEL_MODES = {
   van: { emoji: "🚐", label: "Private van" },
   fourx4: { emoji: "🚙", label: "Local 4×4" },
@@ -75,14 +77,15 @@ export const PROPOSED_PLAN = {
       title: "Estates, the wine tunnel & the back road north",
       base: "Pasanauri",
       icon: "🍷",
+      mapWaypoints: ["Tianeti, Georgia"], // pins the route to the back road
       note: "The Tianeti back road skips Tbilisi entirely — narrow and twisty but scenic. If the driver prefers asphalt all the way, the Tbilisi ring adds ~45 min.",
       blocks: [
         { type: "travel", mode: "van", from: "Sighnaghi", to: "Tsinandali", start: "09:00", end: "10:00" },
         { type: "place", expId: "kakheti-tsinandali", start: "10:00", end: "11:15", note: "Chavchavadze manor gardens + historic cellar" },
         { type: "travel", mode: "van", from: "Tsinandali", to: "Kvareli", start: "11:15", end: "11:55" },
         { type: "place", expId: "kakheti-khareba", start: "12:00", end: "13:00", note: "7.7 km tunnel at a natural 12–14°C — the kids' favourite tasting room" },
-        { type: "place", expId: "kakheti-supra", start: "13:15", end: "15:15", note: "Long feast lunch at a family cellar near Kvareli/Telavi" },
-        { type: "place", expId: "kakheti-winery-tasting", start: "15:15", end: "15:45", note: "The qvevri flight happens at the same marani — one stop, two ticks" },
+        { type: "place", expId: "kakheti-supra", start: "13:15", end: "15:15", mapQuery: "Telavi, Georgia", note: "Long feast lunch at a family cellar near Kvareli/Telavi" },
+        { type: "place", expId: "kakheti-winery-tasting", start: "15:15", end: "15:45", mapQuery: "Telavi, Georgia", note: "The qvevri flight happens at the same marani — one stop, two ticks" },
         { type: "travel", mode: "van", from: "Telavi", to: "Pasanauri via Tianeti back road", start: "16:00", end: "19:00", note: "~2.5–3 hr through forest & hairpins, bypasses Tbilisi" },
         { type: "event", emoji: "🏡", label: "Riverside guesthouse on the Aragvi, home dinner", start: "19:15", end: "21:00" },
       ],
@@ -188,6 +191,7 @@ export const PROPOSED_PLAN = {
       title: "Ushguli — and out over the Zagari Pass",
       base: "Kutaisi",
       icon: "🐎",
+      mapWaypoints: ["Lentekhi, Georgia"], // pins the route to the Zagari Pass exit
       note: "The clever bit: since 2024 the Ushguli→Lentekhi→Kutaisi road is fully sealed, so Ushguli is the EXIT from Svaneti — no backtracking, a whole day saved, and the Zagari Pass is the most scenic road of the trip.",
       blocks: [
         { type: "travel", mode: "fourx4", from: "Mestia", to: "Ushguli", start: "08:30", end: "10:00", note: "47 km, sealed in 2024 — 60–90 min" },
@@ -288,3 +292,44 @@ export const PROPOSED_PLAN = {
     },
   ],
 };
+
+// ---------------------------------------------------------------------------
+// Google Maps directions for the route
+// ---------------------------------------------------------------------------
+
+const baseQuery = (base) =>
+  base === "✈️ Home" ? "Tbilisi International Airport" : `${base}, Georgia`;
+
+// One directions link per day: previous night's base → every stop in
+// order → tonight's base. mapWaypoints pin the intended road where
+// Google would otherwise pick a different one (Tianeti, Zagari Pass).
+export function getDayRouteUrl(day, prevDay, expById, mode = "driving") {
+  const stops = [prevDay ? baseQuery(prevDay.base) : "Tbilisi International Airport"];
+  for (const b of day.blocks) {
+    if (b.type !== "place") continue;
+    const exp = expById.get(b.expId);
+    stops.push(b.mapQuery || (exp ? queryFor(exp) : `${b.fallbackName || b.expId}, Georgia`));
+  }
+  stops.push(...(day.mapWaypoints || []));
+  stops.push(baseQuery(day.base));
+  return getRouteUrl(stops, mode);
+}
+
+// The whole loop, base to base. Ushguli and Borjomi (a pit-stop, not an
+// overnight) are pinned so the shape reads true. Exactly fills the
+// 9-waypoint URL limit.
+export function getTripOverviewUrl() {
+  return getRouteUrl([
+    "Tbilisi, Georgia",
+    "Sighnaghi, Georgia",
+    "Pasanauri, Georgia",
+    "Stepantsminda, Georgia",
+    "Gori, Georgia",
+    "Kutaisi, Georgia",
+    "Mestia, Georgia",
+    "Ushguli, Georgia",
+    "Kutaisi, Georgia",
+    "Borjomi, Georgia",
+    "Tbilisi, Georgia",
+  ]);
+}

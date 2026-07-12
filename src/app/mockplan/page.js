@@ -12,7 +12,12 @@ import {
   getAverageRating,
 } from "@/lib/hooks";
 import { formatDay } from "@/lib/itinerary";
-import { PROPOSED_PLAN, TRAVEL_MODES } from "@/lib/proposal";
+import {
+  PROPOSED_PLAN,
+  TRAVEL_MODES,
+  getDayRouteUrl,
+  getTripOverviewUrl,
+} from "@/lib/proposal";
 import { REGIONS } from "@/lib/data";
 import { getMapsUrl } from "@/lib/links";
 import Navbar from "@/components/Navbar";
@@ -168,6 +173,18 @@ export default function ProposalPage() {
           </p>
         </div>
 
+        <div style={{ textAlign: "center", marginBottom: "var(--space-md)" }}>
+          <a
+            href={getTripOverviewUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="quick-link"
+            style={{ display: "inline-flex" }}
+          >
+            🗺️ See the whole loop on Google Maps
+          </a>
+        </div>
+
         <div className="route-strip animate-in">
           <span className="route-label">🧭 Route</span>
           {stops.map((stop, i) => {
@@ -208,6 +225,23 @@ export default function ProposalPage() {
                 </h3>
                 <div className="plan-day-meta">
                   <span className="drive-chip">🛏️ overnight: {d.base}</span>
+                  {(() => {
+                    const url = getDayRouteUrl(
+                      d,
+                      PROPOSED_PLAN.days[i - 1],
+                      expById
+                    );
+                    return url && d.base !== "✈️ Home" ? (
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="drive-chip"
+                      >
+                        🗺️ day route in Maps
+                      </a>
+                    ) : null;
+                  })()}
                 </div>
                 {d.note && <p className="mock-day-note">{d.note}</p>}
                 <ul className="plan-items">

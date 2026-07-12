@@ -63,12 +63,34 @@ const MAPS_QUERIES = {
   "svaneti-lamaria": "Lamaria Monastery, Ushguli",
   "svaneti-shkhara": "Mount Shkhara viewpoint, Ushguli",
   "svaneti-horse": "Ushguli, Georgia",
+  // Family-added custom places
+  "custom-gori-fortress-mr7miqfw": "Gori Fortress, Gori",
 };
 
-function queryFor(experience) {
+export function queryFor(experience) {
   if (MAPS_QUERIES[experience.id]) return MAPS_QUERIES[experience.id];
   const region = REGIONS.find((r) => r.id === experience.regionId);
   return `${experience.name}, ${region ? region.name + ", " : ""}Georgia`;
+}
+
+// Google Maps directions chaining stops in order (origin → waypoints →
+// destination). The URL API allows at most 9 waypoints, so trim from the
+// middle if a day ever exceeds that.
+export function getRouteUrl(stops, mode = "driving") {
+  // Drop consecutive repeats only — a loop legitimately revisits stops
+  const unique = stops.filter((s, i) => i === 0 || s !== stops[i - 1]);
+  if (unique.length < 2) return null;
+  const origin = unique[0];
+  const destination = unique[unique.length - 1];
+  const waypoints = unique.slice(1, -1).slice(0, 9);
+  const params = new URLSearchParams({
+    api: "1",
+    origin,
+    destination,
+    travelmode: mode,
+  });
+  if (waypoints.length) params.set("waypoints", waypoints.join("|"));
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
 }
 
 export function getMapsUrl(experience) {
