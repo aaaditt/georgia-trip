@@ -2282,3 +2282,51 @@ a:hover { color: var(--wine-light); }
 .mock-watchlist {
   border: 1px solid var(--gold);
 }
+
+/* --- Calendar lock/unlock bar --- */
+.cal-lockbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  padding: var(--space-sm) var(--space-md);
+  margin-bottom: var(--space-md);
+  background: var(--stone-light);
+  border: 1px solid var(--stone-mid);
+  border-radius: var(--radius-lg);
+}
+
+.cal-lockbar.editing {
+  background: var(--wine-glow);
+  border-color: rgba(139, 34, 82, 0.25);
+}
+
+.cal-lockbar-text {
+  font-size: 0.85rem;
+  color: var(--charcoal-mid);
+}
+
+.cal-lockbar-btn {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--stone-dark);
+  background: var(--white);
+  color: var(--charcoal-mid);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.cal-lockbar-btn:hover {
+  border-color: var(--wine);
+  color: var(--wine);
+}
+
+.cal-lockbar.editing .cal-lockbar-btn {
+  border-color: var(--wine);
+  color: var(--wine);
+}

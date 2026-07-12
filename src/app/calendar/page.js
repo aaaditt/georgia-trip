@@ -193,6 +193,9 @@ export default function CalendarPage() {
   const [activeTab, setActiveTab] = useState(REGIONS[0].id);
   const [selectedId, setSelectedId] = useState(null);
   const [showAddEvent, setShowAddEvent] = useState(false);
+  // The calendar always opens locked (view-only) so nobody reorganises
+  // the family's plan by accident — editing is an explicit unlock away.
+  const [unlocked, setUnlocked] = useState(false);
 
   const scrollerRef = useRef(null);
   const daysRef = useRef(null);
@@ -316,6 +319,8 @@ export default function CalendarPage() {
     currentUser &&
     (hasCompletedVoting(votes, experiences, currentUser.id) ||
       grantedIds.has(currentUser.id));
+  // Actually editable right now = allowed to edit AND deliberately unlocked
+  const editing = canEdit && unlocked;
 
   // ---- drag mechanics (direct DOM updates, React state only on drop) ----
 
@@ -493,7 +498,7 @@ export default function CalendarPage() {
   });
 
   const blockHandlers = (block) => {
-    if (!canEdit) return { onClick: () => setSelectedId(block.id) };
+    if (!editing) return { onClick: () => setSelectedId(block.id) };
     return blockEditHandlers(block);
   };
 
@@ -599,7 +604,24 @@ export default function CalendarPage() {
             )}
           </div>
         )}
+        {/* Lock bar — view mode by default, deliberate unlock to edit */}
         {canEdit && (
+          <div className={`cal-lockbar ${unlocked ? "editing" : ""}`}>
+            <span className="cal-lockbar-text">
+              {unlocked
+                ? "🔓 Edit mode — drags and deletes are live for the whole family."
+                : "🔒 View mode — the calendar is safe to browse, nothing can be moved by accident."}
+            </span>
+            <button
+              className="cal-lockbar-btn"
+              onClick={() => setUnlocked((u) => !u)}
+            >
+              {unlocked ? "🔒 Lock" : "🔓 Unlock to edit"}
+            </button>
+          </div>
+        )}
+
+        {editing && (
         <div className="cal-palette">
           <div className="cal-tabs">
             {tabs.map((t) => (
@@ -680,7 +702,7 @@ export default function CalendarPage() {
                         return (
                           <div
                             key={b.id}
-                            className={`cal-block ${selectedId === b.id ? "selected" : ""} ${canEdit ? "" : "readonly"}`}
+                            className={`cal-block ${selectedId === b.id ? "selected" : ""} ${editing ? "" : "readonly"}`}
                             style={{
                               top: (b.startMin / SLOT_MIN) * SLOT_PX,
                               height: h - 2,
@@ -698,7 +720,7 @@ export default function CalendarPage() {
                                 {formatTime(b.startMin)}–{formatTime(b.startMin + b.durationMin)}
                               </span>
                             )}
-                            {canEdit && (
+                            {editing && (
                               <div className="cal-block-resize" {...resizeHandlers(b)} />
                             )}
                           </div>
@@ -731,7 +753,7 @@ export default function CalendarPage() {
               })()}
             </span>
           </div>
-          {canEdit && selectedItem.kind !== "place" && (
+          {editing && selectedItem.kind !== "place" && (
             <input
               key={selectedItem.id}
               type="text"
@@ -752,7 +774,7 @@ export default function CalendarPage() {
             />
           )}
           <div className="cal-panel-actions">
-            {canEdit && (
+            {editing && (
               <button
                 className="cal-panel-delete"
                 onClick={() => {
