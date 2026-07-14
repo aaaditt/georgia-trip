@@ -2297,6 +2297,34 @@ a:hover { color: var(--wine-light); }
   width: 100%;
 }
 
+.cal-panel-note-textarea {
+  width: 100%;
+  min-height: 56px;
+  border: 1px solid var(--stone-mid);
+  border-radius: var(--radius-md);
+  background: var(--stone-light);
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  outline: none;
+  resize: vertical;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+.cal-panel-note-textarea:focus {
+  border-color: var(--wine);
+  background: var(--white);
+}
+
+.cal-panel-note-readonly {
+  font-size: 0.85rem;
+  color: var(--charcoal-mid);
+  background: var(--stone-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 @media (max-width: 640px) {
   .cal-scroller { height: 58vh; }
   .cal-add-event { margin-left: 0; }

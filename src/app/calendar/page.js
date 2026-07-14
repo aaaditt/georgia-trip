@@ -755,7 +755,7 @@ export default function CalendarPage() {
           </div>
           {editing && selectedItem.kind !== "place" && (
             <input
-              key={selectedItem.id}
+              key={`title-${selectedItem.id}`}
               type="text"
               className="comment-input cal-panel-note"
               placeholder={
@@ -772,6 +772,25 @@ export default function CalendarPage() {
                 }
               }}
             />
+          )}
+          {editing ? (
+            <textarea
+              key={`notes-${selectedItem.id}`}
+              className="cal-panel-note-textarea"
+              placeholder="Notes — meet driver at the lobby, bring cash…"
+              defaultValue={selectedItem.notes || ""}
+              maxLength={300}
+              onBlur={(e) => {
+                const v = e.target.value.trim();
+                if (v !== (selectedItem.notes || "")) {
+                  updateItem(selectedItem.id, { notes: v || null });
+                }
+              }}
+            />
+          ) : (
+            selectedItem.notes && (
+              <p className="cal-panel-note-readonly">📝 {selectedItem.notes}</p>
+            )
           )}
           <div className="cal-panel-actions">
             {editing && (
