@@ -2096,6 +2096,10 @@ a:hover { color: var(--wine-light); }
   color: var(--charcoal);
 }
 
+.cal-day-body.editing {
+  touch-action: none;
+}
+
 .cal-day-body {
   position: relative;
   height: 1056px;
@@ -2195,6 +2199,16 @@ a:hover { color: var(--wine-light); }
   border: 2px dashed var(--wine);
   border-radius: var(--radius-sm);
   background: rgba(139, 34, 82, 0.06);
+}
+
+.cal-select-box {
+  display: none;
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+  border: 1.5px solid var(--wine);
+  background: rgba(139, 34, 82, 0.08);
+  border-radius: var(--radius-sm);
 }
 
 .cal-ghost {

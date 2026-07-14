@@ -80,6 +80,23 @@ function layoutDay(dayItems) {
   return result;
 }
 
+// Which block ids does a selection rectangle (in the same content-relative
+// px space as `resolveDrop`/`paintPreview` below — i.e. relative to
+// daysRef's own top-left, not the viewport) overlap?
+function blocksInRect(blocks, rect) {
+  return blocks
+    .filter((b) => {
+      const dayIdx = TRIP_DAYS.indexOf(b.day);
+      if (dayIdx === -1) return false;
+      const left = dayIdx * COL_W;
+      const right = left + COL_W;
+      const top = HEADER_H + (b.startMin / SLOT_MIN) * SLOT_PX;
+      const bottom = top + (b.durationMin / SLOT_MIN) * SLOT_PX;
+      return left < rect.right && right > rect.left && top < rect.bottom && bottom > rect.top;
+    })
+    .map((b) => b.id);
+}
+
 const DURATION_OPTIONS = Array.from({ length: 16 }, (_, i) => (i + 1) * 30);
 const START_OPTIONS = Array.from({ length: 48 }, (_, i) => i * 30);
 
@@ -192,6 +209,7 @@ export default function CalendarPage() {
 
   const [activeTab, setActiveTab] = useState(REGIONS[0].id);
   const [selectedId, setSelectedId] = useState(null);
+  const [selectedIds, setSelectedIds] = useState(new Set());
   const [showAddEvent, setShowAddEvent] = useState(false);
   // The calendar always opens locked (view-only) so nobody reorganises
   // the family's plan by accident — editing is an explicit unlock away.
@@ -201,6 +219,7 @@ export default function CalendarPage() {
   const daysRef = useRef(null);
   const ghostRef = useRef(null);
   const previewRef = useRef(null);
+  const selectBoxRef = useRef(null);
   const dragRef = useRef(null);
   const rafRef = useRef(null);
 
@@ -377,6 +396,30 @@ export default function CalendarPage() {
       return;
     }
 
+    if (d.type === "select") {
+      const rect = daysRef.current.getBoundingClientRect();
+      const x0 = clamp(d.startX - rect.left, 0, rect.width);
+      const x1 = clamp(d.x - rect.left, 0, rect.width);
+      const y0 = clamp(d.startY - rect.top, HEADER_H, rect.height);
+      const y1 = clamp(d.y - rect.top, HEADER_H, rect.height);
+      const box = {
+        left: Math.min(x0, x1),
+        right: Math.max(x0, x1),
+        top: Math.min(y0, y1),
+        bottom: Math.max(y0, y1),
+      };
+      if (selectBoxRef.current) {
+        const el = selectBoxRef.current;
+        el.style.display = "block";
+        el.style.left = `${box.left}px`;
+        el.style.top = `${box.top}px`;
+        el.style.width = `${box.right - box.left}px`;
+        el.style.height = `${box.bottom - box.top}px`;
+      }
+      d.result = blocksInRect(blocks, box);
+      return;
+    }
+
     if (ghostRef.current) {
       ghostRef.current.style.display = "block";
       ghostRef.current.style.transform = `translate(${d.x + 10}px, ${d.y + 12}px)`;
@@ -423,6 +466,7 @@ export default function CalendarPage() {
     cancelAnimationFrame(rafRef.current);
     if (ghostRef.current) ghostRef.current.style.display = "none";
     if (previewRef.current) previewRef.current.style.display = "none";
+    if (selectBoxRef.current) selectBoxRef.current.style.display = "none";
     if (d?.dimEl) d.dimEl.style.opacity = "";
     if (!d || !d.active || !commit || !d.result) return d;
 
@@ -444,6 +488,9 @@ export default function CalendarPage() {
       });
     } else if (d.type === "resize") {
       updateItem(d.item.id, { durationMin: d.result.durationMin });
+    } else if (d.type === "select") {
+      setSelectedId(null);
+      setSelectedIds(new Set(d.result));
     }
     return d;
   }
@@ -521,7 +568,10 @@ export default function CalendarPage() {
     onPointerUp: () => {
       const d = endDrag(true);
       // a press without movement = tap → open the detail panel
-      if (d && !d.active) setSelectedId(d.item.id);
+      if (d && !d.active) {
+        setSelectedIds(new Set());
+        setSelectedId(d.item.id);
+      }
     },
     onPointerCancel: () => endDrag(false),
   });
@@ -535,10 +585,33 @@ export default function CalendarPage() {
     onPointerUp: () => {
       const d = endDrag(true);
       // short blocks are mostly handle — let a still tap open the panel too
-      if (d && !d.active) setSelectedId(d.item.id);
+      if (d && !d.active) {
+        setSelectedIds(new Set());
+        setSelectedId(d.item.id);
+      }
     },
     onPointerCancel: () => endDrag(false),
   });
+
+  const dayBodyHandlers = (day) => {
+    if (!editing) return {};
+    return {
+      onPointerDown: (e) => {
+        // Only start a rubber-band when the pointerdown lands on the empty
+        // day surface itself — if it bubbled up from a block or its
+        // resize handle, their own handlers already took it (and the
+        // resize handle calls stopPropagation()), so bail out here.
+        if (e.target !== e.currentTarget) return;
+        startDrag(e, { type: "select", day });
+      },
+      onPointerMove: onDragMove,
+      onPointerUp: () => {
+        const d = endDrag(true);
+        if (d && !d.active) setSelectedIds(new Set());
+      },
+      onPointerCancel: () => endDrag(false),
+    };
+  };
 
   // ---- render ----
 
@@ -633,7 +706,13 @@ export default function CalendarPage() {
                 {t.icon} <span>{t.label}</span>
               </button>
             ))}
-            <button className="cal-add-event" onClick={() => setShowAddEvent(true)}>
+            <button
+              className="cal-add-event"
+              onClick={() => {
+                setSelectedIds(new Set());
+                setShowAddEvent(true);
+              }}
+            >
               ➕ Checkpoint / event
             </button>
           </div>
@@ -694,7 +773,10 @@ export default function CalendarPage() {
                         {f.date} {f.month}
                       </span>
                     </div>
-                    <div className="cal-day-body">
+                    <div
+                      className={`cal-day-body ${editing ? "editing" : ""}`}
+                      {...dayBodyHandlers(day)}
+                    >
                       {dayBlocks.map((b) => {
                         const lane = lanes[b.id] || { lane: 0, lanes: 1 };
                         const color = itemColor(b);
@@ -702,7 +784,7 @@ export default function CalendarPage() {
                         return (
                           <div
                             key={b.id}
-                            className={`cal-block ${selectedId === b.id ? "selected" : ""} ${editing ? "" : "readonly"}`}
+                            className={`cal-block ${selectedId === b.id ? "selected" : ""} ${selectedIds.has(b.id) ? "multi-selected" : ""} ${editing ? "" : "readonly"}`}
                             style={{
                               top: (b.startMin / SLOT_MIN) * SLOT_PX,
                               height: h - 2,
@@ -731,6 +813,7 @@ export default function CalendarPage() {
                 );
               })}
               <div className="cal-drop-preview" ref={previewRef} />
+              <div className="cal-select-box" ref={selectBoxRef} />
             </div>
           </div>
         </div>
