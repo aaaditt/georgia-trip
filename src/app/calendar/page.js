@@ -28,7 +28,7 @@ import Link from "next/link";
 // Grid geometry (keep in sync with the .cal-* styles in globals.css)
 const SLOT_PX = 22; // one 30-min slot
 const HEADER_H = 48; // sticky day header height
-const COL_W = 140; // fixed day column width
+const COL_W = 160; // fixed day column width
 const REGION_COLORS = {
   tbilisi: "#4A7C8F",
   mtskheta: "#C4704B",
