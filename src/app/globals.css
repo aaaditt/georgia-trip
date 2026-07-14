@@ -2477,3 +2477,39 @@ a:hover { color: var(--wine-light); }
   border-color: var(--wine);
   color: var(--wine);
 }
+
+/* --- Trip-wide Notes page --- */
+.trip-notes-card {
+  background: var(--white);
+  border: 1px solid var(--stone-mid);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.trip-notes-textarea {
+  width: 100%;
+  min-height: 50vh;
+  border: 1px solid var(--stone-mid);
+  border-radius: var(--radius-md);
+  background: var(--stone-light);
+  padding: var(--space-md);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--charcoal);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+.trip-notes-textarea:focus {
+  border-color: var(--wine);
+  background: var(--white);
+}
+
+.trip-notes-footer {
+  margin-top: var(--space-sm);
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  color: var(--charcoal-light);
+}

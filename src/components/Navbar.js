@@ -28,6 +28,7 @@ export default function Navbar() {
     { href: "/mockplan", label: "Proposal", icon: "🧭" },
     { href: "/plan", label: "Day Plan", icon: "📋" },
     { href: "/calendar", label: "Calendar", icon: "🗓️" },
+    { href: "/notes", label: "Notes", icon: "📝" },
     ...(isAdmin ? [{ href: "/admin", label: "Admin", icon: "🔒" }] : []),
   ];
 
