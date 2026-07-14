@@ -73,7 +73,7 @@ export default function CommentBox({ comments, experienceId }) {
         <input
           type="text"
           className="comment-input"
-          placeholder="Add a note..."
+          placeholder="Add a comment..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           maxLength={500}

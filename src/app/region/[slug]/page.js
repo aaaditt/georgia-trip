@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { REGIONS } from "@/lib/data";
 import { useVotes, useRatings, useComments, useExperiences } from "@/lib/hooks";
+import { usePlaceNotes } from "@/lib/notes";
 import Navbar from "@/components/Navbar";
 import ExperienceCard from "@/components/ExperienceCard";
 import AddPlaceForm from "@/components/AddPlaceForm";
@@ -17,6 +18,7 @@ export default function RegionPage() {
   const { votes } = useVotes();
   const { ratings } = useRatings();
   const { comments } = useComments();
+  const { notes: placeNotes } = usePlaceNotes();
   const { experiences, refetch: refetchExperiences } = useExperiences();
 
   useEffect(() => {
@@ -104,6 +106,7 @@ export default function RegionPage() {
               votes={votes}
               ratings={ratings}
               comments={comments}
+              notes={placeNotes}
             />
           </div>
         ))}

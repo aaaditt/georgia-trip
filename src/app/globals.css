@@ -672,6 +672,125 @@ a:hover { color: var(--wine-light); }
   transform: none;
 }
 
+/* --- Place Notes (sticky note) --- */
+.note-box {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(212, 168, 83, 0.1);
+  border: 1px solid rgba(212, 168, 83, 0.35);
+  border-radius: var(--radius-md);
+}
+
+.note-box-empty {
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  color: var(--charcoal-light);
+  background: var(--stone-light);
+  border: 1px dashed var(--stone-dark);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.note-box-empty:hover {
+  border-color: var(--gold);
+  color: var(--charcoal-mid);
+}
+
+.note-box-editing {
+  background: var(--white);
+  border-color: var(--stone-mid);
+}
+
+.note-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xs);
+}
+
+.note-box-label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--charcoal-mid);
+}
+
+.note-edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  color: var(--charcoal-light);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+.note-edit-btn:hover {
+  color: var(--wine);
+  background: rgba(139, 34, 82, 0.08);
+}
+
+.note-text {
+  font-size: 0.88rem;
+  color: var(--charcoal-mid);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.note-meta {
+  display: block;
+  margin-top: var(--space-xs);
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  color: var(--charcoal-light);
+}
+
+.note-textarea {
+  width: 100%;
+  min-height: 60px;
+  border: 1px solid var(--stone-mid);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  outline: none;
+  resize: vertical;
+  background: var(--stone-light);
+}
+.note-textarea:focus {
+  border-color: var(--wine);
+  background: var(--white);
+}
+
+.note-box-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.note-save-btn,
+.note-cancel-btn {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  border: 1px solid var(--stone-mid);
+  background: var(--stone-light);
+  color: var(--charcoal-mid);
+}
+.note-save-btn {
+  background: var(--wine);
+  border-color: var(--wine);
+  color: var(--white);
+}
+.note-save-btn:hover { background: var(--wine-light); }
+.note-save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.note-cancel-btn:hover { border-color: var(--stone-dark); }
+
 /* --- Voter Avatars --- */
 .voter-avatars {
   display: flex;

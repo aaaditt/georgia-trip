@@ -20,12 +20,15 @@ import VoteButtons from "./VoteButtons";
 import StarRating from "./StarRating";
 import VoteSummary from "./VoteSummary";
 import CommentBox from "./CommentBox";
+import PlaceNoteBox from "./PlaceNoteBox";
+import { getPlaceNote } from "@/lib/notes";
 
 export default function ExperienceCard({
   experience,
   votes,
   ratings,
   comments,
+  notes,
 }) {
   const { currentUser } = useUser();
 
@@ -199,6 +202,12 @@ export default function ExperienceCard({
           </div>
         </div>
       )}
+
+      {/* Notes */}
+      <PlaceNoteBox
+        note={getPlaceNote(notes, experience.id)}
+        experienceId={experience.id}
+      />
 
       {/* Comments */}
       <CommentBox comments={expComments} experienceId={experience.id} />
