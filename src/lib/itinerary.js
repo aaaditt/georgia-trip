@@ -62,6 +62,7 @@ function mapDbItem(row) {
     experienceId: row.experience_id,
     transportMode: row.transport_mode,
     title: row.title,
+    notes: row.notes,
     day: row.day,
     startMin: row.start_min,
     durationMin: row.duration_min,
@@ -76,6 +77,7 @@ function toDbItem(item) {
     experience_id: item.experienceId ?? null,
     transport_mode: item.transportMode ?? null,
     title: item.title ?? null,
+    notes: item.notes ?? null,
     day: item.day,
     start_min: item.startMin,
     duration_min: item.durationMin,
@@ -136,6 +138,7 @@ export function useItinerary() {
     if (patch.startMin !== undefined) db.start_min = patch.startMin;
     if (patch.durationMin !== undefined) db.duration_min = patch.durationMin;
     if (patch.title !== undefined) db.title = patch.title;
+    if (patch.notes !== undefined) db.notes = patch.notes;
     db.updated_at = new Date().toISOString();
     const { error } = await supabase
       .from("itinerary_items")
