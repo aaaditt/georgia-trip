@@ -341,6 +341,23 @@ export default function CalendarPage() {
   // Actually editable right now = allowed to edit AND deliberately unlocked
   const editing = canEdit && unlocked;
 
+  // Bulk-delete every rubber-band-selected block with Delete/Backspace,
+  // but never while the user is typing in an input/textarea, and never
+  // outside edit mode.
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (!editing || selectedIds.size === 0) return;
+      if (e.key !== "Delete" && e.key !== "Backspace") return;
+      const tag = document.activeElement?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      e.preventDefault();
+      selectedIds.forEach((id) => removeItem(id));
+      setSelectedIds(new Set());
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [editing, selectedIds, removeItem]);
+
   // ---- drag mechanics (direct DOM updates, React state only on drop) ----
 
   function resolveDrop(clientX, clientY, durationMin) {
@@ -889,6 +906,29 @@ export default function CalendarPage() {
             )}
             <button className="cal-panel-close" onClick={() => setSelectedId(null)}>
               Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {editing && selectedIds.size > 0 && (
+        <div className="cal-bulk-bar">
+          <span className="cal-bulk-bar-text">{selectedIds.size} selected</span>
+          <div className="cal-bulk-bar-actions">
+            <button
+              className="cal-bulk-bar-delete"
+              onClick={() => {
+                selectedIds.forEach((id) => removeItem(id));
+                setSelectedIds(new Set());
+              }}
+            >
+              🗑 Delete
+            </button>
+            <button
+              className="cal-bulk-bar-clear"
+              onClick={() => setSelectedIds(new Set())}
+            >
+              Clear
             </button>
           </div>
         </div>

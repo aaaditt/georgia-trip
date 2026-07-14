@@ -2502,6 +2502,59 @@ a:hover { color: var(--wine-light); }
   color: var(--wine);
 }
 
+/* --- Calendar bulk-select action bar --- */
+.cal-bulk-bar {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-md);
+  transform: translateX(-50%);
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: var(--wine);
+  color: var(--white);
+  border-radius: var(--radius-full);
+  padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-lg);
+  box-shadow: var(--shadow-xl);
+  animation: fadeSlideUp 0.2s var(--ease-out);
+}
+
+.cal-bulk-bar-text {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cal-bulk-bar-actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.cal-bulk-bar-delete,
+.cal-bulk-bar-clear {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+  transition: all var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.cal-bulk-bar-delete {
+  background: var(--white);
+  color: var(--wine);
+  border-color: var(--white);
+}
+.cal-bulk-bar-delete:hover { background: rgba(255, 255, 255, 0.85); }
+.cal-bulk-bar-clear:hover { background: rgba(255, 255, 255, 0.22); }
+
 /* --- Trip-wide Notes page --- */
 .trip-notes-card {
   background: var(--white);
