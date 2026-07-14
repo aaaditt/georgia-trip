@@ -154,6 +154,7 @@ existing token scale, not spec'd line-by-line here.
 No test framework in this repo (`package.json` has no test script) — this
 gets verified manually: `npm run lint`, then a run through on the dev
 server covering:
+
 - Add/edit/clear a place note; confirm it shows on the card and persists
   after reload.
 - Add a note to a calendar place block, a transport block, and a custom
