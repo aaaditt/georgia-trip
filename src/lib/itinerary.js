@@ -22,6 +22,25 @@ export const TRIP_DAYS = Array.from({ length: TRIP_DAYS_COUNT }, (_, i) => {
   return d.toISOString().slice(0, 10);
 });
 
+// Where the family sleeps each night (v4 itinerary) — shown in the
+// calendar day headers so every column answers "where are we that day?"
+export const DAY_BASES = {
+  "2026-08-03": { label: "Tbilisi", regionId: "tbilisi" },
+  "2026-08-04": { label: "Sighnaghi", regionId: "kakheti" },
+  "2026-08-05": { label: "Sighnaghi", regionId: "kakheti" },
+  "2026-08-06": { label: "Stepantsminda", regionId: "gudauri-kazbegi" },
+  "2026-08-07": { label: "Gudauri", regionId: "gudauri-kazbegi" },
+  "2026-08-08": { label: "Gori", regionId: "uplistsikhe" },
+  "2026-08-09": { label: "Kutaisi", regionId: "kutaisi-imereti" },
+  "2026-08-10": { label: "Mestia", regionId: "svaneti" },
+  "2026-08-11": { label: "Mestia", regionId: "svaneti" },
+  "2026-08-12": { label: "Mestia", regionId: "svaneti" },
+  "2026-08-13": { label: "Kutaisi", regionId: "kutaisi-imereti" },
+  "2026-08-14": { label: "Tbilisi", regionId: "tbilisi" },
+  "2026-08-15": { label: "Tbilisi", regionId: "tbilisi" },
+  "2026-08-16": { label: "Fly home ✈️", regionId: null },
+};
+
 export function formatDay(isoDate) {
   const d = new Date(isoDate + "T00:00:00");
   return {

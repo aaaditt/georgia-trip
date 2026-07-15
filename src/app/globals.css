@@ -2008,6 +2008,28 @@ a:hover { color: var(--wine-light); }
 }
 
 /* grid */
+/* colour legend above the grid */
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: var(--space-sm) 2px;
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  color: var(--charcoal-mid);
+}
+.cal-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.cal-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
 .cal-scroller {
   overflow: auto;
   height: 64vh;
@@ -2039,7 +2061,7 @@ a:hover { color: var(--wine-light); }
   position: sticky;
   top: 0;
   z-index: 21;
-  height: 48px;
+  height: 64px; /* = HEADER_H in calendar/page.js */
   background: var(--stone-light);
   border-bottom: 1px solid var(--stone-mid);
 }
@@ -2075,25 +2097,52 @@ a:hover { color: var(--wine-light); }
   position: sticky;
   top: 0;
   z-index: 10;
-  height: 48px;
+  height: 64px; /* = HEADER_H in calendar/page.js */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1px;
   background: var(--cream);
-  border-bottom: 1px solid var(--stone-mid);
-  font-family: var(--font-heading);
+  border-bottom: 2px solid
+    color-mix(in srgb, var(--base-color, var(--stone-mid)) 55%, var(--stone-mid));
 }
 .cal-day-weekday {
+  font-family: var(--font-heading);
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--charcoal-light);
 }
 .cal-day-date {
+  font-family: var(--font-heading);
   font-size: 0.92rem;
   font-weight: 700;
   color: var(--charcoal);
+}
+/* the overnight base town — every column answers "where are we?" */
+.cal-day-base {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-heading);
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: color-mix(in srgb, var(--base-color, var(--charcoal-light)) 80%, var(--charcoal));
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal-day-base::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--base-color, var(--stone-dark));
 }
 
 .cal-day-body.editing {
@@ -2114,7 +2163,20 @@ a:hover { color: var(--wine-light); }
       transparent 0 22px,
       rgba(44, 44, 44, 0.035) 22px 23px,
       transparent 23px 44px
+    ),
+    /* sleeping hours (before 7am, after 10pm) recede so the day pops;
+       308px = 7h × 44px/h, 968px = 22h × 44px/h */
+    linear-gradient(
+      to bottom,
+      rgba(58, 97, 112, 0.07) 0 308px,
+      transparent 308px 968px,
+      rgba(58, 97, 112, 0.07) 968px 1056px
     );
+}
+
+/* faint zebra between day columns so the eye tracks a single day */
+.cal-day:nth-child(even) .cal-day-body {
+  background-color: rgba(139, 115, 85, 0.04);
 }
 
 .cal-block {
@@ -2168,6 +2230,47 @@ a:hover { color: var(--wine-light); }
   font-size: 0.66rem;
   color: var(--charcoal-light);
   margin-top: 1px;
+}
+
+.cal-block:not(.readonly):hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* transport legs read as dashed "in transit" connectors, not activities */
+.cal-block.kind-transport {
+  border-style: dashed;
+  border-left-width: 1px;
+  background-color: color-mix(in srgb, var(--block-color, var(--wine)) 5%, var(--white));
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 7px,
+    color-mix(in srgb, var(--block-color, var(--wine)) 7%, transparent) 7px 14px
+  );
+  box-shadow: none;
+}
+.cal-block.kind-transport .cal-block-name {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--charcoal-mid);
+}
+
+/* checkpoints/meals sit quieter than places */
+.cal-block.kind-custom {
+  background: color-mix(in srgb, var(--block-color, var(--wine)) 8%, var(--white));
+}
+.cal-block.kind-custom .cal-block-name {
+  font-weight: 500;
+}
+
+/* a block carrying a note — tap it to read */
+.cal-block-note-dot {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 0.58rem;
+  line-height: 1;
+  opacity: 0.85;
+  pointer-events: none;
 }
 
 .cal-block-resize {

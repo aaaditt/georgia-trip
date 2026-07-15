@@ -14,6 +14,7 @@ import {
 import {
   useItinerary,
   TRIP_DAYS,
+  DAY_BASES,
   TRANSPORT_MODES,
   SLOT_MIN,
   formatDay,
@@ -27,7 +28,7 @@ import Link from "next/link";
 
 // Grid geometry (keep in sync with the .cal-* styles in globals.css)
 const SLOT_PX = 22; // one 30-min slot
-const HEADER_H = 48; // sticky day header height
+const HEADER_H = 64; // sticky day header height (weekday + date + base town)
 const COL_W = 160; // fixed day column width
 const REGION_COLORS = {
   tbilisi: "#4A7C8F",
@@ -44,6 +45,23 @@ const CUSTOM_COLOR = "#A87E2F";
 
 const snapSlot = (min) => Math.round(min / SLOT_MIN) * SLOT_MIN;
 const clamp = (n, lo, hi) => Math.min(Math.max(n, lo), hi);
+
+// Give custom checkpoints a meaningful emoji from their title, so meals,
+// hotels and rests read at a glance instead of a wall of 📌s.
+const CUSTOM_EMOJI_RULES = [
+  [/land/i, "🛬"],
+  [/flight|fly|airport/i, "✈️"],
+  [/breakfast|lunch|dinner|meal|snack/i, "🍽️"],
+  [/check.?out/i, "🧳"],
+  [/check.?in/i, "🏨"],
+  [/rest|relax|nap/i, "😴"],
+  [/fortress|castle/i, "🏰"],
+  [/pick up car|rental/i, "🚗"],
+];
+function customEmoji(title) {
+  for (const [re, emoji] of CUSTOM_EMOJI_RULES) if (re.test(title || "")) return emoji;
+  return "📌";
+}
 
 function itemColor(item) {
   if (item.kind === "transport") return TRANSPORT_COLOR;
@@ -260,9 +278,14 @@ export default function CalendarPage() {
             emoji: mode?.emoji || "🚗",
           };
         }
-        return { ...it, name: it.title || "Event", emoji: "📌" };
+        return { ...it, name: it.title || "Event", emoji: customEmoji(it.title) };
       });
   }, [items, expById]);
+
+  const usedRegionIds = useMemo(
+    () => new Set(blocks.map((b) => b.regionId).filter(Boolean)),
+    [blocks]
+  );
 
   const layoutByDay = useMemo(() => {
     const map = {};
@@ -764,6 +787,29 @@ export default function CalendarPage() {
         </div>
         )}
 
+        {/* Colour legend — what the block colours mean */}
+        {blocks.length > 0 && (
+          <div className="cal-legend">
+            {REGIONS.filter((r) => usedRegionIds.has(r.id)).map((r) => (
+              <span key={r.id} className="cal-legend-item">
+                <span
+                  className="cal-legend-dot"
+                  style={{ background: REGION_COLORS[r.id] }}
+                />
+                {r.name.split(" ")[0].replace("&", "")}
+              </span>
+            ))}
+            <span className="cal-legend-item">
+              <span className="cal-legend-dot" style={{ background: TRANSPORT_COLOR }} />
+              Drive / taxi
+            </span>
+            <span className="cal-legend-item">
+              <span className="cal-legend-dot" style={{ background: CUSTOM_COLOR }} />
+              Meals & checkpoints
+            </span>
+          </div>
+        )}
+
         {/* Grid */}
         <div className="cal-scroller" ref={scrollerRef}>
           <div className="cal-inner">
@@ -782,13 +828,19 @@ export default function CalendarPage() {
                 const f = formatDay(day);
                 const dayBlocks = blocks.filter((b) => b.day === day);
                 const lanes = layoutByDay[day];
+                const base = DAY_BASES[day];
+                const baseColor = base?.regionId ? REGION_COLORS[base.regionId] : null;
                 return (
                   <div key={day} className="cal-day">
-                    <div className="cal-day-head">
+                    <div
+                      className="cal-day-head"
+                      style={baseColor ? { "--base-color": baseColor } : undefined}
+                    >
                       <span className="cal-day-weekday">{f.weekday}</span>
                       <span className="cal-day-date">
                         {f.date} {f.month}
                       </span>
+                      {base && <span className="cal-day-base">{base.label}</span>}
                     </div>
                     <div
                       className={`cal-day-body ${editing ? "editing" : ""}`}
@@ -801,7 +853,7 @@ export default function CalendarPage() {
                         return (
                           <div
                             key={b.id}
-                            className={`cal-block ${selectedId === b.id ? "selected" : ""} ${selectedIds.has(b.id) ? "multi-selected" : ""} ${editing ? "" : "readonly"}`}
+                            className={`cal-block kind-${b.kind} ${selectedId === b.id ? "selected" : ""} ${selectedIds.has(b.id) ? "multi-selected" : ""} ${editing ? "" : "readonly"}`}
                             style={{
                               top: (b.startMin / SLOT_MIN) * SLOT_PX,
                               height: h - 2,
@@ -819,6 +871,7 @@ export default function CalendarPage() {
                                 {formatTime(b.startMin)}–{formatTime(b.startMin + b.durationMin)}
                               </span>
                             )}
+                            {b.notes && <span className="cal-block-note-dot">📝</span>}
                             {editing && (
                               <div className="cal-block-resize" {...resizeHandlers(b)} />
                             )}
