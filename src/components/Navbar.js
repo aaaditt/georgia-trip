@@ -2,8 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 import { useAdmin } from "@/context/AdminContext";
 import AdminGateModal from "./AdminGateModal";
