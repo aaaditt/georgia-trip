@@ -44,8 +44,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
-.env*
-
 # bash crash dumps (Windows Git Bash)
 bash.exe.stackdump
