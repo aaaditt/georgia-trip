@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 
+/**
+ * Interactive 1–5 star rating with hover preview.
+ * @param {{ currentRating: number, onRate: (star: number) => void }} props
+ */
 export default function StarRating({ currentRating, onRate }) {
   const [hovered, setHovered] = useState(0);
 
