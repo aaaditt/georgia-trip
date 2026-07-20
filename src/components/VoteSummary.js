@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Horizontal stacked-bar showing the go / maybe / skip vote breakdown.
+ * @param {{ voteCounts: { go: number, maybe: number, skip: number, total: number } }} props
+ */
 export default function VoteSummary({ voteCounts }) {
   const { go, maybe, skip, total } = voteCounts;
 
