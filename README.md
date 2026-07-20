@@ -15,7 +15,7 @@ Vote, rate, and comment on 38+ experiences across 7 regions to build the perfect
 
 ## Tech Stack
 
-- **Next.js 14** (App Router)
+- **Next.js 16** (App Router) + **React 19**
 - **Supabase** (PostgreSQL + Realtime)
 - **Vanilla CSS** (custom design system)
 - **Vercel** (deployment)
