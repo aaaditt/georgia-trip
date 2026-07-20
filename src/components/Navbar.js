@@ -48,7 +48,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" aria-label="Main navigation">
       <div className="navbar-inner">
         <Link href="/dashboard" className="navbar-brand" onClick={handleBrandClick}>
           <span className="brand-flag">🇬🇪</span>
