@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Three-button row: Want to go / Maybe / Skip.
+ * @param {{ currentVote: string|null, onVote: (key: string) => void }} props
+ */
 export default function VoteButtons({ currentVote, onVote }) {
   const options = [
     { key: "go", emoji: "✅", label: "Want to go" },
