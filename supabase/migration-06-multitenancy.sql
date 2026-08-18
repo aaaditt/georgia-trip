@@ -25,6 +25,10 @@
 --
 -- Run in Supabase Dashboard > SQL Editor, after migration-05-notes.sql.
 
+-- Created up front (also re-declared in §2) because §1's invite-attempt
+-- throttle table below needs to live in `private` before that section runs.
+CREATE SCHEMA IF NOT EXISTS private;
+
 -- ============================================================
 -- 1. Core multi-tenant tables
 -- ============================================================
@@ -70,10 +74,15 @@ CREATE TABLE IF NOT EXISTS trip_members (
   UNIQUE (trip_id, user_id)
 );
 
+-- gen_random_bytes() below needs pgcrypto — Postgres core's random()/md5()
+-- is not a CSPRNG and must not be used to generate anything
+-- access-granting (invite codes, tokens, etc).
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
+
 CREATE TABLE IF NOT EXISTS trip_invites (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   trip_id UUID NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
-  code TEXT NOT NULL UNIQUE DEFAULT substr(md5(random()::text || clock_timestamp()::text), 1, 8),
+  code TEXT NOT NULL UNIQUE DEFAULT encode(extensions.gen_random_bytes(5), 'hex'),
   email TEXT,
   role TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('admin', 'member')),
   invited_by UUID REFERENCES auth.users(id),
@@ -126,6 +135,16 @@ CREATE TRIGGER on_trip_created
   AFTER INSERT ON trips
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_trip();
 
+-- Failed-attempt log for redeem_trip_invite() below, so guessing codes is
+-- throttled per caller — CSPRNG entropy alone isn't enough once an RPC is
+-- reachable by any authenticated account with no attempt limit.
+CREATE TABLE IF NOT EXISTS private.trip_invite_attempts (
+  id BIGSERIAL PRIMARY KEY,
+  user_id UUID NOT NULL,
+  attempted_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS trip_invite_attempts_user_time_idx ON private.trip_invite_attempts (user_id, attempted_at);
+
 -- Join-by-code RPC (called from the app as supabase.rpc('redeem_trip_invite', { p_code })).
 -- SECURITY DEFINER so an unaffiliated authenticated user can look up an
 -- invite by code without a standing SELECT policy on trip_invites; the
@@ -136,10 +155,18 @@ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
 DECLARE
   v_invite public.trip_invites;
   v_profile public.profiles;
+  v_recent_failures INT;
 BEGIN
+  SELECT COUNT(*) INTO v_recent_failures FROM private.trip_invite_attempts
+    WHERE user_id = (SELECT auth.uid()) AND attempted_at > NOW() - INTERVAL '10 minutes';
+  IF v_recent_failures >= 10 THEN
+    RAISE EXCEPTION 'Too many invite attempts — please try again in a few minutes';
+  END IF;
+
   SELECT * INTO v_invite FROM public.trip_invites
     WHERE code = p_code AND accepted_by IS NULL AND (expires_at IS NULL OR expires_at > NOW());
   IF NOT FOUND THEN
+    INSERT INTO private.trip_invite_attempts (user_id) VALUES ((SELECT auth.uid()));
     RAISE EXCEPTION 'Invite code invalid or expired';
   END IF;
 
