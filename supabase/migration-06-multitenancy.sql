@@ -30,6 +30,70 @@
 CREATE SCHEMA IF NOT EXISTS private;
 
 -- ============================================================
+-- 0. Defensive: recreate any of migrations 03/04/05's tables that turn
+--    out to be missing on THIS project. Discovered live that
+--    migration-04-calendar-access.sql was never actually applied here
+--    even though itinerary_items/votes/etc. were — the repo's migration
+--    file history doesn't necessarily match what's really in the
+--    database. Everything below is IF NOT EXISTS, so this is a no-op on
+--    a project where these already exist correctly.
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS itinerary_items (
+  id TEXT PRIMARY KEY,
+  kind TEXT NOT NULL CHECK (kind IN ('place', 'transport', 'custom')),
+  experience_id TEXT,
+  transport_mode TEXT,
+  title TEXT,
+  day DATE NOT NULL,
+  start_min INT NOT NULL CHECK (start_min >= 0 AND start_min < 1440),
+  duration_min INT NOT NULL DEFAULT 60 CHECK (duration_min >= 30),
+  created_by INT REFERENCES users(id),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS calendar_access (
+  user_id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS place_notes (
+  id SERIAL PRIMARY KEY,
+  experience_id TEXT REFERENCES experiences(id) ON DELETE CASCADE,
+  text TEXT NOT NULL,
+  updated_by INT REFERENCES users(id),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (experience_id)
+);
+
+CREATE TABLE IF NOT EXISTS trip_notes (
+  id INT PRIMARY KEY,
+  text TEXT NOT NULL,
+  updated_by INT REFERENCES users(id),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE itinerary_items; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE calendar_access; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE place_notes; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE trip_notes; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+-- RLS gets enabled here unconditionally (idempotent either way) rather
+-- than assumed-already-on from earlier migrations, for every table §7
+-- writes policies against — same reasoning as above: don't trust that
+-- prior migration files were actually run on this project.
+ALTER TABLE regions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE experiences ENABLE ROW LEVEL SECURITY;
+ALTER TABLE votes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ratings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE itinerary_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE calendar_access ENABLE ROW LEVEL SECURITY;
+ALTER TABLE place_notes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE trip_notes ENABLE ROW LEVEL SECURITY;
+
+-- ============================================================
 -- 1. Core multi-tenant tables
 -- ============================================================
 
