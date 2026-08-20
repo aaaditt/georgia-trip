@@ -11,6 +11,8 @@ export type TripSummary = {
   name: string;
   destination: string | null;
   cover_emoji: string | null;
+  start_date: string | null;
+  end_date: string | null;
 };
 
 export type ActiveMember = {
@@ -57,7 +59,7 @@ export function TripProvider({ children }: { children: ReactNode }) {
     }
     const { data, error } = await supabase
       .from('trip_members')
-      .select('trips(id, name, destination, cover_emoji)')
+      .select('trips(id, name, destination, cover_emoji, start_date, end_date)')
       .eq('user_id', userId)
       .eq('status', 'active')
       .overrideTypes<TripMemberRow[], { merge: false }>();

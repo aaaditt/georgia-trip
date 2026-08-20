@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { CommentBox } from '@/components/comment-box';
+import { PlaceNoteBox } from '@/components/place-note-box';
 import { StarRating } from '@/components/star-rating';
 import { TagPill } from '@/components/tag-pill';
 import { ThemedText } from '@/components/themed-text';
@@ -22,6 +23,7 @@ import {
   type Rating,
   type Vote,
 } from '@/lib/hooks';
+import { getPlaceNote, upsertPlaceNote, type PlaceNote } from '@/lib/notes';
 
 export function ExperienceCard({
   experience,
@@ -30,6 +32,7 @@ export function ExperienceCard({
   votes,
   ratings,
   comments,
+  placeNotes,
 }: {
   experience: Experience;
   tripId: string;
@@ -37,6 +40,7 @@ export function ExperienceCard({
   votes: Vote[];
   ratings: Rating[];
   comments: Comment[];
+  placeNotes: PlaceNote[];
 }) {
   const theme = useTheme();
   const counts = getVoteCounts(votes, experience.id);
@@ -92,6 +96,13 @@ export function ExperienceCard({
         comments={experienceComments}
         onAdd={async (text) => {
           await addComment(tripId, memberId, experience.id, text);
+        }}
+      />
+
+      <PlaceNoteBox
+        note={getPlaceNote(placeNotes, experience.id)}
+        onSave={async (text) => {
+          await upsertPlaceNote(tripId, memberId, experience.id, text);
         }}
       />
     </View>

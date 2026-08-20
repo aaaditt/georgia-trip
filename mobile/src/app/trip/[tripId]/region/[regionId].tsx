@@ -8,6 +8,7 @@ import { Spacing } from '@/constants/theme';
 import { useTrip } from '@/context/TripContext';
 import { useTheme } from '@/hooks/use-theme';
 import { addExperience, useComments, useExperiences, useRatings, useRegions, useVotes } from '@/lib/hooks';
+import { usePlaceNotes } from '@/lib/notes';
 
 export default function RegionScreen() {
   const { regionId } = useLocalSearchParams<{ tripId: string; regionId: string }>();
@@ -19,6 +20,7 @@ export default function RegionScreen() {
   const { votes } = useVotes(activeTripId);
   const { ratings } = useRatings(activeTripId);
   const { comments } = useComments(activeTripId);
+  const { notes: placeNotes } = usePlaceNotes(activeTripId);
 
   const region = regions.find((r) => r.id === regionId);
   const regionExperiences = experiences.filter((e) => e.regionId === regionId);
@@ -55,6 +57,7 @@ export default function RegionScreen() {
                 votes={votes}
                 ratings={ratings}
                 comments={comments}
+                placeNotes={placeNotes}
               />
             </View>
           ) : null

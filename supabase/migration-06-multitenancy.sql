@@ -480,6 +480,10 @@ CREATE INDEX IF NOT EXISTS place_notes_trip_id_idx ON place_notes (trip_id);
 CREATE INDEX IF NOT EXISTS trip_notes_trip_id_idx ON trip_notes (trip_id);
 
 CREATE UNIQUE INDEX IF NOT EXISTS calendar_access_trip_member_uidx ON calendar_access (trip_id, member_id);
+-- One trip_notes row per trip going forward (supersedes the old
+-- hardcoded id=1 pin) — the mobile app's notes.ts upserts on trip_id, so
+-- this needs a real unique constraint to be a valid ON CONFLICT target.
+CREATE UNIQUE INDEX IF NOT EXISTS trip_notes_trip_id_uidx ON trip_notes (trip_id);
 CREATE UNIQUE INDEX IF NOT EXISTS votes_member_experience_uidx ON votes (member_id, experience_id) WHERE member_id IS NOT NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS ratings_member_experience_uidx ON ratings (member_id, experience_id) WHERE member_id IS NOT NULL;
 
