@@ -28,9 +28,16 @@ export default function TripPickerScreen() {
             Your trips
           </ThemedText>
         </View>
-        <Pressable onPress={signOut}>
-          <ThemedText type="link">Log out</ThemedText>
-        </Pressable>
+        <View style={styles.headerActions}>
+          <Link href="/(trips)/account" asChild>
+            <Pressable>
+              <ThemedText type="link">Account</ThemedText>
+            </Pressable>
+          </Link>
+          <Pressable onPress={signOut}>
+            <ThemedText type="link">Log out</ThemedText>
+          </Pressable>
+        </View>
       </View>
 
       <FlatList
@@ -91,6 +98,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: Spacing.lg,
   },
+  headerActions: { flexDirection: 'row', gap: Spacing.md },
   list: { gap: Spacing.sm, flexGrow: 1 },
   empty: { textAlign: 'center', marginTop: Spacing.xl },
   card: {

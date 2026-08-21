@@ -11,8 +11,9 @@ import { addRegion, useExperiences, useRegions, useTripMembers, useVotes } from 
 
 export default function DashboardScreen() {
   const theme = useTheme();
-  const { trips, activeTripId } = useTrip();
+  const { trips, activeTripId, activeMember } = useTrip();
   const trip = trips.find((t) => t.id === activeTripId);
+  const isAdmin = activeMember?.role === 'owner' || activeMember?.role === 'admin';
 
   const { regions, loading: regionsLoading } = useRegions(activeTripId);
   const { experiences } = useExperiences(activeTripId);
@@ -55,7 +56,17 @@ export default function DashboardScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View style={styles.header}>
-            <ThemedText type="title">{trip?.cover_emoji ?? '🧳'} {trip?.name ?? 'Trip'}</ThemedText>
+            <View style={styles.titleRow}>
+              <ThemedText type="title" style={{ flex: 1 }}>
+                {trip?.cover_emoji ?? '🧳'} {trip?.name ?? 'Trip'}
+              </ThemedText>
+              {isAdmin && activeTripId && (
+                <Pressable
+                  onPress={() => router.push({ pathname: '/trip/[tripId]/admin', params: { tripId: activeTripId } })}>
+                  <ThemedText type="link">⚙️ Admin</ThemedText>
+                </Pressable>
+              )}
+            </View>
             {trip?.destination && (
               <ThemedText type="default" themeColor="textSecondary">
                 {trip.destination}
@@ -154,6 +165,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   list: { padding: Spacing.lg, gap: Spacing.sm },
   header: { gap: Spacing.sm, marginBottom: Spacing.sm },
+  titleRow: { flexDirection: 'row', alignItems: 'flex-start' },
   sectionTitle: { marginTop: Spacing.md },
   empty: { textAlign: 'center', marginTop: Spacing.xl },
   cardWrap: { marginBottom: Spacing.sm },

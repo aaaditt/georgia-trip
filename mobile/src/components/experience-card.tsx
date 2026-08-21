@@ -24,6 +24,7 @@ import {
   type Vote,
 } from '@/lib/hooks';
 import { getPlaceNote, upsertPlaceNote, type PlaceNote } from '@/lib/notes';
+import { blockMember, reportComment, useBlockedMemberIds } from '@/lib/moderation';
 
 export function ExperienceCard({
   experience,
@@ -48,7 +49,10 @@ export function ExperienceCard({
   const myRating = getMemberRating(ratings, memberId, experience.id);
   const avgRating = getAverageRating(ratings, experience.id);
   const experienceRatings = getRatingsForExperience(ratings, experience.id);
-  const experienceComments = getCommentsForExperience(comments, experience.id);
+  const { blockedIds } = useBlockedMemberIds(tripId, memberId);
+  const experienceComments = getCommentsForExperience(comments, experience.id).filter(
+    (c) => !blockedIds.has(c.member_id)
+  );
 
   return (
     <View style={[styles.card, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
@@ -94,9 +98,12 @@ export function ExperienceCard({
 
       <CommentBox
         comments={experienceComments}
+        myMemberId={memberId}
         onAdd={async (text) => {
           await addComment(tripId, memberId, experience.id, text);
         }}
+        onReport={(commentId) => reportComment(tripId, commentId, memberId)}
+        onBlock={(blockedMemberId) => blockMember(tripId, memberId, blockedMemberId)}
       />
 
       <PlaceNoteBox
