@@ -498,56 +498,90 @@ CREATE UNIQUE INDEX IF NOT EXISTS ratings_member_experience_uidx ON ratings (mem
 -- ============================================================
 
 DROP POLICY IF EXISTS "Allow all for anon" ON regions;
+DROP POLICY IF EXISTS "members read regions" ON regions;
 CREATE POLICY "members read regions" ON regions FOR SELECT TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members insert regions" ON regions;
 CREATE POLICY "members insert regions" ON regions FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members update regions" ON regions;
 CREATE POLICY "members update regions" ON regions FOR UPDATE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members delete regions" ON regions;
 CREATE POLICY "members delete regions" ON regions FOR DELETE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
 
 DROP POLICY IF EXISTS "Allow all for anon" ON experiences;
+DROP POLICY IF EXISTS "members read experiences" ON experiences;
 CREATE POLICY "members read experiences" ON experiences FOR SELECT TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members insert experiences" ON experiences;
 CREATE POLICY "members insert experiences" ON experiences FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members update experiences" ON experiences;
 CREATE POLICY "members update experiences" ON experiences FOR UPDATE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members delete experiences" ON experiences;
 CREATE POLICY "members delete experiences" ON experiences FOR DELETE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
 
 DROP POLICY IF EXISTS "Allow all for anon" ON votes;
+DROP POLICY IF EXISTS "members read votes" ON votes;
 CREATE POLICY "members read votes" ON votes FOR SELECT TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members insert own votes" ON votes;
 CREATE POLICY "members insert own votes" ON votes FOR INSERT TO authenticated WITH CHECK (member_id IN (SELECT private.my_member_ids(trip_id)));
+DROP POLICY IF EXISTS "members update own votes" ON votes;
 CREATE POLICY "members update own votes" ON votes FOR UPDATE TO authenticated USING (member_id IN (SELECT private.my_member_ids(trip_id)));
+DROP POLICY IF EXISTS "members delete own votes" ON votes;
 CREATE POLICY "members delete own votes" ON votes FOR DELETE TO authenticated USING (member_id IN (SELECT private.my_member_ids(trip_id)));
 
 DROP POLICY IF EXISTS "Allow all for anon" ON ratings;
+DROP POLICY IF EXISTS "members read ratings" ON ratings;
 CREATE POLICY "members read ratings" ON ratings FOR SELECT TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members insert own ratings" ON ratings;
 CREATE POLICY "members insert own ratings" ON ratings FOR INSERT TO authenticated WITH CHECK (member_id IN (SELECT private.my_member_ids(trip_id)));
+DROP POLICY IF EXISTS "members update own ratings" ON ratings;
 CREATE POLICY "members update own ratings" ON ratings FOR UPDATE TO authenticated USING (member_id IN (SELECT private.my_member_ids(trip_id)));
+DROP POLICY IF EXISTS "members delete own ratings" ON ratings;
 CREATE POLICY "members delete own ratings" ON ratings FOR DELETE TO authenticated USING (member_id IN (SELECT private.my_member_ids(trip_id)));
 
 DROP POLICY IF EXISTS "Allow all for anon" ON comments;
+DROP POLICY IF EXISTS "members read comments" ON comments;
 CREATE POLICY "members read comments" ON comments FOR SELECT TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members insert own comments" ON comments;
 CREATE POLICY "members insert own comments" ON comments FOR INSERT TO authenticated WITH CHECK (member_id IN (SELECT private.my_member_ids(trip_id)));
+DROP POLICY IF EXISTS "members update own comments" ON comments;
 CREATE POLICY "members update own comments" ON comments FOR UPDATE TO authenticated USING (member_id IN (SELECT private.my_member_ids(trip_id)));
+DROP POLICY IF EXISTS "members delete own comments" ON comments;
 CREATE POLICY "members delete own comments" ON comments FOR DELETE TO authenticated USING (member_id IN (SELECT private.my_member_ids(trip_id)));
 
 DROP POLICY IF EXISTS "Allow all for anon" ON itinerary_items;
+DROP POLICY IF EXISTS "members read itinerary" ON itinerary_items;
 CREATE POLICY "members read itinerary" ON itinerary_items FOR SELECT TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members insert itinerary" ON itinerary_items;
 CREATE POLICY "members insert itinerary" ON itinerary_items FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members update itinerary" ON itinerary_items;
 CREATE POLICY "members update itinerary" ON itinerary_items FOR UPDATE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members delete itinerary" ON itinerary_items;
 CREATE POLICY "members delete itinerary" ON itinerary_items FOR DELETE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
 
 DROP POLICY IF EXISTS "Allow all for anon" ON calendar_access;
+DROP POLICY IF EXISTS "members read calendar access" ON calendar_access;
 CREATE POLICY "members read calendar access" ON calendar_access FOR SELECT TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "admins manage calendar access" ON calendar_access;
 CREATE POLICY "admins manage calendar access" ON calendar_access FOR ALL TO authenticated
   USING ((SELECT private.is_trip_admin(trip_id))) WITH CHECK ((SELECT private.is_trip_admin(trip_id)));
 
 DROP POLICY IF EXISTS "Allow all for anon" ON place_notes;
+DROP POLICY IF EXISTS "members read place notes" ON place_notes;
 CREATE POLICY "members read place notes" ON place_notes FOR SELECT TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members insert place notes" ON place_notes;
 CREATE POLICY "members insert place notes" ON place_notes FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members update place notes" ON place_notes;
 CREATE POLICY "members update place notes" ON place_notes FOR UPDATE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members delete place notes" ON place_notes;
 CREATE POLICY "members delete place notes" ON place_notes FOR DELETE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
 
 DROP POLICY IF EXISTS "Allow all for anon" ON trip_notes;
+DROP POLICY IF EXISTS "members read trip notes" ON trip_notes;
 CREATE POLICY "members read trip notes" ON trip_notes FOR SELECT TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members insert trip notes" ON trip_notes;
 CREATE POLICY "members insert trip notes" ON trip_notes FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members update trip notes" ON trip_notes;
 CREATE POLICY "members update trip notes" ON trip_notes FOR UPDATE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
+DROP POLICY IF EXISTS "members delete trip notes" ON trip_notes;
 CREATE POLICY "members delete trip notes" ON trip_notes FOR DELETE TO authenticated USING ((SELECT private.is_trip_member(trip_id)));
 
 -- ============================================================
