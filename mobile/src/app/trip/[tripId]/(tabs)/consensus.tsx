@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
+import { Screen } from '@/components/screen';
 import { TagPill } from '@/components/tag-pill';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
@@ -33,7 +34,7 @@ export default function ConsensusScreen() {
   const regionName = (regionId: string) => regions.find((r) => r.id === regionId)?.name ?? '';
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <Screen edges={['top']} style={styles.container}>
       <FlatList
         data={ranked}
         keyExtractor={({ experience }) => experience.id}
@@ -54,7 +55,7 @@ export default function ConsensusScreen() {
           <RankedRow rank={index + 1} experience={item.experience} regionName={regionName(item.experience.regionId)} votes={votes} />
         )}
       />
-    </View>
+    </Screen>
   );
 }
 
@@ -101,7 +102,7 @@ function RankedRow({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {},
   list: { padding: Spacing.lg, gap: Spacing.sm },
   title: { marginBottom: Spacing.sm },
   empty: { textAlign: 'center', marginTop: Spacing.xl },

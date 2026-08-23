@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Fonts, Radius, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/AuthContext';
@@ -54,7 +55,7 @@ export default function AccountScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <Screen style={styles.container}>
       <ThemedText type="title">Account</ThemedText>
 
       <View style={styles.field}>
@@ -131,12 +132,12 @@ export default function AccountScreen() {
           </ThemedText>
         </Pressable>
       </View>
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: Spacing.lg, gap: Spacing.lg },
+  container: { padding: Spacing.lg, gap: Spacing.lg },
   field: { gap: Spacing.xs },
   blockedRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   input: { borderWidth: 1, borderRadius: Radius.md, paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm },

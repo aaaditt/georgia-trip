@@ -1,6 +1,7 @@
 import { Link, router } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Radius, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/AuthContext';
@@ -18,7 +19,7 @@ export default function TripPickerScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <Screen style={styles.container}>
       <View style={styles.header}>
         <View>
           <ThemedText type="subtitle">
@@ -87,12 +88,12 @@ export default function TripPickerScreen() {
           </Pressable>
         </Link>
       </View>
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: Spacing.lg },
+  container: { padding: Spacing.lg },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

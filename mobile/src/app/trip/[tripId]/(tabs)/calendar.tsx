@@ -6,6 +6,7 @@ import { CalendarPalette, type PalettePayload } from '@/components/calendar/pale
 import { DayPicker } from '@/components/calendar/day-picker';
 import { DetailSheet } from '@/components/calendar/detail-sheet';
 import { TimeGrid, type GridBlock } from '@/components/calendar/time-grid';
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Radius, Spacing } from '@/constants/theme';
 import { useTrip } from '@/context/TripContext';
@@ -112,16 +113,16 @@ export default function CalendarScreen() {
 
   if (!day) {
     return (
-      <View style={[styles.container, styles.centered, { backgroundColor: theme.background }]}>
+      <Screen edges={['top']} style={StyleSheet.flatten([styles.container, styles.centered])}>
         <ThemedText type="default" themeColor="textSecondary" style={styles.emptyText}>
           Set this trip's start and end dates (trip settings) to unlock the calendar.
         </ThemedText>
-      </View>
+      </Screen>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <Screen edges={['top']} style={styles.container}>
       <DayPicker days={days} activeDay={day} onSelect={setActiveDay} />
 
       {!canEdit && (
@@ -243,12 +244,12 @@ export default function CalendarScreen() {
           }}
         />
       )}
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {},
   centered: { alignItems: 'center', justifyContent: 'center', padding: Spacing.lg },
   emptyText: { textAlign: 'center' },
   lockCard: { margin: Spacing.md, padding: Spacing.md, borderRadius: Radius.lg, borderWidth: 1 },

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { RegionCard } from '@/components/region-card';
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Fonts, Radius, Spacing } from '@/constants/theme';
 import { useTrip } from '@/context/TripContext';
@@ -49,7 +50,7 @@ export default function DashboardScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <Screen edges={['top']} style={styles.container}>
       <FlatList
         data={regions}
         keyExtractor={(r) => r.id}
@@ -157,12 +158,12 @@ export default function DashboardScreen() {
           </View>
         }
       />
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {},
   list: { padding: Spacing.lg, gap: Spacing.sm },
   header: { gap: Spacing.sm, marginBottom: Spacing.sm },
   titleRow: { flexDirection: 'row', alignItems: 'flex-start' },

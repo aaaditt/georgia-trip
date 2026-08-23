@@ -2,6 +2,7 @@ import { Link } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Fonts, Radius, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/AuthContext';
@@ -27,61 +28,61 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: theme.background }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <ThemedText type="title" style={styles.brand}>
-          🧳 Trip Planner
-        </ThemedText>
-        <ThemedText type="default" themeColor="textSecondary" style={styles.subtitle}>
-          Log in to see your trips
-        </ThemedText>
+    <Screen>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+          <ThemedText type="title" style={styles.brand}>
+            🧳 Trip Planner
+          </ThemedText>
+          <ThemedText type="default" themeColor="textSecondary" style={styles.subtitle}>
+            Log in to see your trips
+          </ThemedText>
 
-        <View style={styles.form}>
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
-            placeholderTextColor={theme.textMuted}
-            autoCapitalize="none"
-            autoComplete="email"
-            keyboardType="email-address"
-            style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
-          />
-          <TextInput
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Password"
-            placeholderTextColor={theme.textMuted}
-            secureTextEntry
-            autoComplete="password"
-            style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
-          />
+          <View style={styles.form}>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Email"
+              placeholderTextColor={theme.textMuted}
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
+            />
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Password"
+              placeholderTextColor={theme.textMuted}
+              secureTextEntry
+              autoComplete="password"
+              style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
+            />
 
-          {error && (
-            <ThemedText type="small" themeColor="accent">
-              {error}
-            </ThemedText>
-          )}
+            {error && (
+              <ThemedText type="small" themeColor="accent">
+                {error}
+              </ThemedText>
+            )}
 
-          <Pressable
-            onPress={onSubmit}
-            disabled={submitting || !email || !password}
-            style={[styles.button, { backgroundColor: theme.accent, opacity: submitting ? 0.6 : 1 }]}>
-            <ThemedText type="default" style={{ color: '#fff', fontFamily: Fonts.headingMedium }}>
-              {submitting ? 'Logging in…' : 'Log in'}
-            </ThemedText>
-          </Pressable>
-
-          <Link href="/(auth)/sign-up" asChild>
-            <Pressable style={styles.linkRow}>
-              <ThemedText type="link">New here? Create an account</ThemedText>
+            <Pressable
+              onPress={onSubmit}
+              disabled={submitting || !email || !password}
+              style={[styles.button, { backgroundColor: theme.accent, opacity: submitting ? 0.6 : 1 }]}>
+              <ThemedText type="default" style={{ color: '#fff', fontFamily: Fonts.headingMedium }}>
+                {submitting ? 'Logging in…' : 'Log in'}
+              </ThemedText>
             </Pressable>
-          </Link>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+            <Link href="/(auth)/sign-up" asChild>
+              <Pressable style={styles.linkRow}>
+                <ThemedText type="link">New here? Create an account</ThemedText>
+              </Pressable>
+            </Link>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </Screen>
   );
 }
 

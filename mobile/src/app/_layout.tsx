@@ -12,9 +12,11 @@ import {
 } from '@expo-google-fonts/source-serif-4';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { TripProvider } from '@/context/TripContext';
@@ -62,13 +64,16 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <AuthProvider>
-          <TripProvider>
-            <RootNavigator />
-          </TripProvider>
-        </AuthProvider>
-      </ThemeProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <AuthProvider>
+            <TripProvider>
+              <RootNavigator />
+            </TripProvider>
+          </AuthProvider>
+        </ThemeProvider>
+        <StatusBar style="auto" />
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }

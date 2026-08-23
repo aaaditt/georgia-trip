@@ -2,6 +2,7 @@ import { Link } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Fonts, Radius, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/AuthContext';
@@ -34,7 +35,7 @@ export default function SignUpScreen() {
 
   if (checkEmail) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.background, justifyContent: 'center' }]}>
+      <Screen style={StyleSheet.flatten([styles.container, { justifyContent: 'center' }])}>
         <ThemedText type="title" style={styles.brand}>
           📬 Check your email
         </ThemedText>
@@ -48,74 +49,74 @@ export default function SignUpScreen() {
             </ThemedText>
           </Pressable>
         </Link>
-      </View>
+      </Screen>
     );
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: theme.background }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <ThemedText type="title" style={styles.brand}>
-          🧳 Trip Planner
-        </ThemedText>
-        <ThemedText type="default" themeColor="textSecondary" style={styles.subtitle}>
-          Create an account
-        </ThemedText>
+    <Screen>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+          <ThemedText type="title" style={styles.brand}>
+            🧳 Trip Planner
+          </ThemedText>
+          <ThemedText type="default" themeColor="textSecondary" style={styles.subtitle}>
+            Create an account
+          </ThemedText>
 
-        <View style={styles.form}>
-          <TextInput
-            value={displayName}
-            onChangeText={setDisplayName}
-            placeholder="Your name"
-            placeholderTextColor={theme.textMuted}
-            autoComplete="name"
-            style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
-          />
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
-            placeholderTextColor={theme.textMuted}
-            autoCapitalize="none"
-            autoComplete="email"
-            keyboardType="email-address"
-            style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
-          />
-          <TextInput
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Password (min. 6 characters)"
-            placeholderTextColor={theme.textMuted}
-            secureTextEntry
-            autoComplete="password-new"
-            style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
-          />
+          <View style={styles.form}>
+            <TextInput
+              value={displayName}
+              onChangeText={setDisplayName}
+              placeholder="Your name"
+              placeholderTextColor={theme.textMuted}
+              autoComplete="name"
+              style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
+            />
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Email"
+              placeholderTextColor={theme.textMuted}
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
+            />
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Password (min. 6 characters)"
+              placeholderTextColor={theme.textMuted}
+              secureTextEntry
+              autoComplete="password-new"
+              style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
+            />
 
-          {error && (
-            <ThemedText type="small" themeColor="accent">
-              {error}
-            </ThemedText>
-          )}
+            {error && (
+              <ThemedText type="small" themeColor="accent">
+                {error}
+              </ThemedText>
+            )}
 
-          <Pressable
-            onPress={onSubmit}
-            disabled={submitting || !email || !password || !displayName}
-            style={[styles.button, { backgroundColor: theme.accent, opacity: submitting ? 0.6 : 1 }]}>
-            <ThemedText type="default" style={{ color: '#fff', fontFamily: Fonts.headingMedium }}>
-              {submitting ? 'Creating account…' : 'Create account'}
-            </ThemedText>
-          </Pressable>
-
-          <Link href="/(auth)/login" asChild>
-            <Pressable style={styles.linkRow}>
-              <ThemedText type="link">Already have an account? Log in</ThemedText>
+            <Pressable
+              onPress={onSubmit}
+              disabled={submitting || !email || !password || !displayName}
+              style={[styles.button, { backgroundColor: theme.accent, opacity: submitting ? 0.6 : 1 }]}>
+              <ThemedText type="default" style={{ color: '#fff', fontFamily: Fonts.headingMedium }}>
+                {submitting ? 'Creating account…' : 'Create account'}
+              </ThemedText>
             </Pressable>
-          </Link>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+            <Link href="/(auth)/login" asChild>
+              <Pressable style={styles.linkRow}>
+                <ThemedText type="link">Already have an account? Log in</ThemedText>
+              </Pressable>
+            </Link>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </Screen>
   );
 }
 

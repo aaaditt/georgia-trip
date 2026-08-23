@@ -99,5 +99,4 @@ export const Radius = {
   full: 9999,
 } as const;
 
-export const BottomTabInset = 0;
 export const MaxContentWidth = 800;

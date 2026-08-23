@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Fonts, Radius, Spacing } from '@/constants/theme';
 import { useTrip } from '@/context/TripContext';
@@ -34,43 +35,45 @@ export default function JoinTripScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}>
-      <ThemedText type="title">Join a trip</ThemedText>
-      <ThemedText type="default" themeColor="textSecondary" style={styles.subtitle}>
-        Enter the invite code someone shared with you.
-      </ThemedText>
+    <Screen>
+      <ScrollView contentContainerStyle={styles.container}>
+        <ThemedText type="title">Join a trip</ThemedText>
+        <ThemedText type="default" themeColor="textSecondary" style={styles.subtitle}>
+          Enter the invite code someone shared with you.
+        </ThemedText>
 
-      <View style={styles.form}>
-        <TextInput
-          value={code}
-          onChangeText={(v) => setCode(v.trim())}
-          placeholder="Invite code"
-          placeholderTextColor={theme.textMuted}
-          autoCapitalize="none"
-          autoCorrect={false}
-          style={[
-            styles.input,
-            styles.codeInput,
-            { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement },
-          ]}
-        />
+        <View style={styles.form}>
+          <TextInput
+            value={code}
+            onChangeText={(v) => setCode(v.trim())}
+            placeholder="Invite code"
+            placeholderTextColor={theme.textMuted}
+            autoCapitalize="none"
+            autoCorrect={false}
+            style={[
+              styles.input,
+              styles.codeInput,
+              { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement },
+            ]}
+          />
 
-        {error && (
-          <ThemedText type="small" themeColor="accent">
-            {error}
-          </ThemedText>
-        )}
+          {error && (
+            <ThemedText type="small" themeColor="accent">
+              {error}
+            </ThemedText>
+          )}
 
-        <Pressable
-          onPress={onSubmit}
-          disabled={submitting || !code}
-          style={[styles.button, { backgroundColor: theme.accent, opacity: submitting ? 0.6 : 1 }]}>
-          <ThemedText type="default" style={{ color: '#fff', fontFamily: Fonts.headingMedium }}>
-            {submitting ? 'Joining…' : 'Join trip'}
-          </ThemedText>
-        </Pressable>
-      </View>
-    </ScrollView>
+          <Pressable
+            onPress={onSubmit}
+            disabled={submitting || !code}
+            style={[styles.button, { backgroundColor: theme.accent, opacity: submitting ? 0.6 : 1 }]}>
+            <ThemedText type="default" style={{ color: '#fff', fontFamily: Fonts.headingMedium }}>
+              {submitting ? 'Joining…' : 'Join trip'}
+            </ThemedText>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </Screen>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
 
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useTrip } from '@/context/TripContext';
@@ -65,7 +66,7 @@ export default function PlanScreen() {
   const totalItems = items.length;
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <Screen edges={['top']} style={styles.container}>
       <SectionList
         sections={sections}
         keyExtractor={(row) => row.id}
@@ -102,12 +103,12 @@ export default function PlanScreen() {
           </View>
         )}
       />
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {},
   list: { padding: Spacing.lg, gap: Spacing.sm },
   header: { gap: Spacing.xs, marginBottom: Spacing.md },
   empty: { textAlign: 'center', marginTop: Spacing.xl },
