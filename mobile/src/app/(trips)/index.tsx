@@ -72,14 +72,15 @@ export default function TripPickerScreen() {
 
       <View style={styles.actions}>
         <Link href="/(trips)/create" asChild>
-          <Pressable style={[styles.actionButton, { backgroundColor: theme.accent }]}>
+          <Pressable style={StyleSheet.flatten([styles.actionButton, { backgroundColor: theme.accent }])}>
             <ThemedText type="default" style={{ color: '#fff' }}>
               + Create a trip
             </ThemedText>
           </Pressable>
         </Link>
         <Link href="/(trips)/join" asChild>
-          <Pressable style={[styles.actionButton, styles.actionButtonOutline, { borderColor: theme.accent }]}>
+          <Pressable
+            style={StyleSheet.flatten([styles.actionButton, styles.actionButtonOutline, { borderColor: theme.accent }])}>
             <ThemedText type="default" themeColor="accent">
               Join with a code
             </ThemedText>

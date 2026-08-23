@@ -127,13 +127,15 @@ export async function addRegion({
   subtitle?: string;
 }) {
   const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40)}-${Date.now().toString(36)}`;
-  const { error } = await supabase.from('regions').insert({
-    id: slug,
-    trip_id: tripId,
-    name: name.trim(),
-    icon: icon?.trim() || '📍',
-    subtitle: subtitle?.trim() || null,
-    sort_order: 999,
+  // add_region (migration-08) — SECURITY DEFINER RPC, not a direct
+  // insert; see that migration's header for why.
+  const { error } = await supabase.rpc('add_region', {
+    p_id: slug,
+    p_trip_id: tripId,
+    p_name: name.trim(),
+    p_icon: icon?.trim() || '📍',
+    p_subtitle: subtitle?.trim() || null,
+    p_sort_order: 999,
   });
   return { id: slug, error };
 }
@@ -176,16 +178,16 @@ export async function addExperience({
   priceLari?: string;
 }) {
   const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40)}-${Date.now().toString(36)}`;
-  const { error } = await supabase.from('experiences').insert({
-    id: slug,
-    trip_id: tripId,
-    region_id: regionId,
-    name: name.trim(),
-    description: description?.trim() || null,
-    time_needed: time?.trim() || null,
-    price_lari: priceLari?.trim() || null,
-    tags: [],
-    sort_order: 999,
+  // add_experience (migration-08) — SECURITY DEFINER RPC, not a direct
+  // insert; see that migration's header for why.
+  const { error } = await supabase.rpc('add_experience', {
+    p_id: slug,
+    p_trip_id: tripId,
+    p_region_id: regionId,
+    p_name: name.trim(),
+    p_description: description?.trim() || null,
+    p_time_needed: time?.trim() || null,
+    p_price_lari: priceLari?.trim() || null,
   });
   return { id: slug, error };
 }
@@ -234,30 +236,39 @@ export async function upsertVote(
   experienceId: string,
   vote: 'go' | 'maybe' | 'skip'
 ) {
-  const { error } = await supabase.from('votes').upsert(
-    { trip_id: tripId, member_id: memberId, experience_id: experienceId, vote, updated_at: new Date().toISOString() },
-    { onConflict: 'member_id,experience_id' }
-  );
+  // upsert_vote (migration-08) — SECURITY DEFINER RPC, not a direct
+  // upsert; see that migration's header for why.
+  const { error } = await supabase.rpc('upsert_vote', {
+    p_trip_id: tripId,
+    p_member_id: memberId,
+    p_experience_id: experienceId,
+    p_vote: vote,
+  });
   return { error };
 }
 
 export async function upsertRating(tripId: string, memberId: string, experienceId: string, rating: number) {
-  const { error } = await supabase.from('ratings').upsert(
-    { trip_id: tripId, member_id: memberId, experience_id: experienceId, rating, updated_at: new Date().toISOString() },
-    { onConflict: 'member_id,experience_id' }
-  );
+  const { error } = await supabase.rpc('upsert_rating', {
+    p_trip_id: tripId,
+    p_member_id: memberId,
+    p_experience_id: experienceId,
+    p_rating: rating,
+  });
   return { error };
 }
 
 export async function addComment(tripId: string, memberId: string, experienceId: string, text: string) {
-  const { error } = await supabase
-    .from('comments')
-    .insert({ trip_id: tripId, member_id: memberId, experience_id: experienceId, text });
+  const { error } = await supabase.rpc('add_comment', {
+    p_trip_id: tripId,
+    p_member_id: memberId,
+    p_experience_id: experienceId,
+    p_text: text,
+  });
   return { error };
 }
 
 export async function deleteComment(commentId: number) {
-  const { error } = await supabase.from('comments').delete().eq('id', commentId);
+  const { error } = await supabase.rpc('delete_comment', { p_comment_id: commentId });
   return { error };
 }
 

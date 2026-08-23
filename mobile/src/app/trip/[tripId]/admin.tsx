@@ -41,7 +41,9 @@ export default function AdminScreen() {
   const toggleAdmin = async (member: TripMember) => {
     if (member.role === 'owner') return;
     const nextRole = member.role === 'admin' ? 'member' : 'admin';
-    await supabase.from('trip_members').update({ role: nextRole }).eq('id', member.id);
+    // update_member_role (migration-08) — SECURITY DEFINER RPC, not a
+    // direct update; see that migration's header for why.
+    await supabase.rpc('update_member_role', { p_member_id: member.id, p_next_role: nextRole });
     refetchMembers();
   };
 
@@ -52,7 +54,9 @@ export default function AdminScreen() {
         text: 'Remove',
         style: 'destructive',
         onPress: async () => {
-          await supabase.from('trip_members').update({ status: 'removed' }).eq('id', member.id);
+          // remove_trip_member (migration-08) — SECURITY DEFINER RPC, not
+          // a direct update; see that migration's header for why.
+          await supabase.rpc('remove_trip_member', { p_member_id: member.id });
           refetchMembers();
         },
       },

@@ -44,9 +44,12 @@ export function useCalendarAccess(tripId: string | null) {
     async (memberId: string) => {
       if (!tripId) return { error: new Error('No active trip') };
       setGrantedIds((prev) => new Set(prev).add(memberId));
-      const { error } = await supabase
-        .from('calendar_access')
-        .upsert({ trip_id: tripId, member_id: memberId }, { onConflict: 'trip_id,member_id' });
+      // grant_calendar_access (migration-08) — SECURITY DEFINER RPC, not a
+      // direct upsert; see that migration's header for why.
+      const { error } = await supabase.rpc('grant_calendar_access', {
+        p_trip_id: tripId,
+        p_member_id: memberId,
+      });
       if (error) fetchAccess();
       return { error };
     },
@@ -61,11 +64,12 @@ export function useCalendarAccess(tripId: string | null) {
         next.delete(memberId);
         return next;
       });
-      const { error } = await supabase
-        .from('calendar_access')
-        .delete()
-        .eq('trip_id', tripId)
-        .eq('member_id', memberId);
+      // revoke_calendar_access (migration-08) — SECURITY DEFINER RPC, not
+      // a direct delete; see that migration's header for why.
+      const { error } = await supabase.rpc('revoke_calendar_access', {
+        p_trip_id: tripId,
+        p_member_id: memberId,
+      });
       if (error) fetchAccess();
       return { error };
     },

@@ -52,17 +52,21 @@ export function useCommentReports(tripId: string | null) {
 }
 
 export async function dismissReport(reportId: string) {
-  const { error } = await supabase.from('comment_reports').delete().eq('id', reportId);
+  // dismiss_report (migration-08) — SECURITY DEFINER RPC, not a direct
+  // delete; see that migration's header for why.
+  const { error } = await supabase.rpc('dismiss_report', { p_report_id: reportId });
   return { error };
 }
 
 export async function reportComment(tripId: string, commentId: number, reporterMemberId: string, reason?: string) {
-  const { error } = await supabase
-    .from('comment_reports')
-    .upsert(
-      { trip_id: tripId, comment_id: commentId, reported_by_member: reporterMemberId, reason: reason ?? null },
-      { onConflict: 'comment_id,reported_by_member' }
-    );
+  // report_comment (migration-08) — SECURITY DEFINER RPC, not a direct
+  // upsert; see that migration's header for why.
+  const { error } = await supabase.rpc('report_comment', {
+    p_trip_id: tripId,
+    p_comment_id: commentId,
+    p_reporter_member_id: reporterMemberId,
+    p_reason: reason ?? null,
+  });
   return { error };
 }
 
@@ -109,20 +113,22 @@ export function useBlockedMemberIds(tripId: string | null, myMemberId: string | 
 }
 
 export async function blockMember(tripId: string, blockerMemberId: string, blockedMemberId: string) {
-  const { error } = await supabase
-    .from('blocked_members')
-    .upsert(
-      { trip_id: tripId, blocker_member_id: blockerMemberId, blocked_member_id: blockedMemberId },
-      { onConflict: 'blocker_member_id,blocked_member_id' }
-    );
+  // block_member (migration-08) — SECURITY DEFINER RPC, not a direct
+  // upsert; see that migration's header for why.
+  const { error } = await supabase.rpc('block_member', {
+    p_trip_id: tripId,
+    p_blocker_member_id: blockerMemberId,
+    p_blocked_member_id: blockedMemberId,
+  });
   return { error };
 }
 
 export async function unblockMember(blockerMemberId: string, blockedMemberId: string) {
-  const { error } = await supabase
-    .from('blocked_members')
-    .delete()
-    .eq('blocker_member_id', blockerMemberId)
-    .eq('blocked_member_id', blockedMemberId);
+  // unblock_member (migration-08) — SECURITY DEFINER RPC, not a direct
+  // delete; see that migration's header for why.
+  const { error } = await supabase.rpc('unblock_member', {
+    p_blocker_member_id: blockerMemberId,
+    p_blocked_member_id: blockedMemberId,
+  });
   return { error };
 }

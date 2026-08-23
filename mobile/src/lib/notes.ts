@@ -64,10 +64,14 @@ export function getPlaceNote(notes: PlaceNote[], experienceId: string) {
 }
 
 export async function upsertPlaceNote(tripId: string, memberId: string, experienceId: string, text: string) {
-  const { error } = await supabase.from('place_notes').upsert(
-    { trip_id: tripId, experience_id: experienceId, text, updated_by_member: memberId, updated_at: new Date().toISOString() },
-    { onConflict: 'experience_id' }
-  );
+  // upsert_place_note (migration-08) — SECURITY DEFINER RPC, not a direct
+  // upsert; see that migration's header for why.
+  const { error } = await supabase.rpc('upsert_place_note', {
+    p_trip_id: tripId,
+    p_member_id: memberId,
+    p_experience_id: experienceId,
+    p_text: text,
+  });
   return { error };
 }
 
@@ -108,8 +112,12 @@ export function useTripNote(tripId: string | null) {
 }
 
 export async function upsertTripNote(tripId: string, memberId: string, text: string) {
-  const { error } = await supabase
-    .from('trip_notes')
-    .upsert({ trip_id: tripId, text, updated_by_member: memberId, updated_at: new Date().toISOString() }, { onConflict: 'trip_id' });
+  // upsert_trip_note (migration-08) — SECURITY DEFINER RPC, not a direct
+  // upsert; see that migration's header for why.
+  const { error } = await supabase.rpc('upsert_trip_note', {
+    p_trip_id: tripId,
+    p_member_id: memberId,
+    p_text: text,
+  });
   return { error };
 }

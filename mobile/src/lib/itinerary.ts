@@ -85,21 +85,6 @@ function mapDbItem(row: any): ItineraryItem {
   };
 }
 
-function toDbItem(item: Partial<ItineraryItem> & { tripId: string }) {
-  const db: Record<string, unknown> = { trip_id: item.tripId };
-  if (item.id !== undefined) db.id = item.id;
-  if (item.kind !== undefined) db.kind = item.kind;
-  if (item.experienceId !== undefined) db.experience_id = item.experienceId ?? null;
-  if (item.transportMode !== undefined) db.transport_mode = item.transportMode ?? null;
-  if (item.title !== undefined) db.title = item.title ?? null;
-  if (item.notes !== undefined) db.notes = item.notes ?? null;
-  if (item.day !== undefined) db.day = item.day;
-  if (item.startMin !== undefined) db.start_min = item.startMin;
-  if (item.durationMin !== undefined) db.duration_min = item.durationMin;
-  if (item.createdByMember !== undefined) db.created_by_member = item.createdByMember ?? null;
-  return db;
-}
-
 // Same optimistic-update shape as the web app's useItinerary: mutate local
 // state immediately so drags don't snap back while the network round-trips,
 // then persist; realtime reconciles everyone else.
@@ -145,7 +130,21 @@ export function useItinerary(tripId: string | null) {
       if (!tripId) return { error: new Error('No active trip') };
       const withId: ItineraryItem = { ...item, id: crypto.randomUUID() };
       setItems((prev) => [...prev, withId]);
-      const { error } = await supabase.from('itinerary_items').insert(toDbItem({ ...withId, tripId }));
+      // add_itinerary_item (migration-08) — SECURITY DEFINER RPC, not a
+      // direct insert; see that migration's header for why.
+      const { error } = await supabase.rpc('add_itinerary_item', {
+        p_id: withId.id,
+        p_trip_id: tripId,
+        p_kind: withId.kind,
+        p_experience_id: withId.experienceId,
+        p_transport_mode: withId.transportMode,
+        p_title: withId.title,
+        p_notes: withId.notes,
+        p_day: withId.day,
+        p_start_min: withId.startMin,
+        p_duration_min: withId.durationMin,
+        p_created_by_member: withId.createdByMember,
+      });
       if (error) setItems((prev) => prev.filter((i) => i.id !== withId.id));
       return { error };
     },
@@ -155,10 +154,27 @@ export function useItinerary(tripId: string | null) {
   const updateItem = useCallback(
     async (id: string, patch: Partial<ItineraryItem>) => {
       if (!tripId) return { error: new Error('No active trip') };
-      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, ...patch } : i)));
-      const db = toDbItem({ ...patch, tripId });
-      delete db.trip_id;
-      const { error } = await supabase.from('itinerary_items').update(db).eq('id', id);
+      let merged: ItineraryItem | undefined;
+      setItems((prev) =>
+        prev.map((i) => {
+          if (i.id !== id) return i;
+          merged = { ...i, ...patch };
+          return merged;
+        })
+      );
+      if (!merged) return { error: new Error('Item not found') };
+      // update_itinerary_item (migration-08) — SECURITY DEFINER RPC, not a
+      // direct update; see that migration's header for why. Sends the
+      // full merged row rather than a partial patch (the RPC has no
+      // NULL-means-"don't touch" sentinel handling).
+      const { error } = await supabase.rpc('update_itinerary_item', {
+        p_id: id,
+        p_day: merged.day,
+        p_start_min: merged.startMin,
+        p_duration_min: merged.durationMin,
+        p_title: merged.title,
+        p_notes: merged.notes,
+      });
       return { error };
     },
     [tripId]
@@ -166,7 +182,9 @@ export function useItinerary(tripId: string | null) {
 
   const removeItem = useCallback(async (id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
-    const { error } = await supabase.from('itinerary_items').delete().eq('id', id);
+    // delete_itinerary_item (migration-08) — SECURITY DEFINER RPC, not a
+    // direct delete; see that migration's header for why.
+    const { error } = await supabase.rpc('delete_itinerary_item', { p_id: id });
     return { error };
   }, []);
 

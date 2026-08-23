@@ -30,29 +30,26 @@ export default function CreateTripScreen() {
     }
     setError(null);
     setSubmitting(true);
-    // on_trip_created (migration-06) inserts the owner's trip_members row
-    // automatically in the same transaction as this insert. Dates are
+    // create_trip (migration-08) — SECURITY DEFINER RPC, not a direct
+    // insert; see that migration's header for why. on_trip_created
+    // (migration-06) still inserts the owner's trip_members row
+    // automatically via the AFTER INSERT trigger either way. Dates are
     // optional at creation but the calendar (Phase 3) needs them to know
     // which days to show — worth filling in if you have them.
-    const { data, error: insertError } = await supabase
-      .from('trips')
-      .insert({
-        name: name.trim(),
-        destination: destination.trim() || null,
-        start_date: startDate || null,
-        end_date: endDate || null,
-        created_by: session.user.id,
-      })
-      .select('id')
-      .single();
+    const { data: tripId, error: insertError } = await supabase.rpc('create_trip', {
+      p_name: name.trim(),
+      p_destination: destination.trim() || null,
+      p_start_date: startDate || null,
+      p_end_date: endDate || null,
+    });
     setSubmitting(false);
-    if (insertError || !data) {
+    if (insertError || !tripId) {
       setError(insertError?.message ?? 'Could not create trip');
       return;
     }
     await refetchTrips();
-    setActiveTripId(data.id);
-    router.replace({ pathname: '/trip/[tripId]/dashboard', params: { tripId: data.id } });
+    setActiveTripId(tripId as string);
+    router.replace({ pathname: '/trip/[tripId]/dashboard', params: { tripId: tripId as string } });
   };
 
   return (

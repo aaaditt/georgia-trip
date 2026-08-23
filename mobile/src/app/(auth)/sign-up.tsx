@@ -42,7 +42,7 @@ export default function SignUpScreen() {
           We sent a confirmation link to {email}. Confirm it, then log in.
         </ThemedText>
         <Link href="/(auth)/login" asChild>
-          <Pressable style={[styles.button, { backgroundColor: theme.accent }]}>
+          <Pressable style={StyleSheet.flatten([styles.button, { backgroundColor: theme.accent }])}>
             <ThemedText type="default" style={{ color: '#fff', fontFamily: Fonts.headingMedium }}>
               Back to log in
             </ThemedText>

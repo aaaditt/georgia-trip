@@ -26,7 +26,7 @@ export default function AccountScreen() {
   const saveName = async () => {
     if (!session?.user || !displayName.trim() || displayName === profile?.display_name) return;
     setSaving(true);
-    await supabase.from('profiles').update({ display_name: displayName.trim() }).eq('id', session.user.id);
+    await supabase.rpc('update_own_profile', { p_display_name: displayName.trim() });
     setSaving(false);
   };
 

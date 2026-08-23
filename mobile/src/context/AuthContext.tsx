@@ -70,8 +70,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) return { error: error.message };
     // handle_new_auth_user() (migration-06) creates the profiles row with a
     // default name derived from the email; patch in the real display name.
+    // update_own_profile (migration-08) — SECURITY DEFINER RPC, not a
+    // direct update; see that migration's header for why.
     if (data.user) {
-      await supabase.from('profiles').update({ display_name: displayName }).eq('id', data.user.id);
+      await supabase.rpc('update_own_profile', { p_display_name: displayName });
     }
     return { error: null };
   };
