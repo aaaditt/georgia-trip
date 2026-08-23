@@ -73,7 +73,7 @@ Tasks 1–3 are independent of each other and of the content. Task 9 (research) 
 
 ### Task 1: Test harness and safe-area system
 
-Fixes brief item 6. `react-native-safe-area-context@5.7.0` is installed but used nowhere in `mobile/src`, and `SafeAreaProvider` is absent from the root layout — so `useSafeAreaInsets()` would return zeros even if something called it. Every route group sets `headerShown: false`, so all 12 headerless screens currently collide with the notch.
+Fixes brief item 6. `react-native-safe-area-context@5.7.0` is installed but used nowhere in `mobile/src`, and `SafeAreaProvider` is absent from the root layout — so `useSafeAreaInsets()` would return zeros even if something called it. Every route group sets `headerShown: false`, so all 11 headerless screens currently collide with the notch. Ten of them are fixed here; `(trips)/create.tsx` is the eleventh and is rewritten wholesale in Task 5, which applies the wrapper itself.
 
 **Files:**
 - Modify: `mobile/package.json`
@@ -286,7 +286,8 @@ git commit -m "fix: apply safe-area insets across all headerless screens
 react-native-safe-area-context was installed but used nowhere, and
 SafeAreaProvider was missing from the root layout, so every screen in
 the app rendered under the status bar. Adds a single Screen wrapper and
-applies it to all 12 headerless screens.
+applies it to ten of the eleven headerless screens; create.tsx gets it in
+the wizard rewrite.
 
 Also sets up jest-expo, which the app had no test harness for."
 git push origin main
@@ -555,7 +556,12 @@ import {
 } from '@/lib/date-range';
 
 const WEEKDAY_INITIALS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-const COLUMN_WIDTH = `${100 / 7}%` as const;
+// A plain string literal, not `${100 / 7}%`. TypeScript does not evaluate
+// arithmetic inside template literal types, so the computed form widens to
+// `string` in a standalone const and stops satisfying RN's DimensionValue
+// (`${number}%`). Inline template literals in a style object are fine —
+// they get the contextual type — but an extracted const does not.
+const COLUMN_WIDTH = '14.2857%';
 
 export function DateRangeCalendar({
   start,
@@ -598,7 +604,9 @@ export function DateRangeCalendar({
             ‹
           </ThemedText>
         </Pressable>
-        <ThemedText type="defaultSemiBold">{monthLabel(visible)}</ThemedText>
+        <ThemedText type="default" style={{ fontFamily: Fonts.headingMedium }}>
+          {monthLabel(visible)}
+        </ThemedText>
         <Pressable
           onPress={() => setVisible(addMonths(visible, 1))}
           hitSlop={12}
@@ -695,7 +703,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-Note on the `type` props passed to `ThemedText`: verify `'defaultSemiBold'`, `'smallBold'`, `'small'` and `'subtitle'` all exist in `mobile/src/components/themed-text.tsx` before running. If any is missing, use the nearest one that does rather than adding new variants in this task.
+`ThemedText`'s `type` prop accepts exactly `'default' | 'title' | 'subtitle' | 'small' | 'smallBold' | 'link'` (`mobile/src/components/themed-text.tsx:7`). There is no `'defaultSemiBold'` — weight above `default` comes from an inline `fontFamily: Fonts.headingMedium`, as the month label above does. Do not add new variants in this task.
 
 - [ ] **Step 6: Typecheck, lint, test**
 
@@ -1691,7 +1699,7 @@ const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.sm },
   // Two columns: half the width minus half the gap.
   tile: {
-    width: `48%`,
+    width: '48%',
     flexGrow: 1,
     borderWidth: 1,
     borderRadius: Radius.lg,
@@ -3295,7 +3303,7 @@ git push origin main
 
 ## Done when
 
-- [ ] All 12 headerless screens clear the notch on a device with one
+- [ ] All 11 headerless screens clear the notch on a device with one
 - [ ] Trip creation is name → date range → region pick, with no destination field anywhere
 - [ ] A new trip has 10 regions and 113 places without anyone adding one by hand
 - [ ] The dashboard separates the shortlist from Explore, and progress counts only the shortlist

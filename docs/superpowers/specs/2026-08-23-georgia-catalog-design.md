@@ -246,7 +246,7 @@ lands later.
 `react-native-safe-area-context@5.7.0` is installed but used nowhere in
 `mobile/src`, and `SafeAreaProvider` is absent from the root layout — so
 `useSafeAreaInsets()` would return zeros today. Every route group sets
-`headerShown: false`, so all 12 headerless screens collide with the notch.
+`headerShown: false`, so all 11 headerless screens collide with the notch.
 
 Fix: add `SafeAreaProvider` and `<StatusBar>` to `app/_layout.tsx`, then apply
 one `<Screen edges={…}>` wrapper across the affected screens —
