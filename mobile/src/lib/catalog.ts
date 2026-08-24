@@ -51,7 +51,7 @@ export function useCatalogRegions() {
 }
 
 // create_georgia_trip (migration-09) — SECURITY DEFINER RPC, not a direct
-// insert; see migration-08's header for why. Creating and seeding in one
+// insert; see that migration's header for why. Creating and seeding in one
 // call keeps it atomic and avoids ~113 client round-trips.
 export async function createGeorgiaTrip({
   name,
@@ -73,8 +73,9 @@ export async function createGeorgiaTrip({
   return { tripId: (data as string | null) ?? null, error };
 }
 
-// seed_trip_catalog (migration-09) — the manual "Add Georgia's places"
-// import for trips that predate the catalog. Idempotent server-side.
+// seed_trip_catalog (migration-09) — SECURITY DEFINER RPC, not a direct
+// insert; see that migration's header for why. The manual "Add Georgia's
+// places" import for trips that predate the catalog. Idempotent server-side.
 export async function seedTripCatalog(tripId: string, regionIds: string[]) {
   const { data, error } = await supabase.rpc('seed_trip_catalog', {
     p_trip_id: tripId,
@@ -83,8 +84,9 @@ export async function seedTripCatalog(tripId: string, regionIds: string[]) {
   return { placesAdded: (data as number | null) ?? 0, error };
 }
 
-// set_trip_region_selected (migration-09) — any member may change the
-// shortlist; it's a shared group decision, matching migration-06's
+// set_trip_region_selected (migration-09) — SECURITY DEFINER RPC, not a
+// direct update; see that migration's header for why. Any member may change
+// the shortlist; it's a shared group decision, matching migration-06's
 // "members update regions" policy.
 export async function setRegionSelected(regionId: string, selected: boolean) {
   const { error } = await supabase.rpc('set_trip_region_selected', {
