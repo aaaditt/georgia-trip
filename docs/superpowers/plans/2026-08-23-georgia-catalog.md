@@ -532,7 +532,7 @@ export function monthGrid(ym: YearMonth): (IsoDate | null)[] {
 cd mobile && npm test
 ```
 
-Expected: PASS, 18 tests.
+Expected: PASS, 17 tests (5 dayCount + 12 new).
 
 - [ ] **Step 5: Build the calendar component**
 
@@ -713,7 +713,7 @@ const styles = StyleSheet.create({
 cd mobile && npx tsc --noEmit && npm run lint && npm test
 ```
 
-Expected: no type errors, no new lint errors, 18 tests passing.
+Expected: no type errors, no new lint errors, 17 tests passing.
 
 - [ ] **Step 7: Commit**
 
