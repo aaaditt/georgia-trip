@@ -18,7 +18,7 @@
 - **Migrations cannot be executed from this environment.** No Supabase CLI, no service-role key. Migration files are deliverables handed to the user to paste into the Supabase SQL Editor, exactly like migrations 01–08.
 - `regions.id` and `experiences.id` are **globally unique** `TEXT PRIMARY KEY` columns — not composite with `trip_id`. Any row seeded into a trip must mint a per-trip-unique id. The convention is `<catalog_slug>-<trip_uuid>`.
 - Expo SDK version is pinned at 57. Per `mobile/AGENTS.md`, verify APIs against `https://docs.expo.dev/versions/v57.0.0/` rather than from memory.
-- On Windows, `npx expo install` needs the escaped separator: `npx expo install <pkgs> "--" --dev`.
+- On Windows, `npx expo install` needs the escaped separator to pass flags through to the package manager: `npx expo install <pkgs> "--" --save-dev`. Use `--save-dev`, **not** `--dev` — npm 11 accepts `--dev` without error but does not treat it as `--save-dev`, so the packages land in `dependencies`. Always verify placement in `package.json` afterwards rather than trusting the command's exit code.
 - All dates are handled in **UTC** (`new Date(iso + 'T00:00:00Z')`), matching the existing `tripDays()` in `mobile/src/lib/itinerary.ts`. Never construct a bare `new Date(iso)`.
 - Day counts are **inclusive** of both endpoints: 2027-08-03 → 2027-08-14 is 12 days.
 - Region and place ids in the catalog are stable lowercase kebab-case slugs. Once a slug ships it must never be renamed — trips reference it via `catalog_region_id` / `catalog_place_id`.
@@ -93,7 +93,7 @@ Fixes brief item 6. `react-native-safe-area-context@5.7.0` is installed but used
 Windows quoting is required — without `"--"` npm swallows the `--dev` flag:
 
 ```bash
-cd mobile && npx expo install jest-expo jest @types/jest "--" --dev
+cd mobile && npx expo install jest-expo jest @types/jest "--" --save-dev
 ```
 
 - [ ] **Step 2: Configure jest in `mobile/package.json`**
@@ -104,6 +104,8 @@ Add to `scripts`:
 "test": "jest",
 "test:watch": "jest --watchAll"
 ```
+
+Add `"types": ["jest"]` to `compilerOptions` in `mobile/tsconfig.json` — without it `npx tsc --noEmit` fails on `describe`/`it`/`expect` even though `@types/jest` is installed, because the Expo base config does not include them.
 
 Add a top-level `jest` key:
 
