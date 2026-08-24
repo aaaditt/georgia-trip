@@ -13,7 +13,7 @@ import { useTrip } from '@/context/TripContext';
 import { useTheme } from '@/hooks/use-theme';
 import { hasCompletedVoting, useCalendarAccess } from '@/lib/access';
 import { colorForRegion, customEmoji, TRANSPORT_COLOR, CUSTOM_COLOR } from '@/lib/calendar-layout';
-import { useExperiences, useRatings, useRegions, useVotes } from '@/lib/hooks';
+import { experiencesInSelectedRegions, useExperiences, useRatings, useRegions, useVotes } from '@/lib/hooks';
 import { clamp } from '@/lib/calendar-layout';
 import { parseDefaultDuration, tripDays, TRANSPORT_MODES, useItinerary, type ItineraryItem } from '@/lib/itinerary';
 
@@ -40,8 +40,16 @@ export default function CalendarScreen() {
   const [showAddEvent, setShowAddEvent] = useState(false);
 
   const gateLoading = expLoading || votesLoading || accessLoading;
-  const votedCount = activeMember ? experiences.filter((e) => votes.some((v) => v.member_id === activeMember.id && v.experience_id === e.id)).length : 0;
-  const canEdit = !gateLoading && !!activeMember && (hasCompletedVoting(votes, experiences, activeMember.id) || grantedIds.has(activeMember.id));
+  const scopedExperiences = useMemo(
+    () => experiencesInSelectedRegions(experiences, regions),
+    [experiences, regions]
+  );
+  const votedCount = activeMember
+    ? scopedExperiences.filter((e) => votes.some((v) => v.member_id === activeMember.id && v.experience_id === e.id)).length
+    : 0;
+  const canEdit =
+    !gateLoading && !!activeMember &&
+    (hasCompletedVoting(votes, scopedExperiences, activeMember.id) || grantedIds.has(activeMember.id));
   const editing = canEdit && unlocked;
 
   const expById = useMemo(() => new Map(experiences.map((e) => [e.id, e])), [experiences]);
@@ -82,7 +90,8 @@ export default function CalendarScreen() {
 
   const onPick = (payload: PalettePayload) => {
     if (!day || !activeMember || !activeTripId) return;
-    const durationMin = payload.kind === 'place' ? parseDefaultDuration(expById.get(payload.experienceId)?.time) : 60;
+    const exp = payload.kind === 'place' ? expById.get(payload.experienceId) : undefined;
+    const durationMin = payload.kind === 'place' ? parseDefaultDuration(exp?.time, exp?.durationMin) : 60;
     const startMin = nextFreeSlot(day, durationMin);
     addItem({
       kind: payload.kind,
@@ -131,7 +140,7 @@ export default function CalendarScreen() {
             <ThemedText type="small">Checking your voting progress…</ThemedText>
           ) : (
             <ThemedText type="small" themeColor="textSecondary">
-              🔒 Vote on every place first — you're at {votedCount}/{experiences.length}. You can still look around below.
+              🔒 Vote on every place first — you're at {votedCount}/{scopedExperiences.length}. You can still look around below.
             </ThemedText>
           )}
         </View>

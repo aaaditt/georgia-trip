@@ -43,9 +43,15 @@ export function formatTime(minutes: number) {
   return m === 0 ? `${h12}${ampm}` : `${h12}:${String(m).padStart(2, '0')}${ampm}`;
 }
 
-export function parseDefaultDuration(timeNeeded: string | undefined): number {
-  const text = (timeNeeded || '').toLowerCase();
+/**
+ * Catalog places carry a real duration_min. Member-added places only have
+ * the free-text "2–3 hr" string, so the regex path stays as the fallback.
+ */
+export function parseDefaultDuration(timeNeeded?: string, durationMin?: number | null): number {
   const snap = (min: number) => Math.max(SLOT_MIN, Math.round(min / SLOT_MIN) * SLOT_MIN);
+  if (typeof durationMin === 'number' && durationMin > 0) return snap(durationMin);
+
+  const text = (timeNeeded || '').toLowerCase();
   if (text.includes('full day')) return 480;
   if (text.includes('half')) return 240;
   const firstNumber = text.match(/\d+(?:\.\d+)?/);

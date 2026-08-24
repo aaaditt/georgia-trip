@@ -3,8 +3,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { Experience, Vote } from '@/lib/hooks';
 
-// A person may edit the calendar once they've voted on every place…
+/**
+ * A person may edit the calendar once they've voted on every place in the
+ * trip's shortlisted regions. Callers must pass an already-scoped list —
+ * experiencesInSelectedRegions() in lib/hooks.
+ *
+ * The empty guard matters: Array.every() on [] is true, so a trip with no
+ * shortlisted regions would otherwise hand everyone calendar access.
+ */
 export function hasCompletedVoting(votes: Vote[], experiences: Experience[], memberId: string) {
+  if (experiences.length === 0) return false;
   return experiences.every((e) => votes.some((v) => v.member_id === memberId && v.experience_id === e.id));
 }
 

@@ -1,14 +1,19 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { supabase } from '@/lib/supabase';
 
 export type Region = {
   id: string;
-  regionId?: never;
   name: string;
   icon: string;
   subtitle: string | null;
   sortOrder: number;
+  catalogRegionId: string | null;
+  summary: string | null;
+  whenToGo: string | null;
+  gettingThere: string | null;
+  baseTowns: string | null;
+  isSelected: boolean;
 };
 
 export type Experience = {
@@ -22,6 +27,18 @@ export type Experience = {
   priceAED: string;
   tags: string[];
   sortOrder: number;
+  catalogPlaceId: string | null;
+  hook: string | null;
+  tips: string | null;
+  bestTime: string | null;
+  durationMin: number | null;
+  priceGelMin: number | null;
+  priceGelMax: number | null;
+  nearestTown: string | null;
+  lat: number | null;
+  lng: number | null;
+  kidNote: string | null;
+  bookingRequired: boolean;
 };
 
 type MemberRef = { display_name: string; emoji: string } | null;
@@ -105,6 +122,12 @@ function mapDbRegion(row: any): Region {
     icon: row.icon || '📍',
     subtitle: row.subtitle,
     sortOrder: row.sort_order ?? 0,
+    catalogRegionId: row.catalog_region_id ?? null,
+    summary: row.summary ?? null,
+    whenToGo: row.when_to_go ?? null,
+    gettingThere: row.getting_there ?? null,
+    baseTowns: row.base_towns ?? null,
+    isSelected: row.is_selected ?? false,
   };
 }
 
@@ -112,7 +135,21 @@ export function useRegions(tripId: string | null) {
   const { data, loading, refetch } = useTripTable<any>('regions', tripId, '*', {
     column: 'sort_order',
   });
-  return { regions: data.map(mapDbRegion), loading, refetch };
+  const regions = useMemo(() => data.map(mapDbRegion), [data]);
+  const selectedRegions = useMemo(() => regions.filter((r) => r.isSelected), [regions]);
+  const unselectedRegions = useMemo(() => regions.filter((r) => !r.isSelected), [regions]);
+  return { regions, selectedRegions, unselectedRegions, loading, refetch };
+}
+
+/**
+ * Every trip carries the whole Georgia catalog, so "all experiences" is ~113
+ * places whether or not the group is going to any of them. Anything that
+ * counts progress, nags, or gates has to run over the shortlist instead.
+ * Browsing and voting are deliberately NOT scoped — those stay open.
+ */
+export function experiencesInSelectedRegions(experiences: Experience[], regions: Region[]): Experience[] {
+  const selected = new Set(regions.filter((r) => r.isSelected).map((r) => r.id));
+  return experiences.filter((e) => selected.has(e.regionId));
 }
 
 export async function addRegion({
@@ -152,6 +189,20 @@ function mapDbExperience(row: any): Experience {
     priceAED: row.price_aed || '—',
     tags: row.tags || [],
     sortOrder: row.sort_order ?? 0,
+    catalogPlaceId: row.catalog_place_id ?? null,
+    hook: row.hook ?? null,
+    tips: row.tips ?? null,
+    bestTime: row.best_time ?? null,
+    // NUMERIC comes back from PostgREST as a string; INT comes back as a
+    // number. Normalise both rather than letting `lat` be a string.
+    durationMin: row.duration_min ?? null,
+    priceGelMin: row.price_gel_min ?? null,
+    priceGelMax: row.price_gel_max ?? null,
+    nearestTown: row.nearest_town ?? null,
+    lat: row.lat === null || row.lat === undefined ? null : Number(row.lat),
+    lng: row.lng === null || row.lng === undefined ? null : Number(row.lng),
+    kidNote: row.kid_note ?? null,
+    bookingRequired: row.booking_required ?? false,
   };
 }
 
