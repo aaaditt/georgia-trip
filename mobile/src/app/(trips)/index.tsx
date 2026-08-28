@@ -7,6 +7,7 @@ import { Radius, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/AuthContext';
 import { useTrip, type TripSummary } from '@/context/TripContext';
 import { useTheme } from '@/hooks/use-theme';
+import { dayCount } from '@/lib/date-range';
 
 export default function TripPickerScreen() {
   const theme = useTheme();
@@ -61,9 +62,9 @@ export default function TripPickerScreen() {
             </ThemedText>
             <View style={{ flex: 1 }}>
               <ThemedText type="default">{item.name}</ThemedText>
-              {item.destination && (
+              {item.start_date && item.end_date && (
                 <ThemedText type="small" themeColor="textSecondary">
-                  {item.destination}
+                  {dayCount(item.start_date, item.end_date)} days
                 </ThemedText>
               )}
             </View>

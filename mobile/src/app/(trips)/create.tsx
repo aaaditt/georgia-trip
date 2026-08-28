@@ -1,95 +1,137 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
+import { DateRangeCalendar } from '@/components/date-range-calendar';
+import { RegionPickerGrid } from '@/components/region-picker-grid';
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Fonts, Radius, Spacing } from '@/constants/theme';
-import { useAuth } from '@/context/AuthContext';
 import { useTrip } from '@/context/TripContext';
 import { useTheme } from '@/hooks/use-theme';
-import { supabase } from '@/lib/supabase';
+import { createGeorgiaTrip, useCatalogRegions } from '@/lib/catalog';
+import { dayCount, type IsoDate } from '@/lib/date-range';
+
+const STEPS = 3;
 
 export default function CreateTripScreen() {
   const theme = useTheme();
-  const { session } = useAuth();
   const { refetchTrips, setActiveTripId } = useTrip();
+  const { catalogRegions, loading: catalogLoading } = useCatalogRegions();
+
+  const [step, setStep] = useState(1);
   const [name, setName] = useState('');
-  const [destination, setDestination] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [start, setStart] = useState<IsoDate | null>(null);
+  const [end, setEnd] = useState<IsoDate | null>(null);
+  const [regionIds, setRegionIds] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const dateOk = (v: string) => v === '' || /^\d{4}-\d{2}-\d{2}$/.test(v);
+  const toggleRegion = (id: string) => {
+    setRegionIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
-  const onSubmit = async () => {
-    if (!session?.user) return;
-    if (!dateOk(startDate) || !dateOk(endDate)) {
-      setError('Dates must be in YYYY-MM-DD format');
-      return;
-    }
+  const options = useMemo(
+    () => catalogRegions.map((r) => ({ id: r.id, name: r.name, icon: r.icon, subtitle: r.subtitle })),
+    [catalogRegions]
+  );
+
+  const canAdvance = step === 1 ? name.trim().length > 0 : step === 2 ? !!start && !!end : true;
+
+  const onCreate = async () => {
     setError(null);
     setSubmitting(true);
-    // create_trip (migration-08) — SECURITY DEFINER RPC, not a direct
-    // insert; see that migration's header for why. on_trip_created
-    // (migration-06) still inserts the owner's trip_members row
-    // automatically via the AFTER INSERT trigger either way. Dates are
-    // optional at creation but the calendar (Phase 3) needs them to know
-    // which days to show — worth filling in if you have them.
-    const { data: tripId, error: insertError } = await supabase.rpc('create_trip', {
-      p_name: name.trim(),
-      p_destination: destination.trim() || null,
-      p_start_date: startDate || null,
-      p_end_date: endDate || null,
+    const { tripId, error: rpcError } = await createGeorgiaTrip({
+      name,
+      startDate: start,
+      endDate: end,
+      regionIds: [...regionIds],
     });
     setSubmitting(false);
-    if (insertError || !tripId) {
-      setError(insertError?.message ?? 'Could not create trip');
+    if (rpcError || !tripId) {
+      setError(rpcError?.message ?? 'Could not create trip');
       return;
     }
     await refetchTrips();
-    setActiveTripId(tripId as string);
-    router.replace({ pathname: '/trip/[tripId]/dashboard', params: { tripId: tripId as string } });
+    setActiveTripId(tripId);
+    router.replace({ pathname: '/trip/[tripId]/dashboard', params: { tripId } });
   };
 
   return (
-    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}>
-      <ThemedText type="title">New trip</ThemedText>
-      <ThemedText type="default" themeColor="textSecondary" style={styles.subtitle}>
-        You'll be the owner and can invite others once it's created.
-      </ThemedText>
-
-      <View style={styles.form}>
-        <TextInput
-          value={name}
-          onChangeText={setName}
-          placeholder="Trip name (e.g. Georgia 2027)"
-          placeholderTextColor={theme.textMuted}
-          style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
-        />
-        <TextInput
-          value={destination}
-          onChangeText={setDestination}
-          placeholder="Destination (optional)"
-          placeholderTextColor={theme.textMuted}
-          style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
-        />
-        <View style={styles.row}>
-          <TextInput
-            value={startDate}
-            onChangeText={setStartDate}
-            placeholder="Start date (YYYY-MM-DD)"
-            placeholderTextColor={theme.textMuted}
-            style={[styles.input, styles.half, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
-          />
-          <TextInput
-            value={endDate}
-            onChangeText={setEndDate}
-            placeholder="End date (YYYY-MM-DD)"
-            placeholderTextColor={theme.textMuted}
-            style={[styles.input, styles.half, { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement }]}
-          />
+    <Screen>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <View style={styles.dots}>
+          {Array.from({ length: STEPS }, (_, i) => (
+            <View
+              key={i}
+              style={[
+                styles.dot,
+                { backgroundColor: i < step ? theme.accent : theme.border },
+              ]}
+            />
+          ))}
         </View>
+
+        {step === 1 && (
+          <View style={styles.stepBody}>
+            <ThemedText type="title">What&rsquo;s this trip called?</ThemedText>
+            <ThemedText type="default" themeColor="textSecondary">
+              You&rsquo;ll be the owner and can invite others once it&rsquo;s created.
+            </ThemedText>
+            <TextInput
+              value={name}
+              onChangeText={setName}
+              placeholder="Georgia 2027"
+              placeholderTextColor={theme.textMuted}
+              autoFocus
+              returnKeyType="next"
+              onSubmitEditing={() => canAdvance && setStep(2)}
+              style={[
+                styles.input,
+                { color: theme.text, borderColor: theme.border, backgroundColor: theme.backgroundElement },
+              ]}
+            />
+          </View>
+        )}
+
+        {step === 2 && (
+          <View style={styles.stepBody}>
+            <ThemedText type="title">When are you going?</ThemedText>
+            <ThemedText type="default" themeColor="textSecondary">
+              Tap the first day, then the last. You can change this later.
+            </ThemedText>
+            <DateRangeCalendar
+              start={start}
+              end={end}
+              onChange={(nextStart, nextEnd) => {
+                setStart(nextStart);
+                setEnd(nextEnd);
+              }}
+            />
+          </View>
+        )}
+
+        {step === 3 && (
+          <View style={styles.stepBody}>
+            <ThemedText type="title">Which parts of Georgia?</ThemedText>
+            <ThemedText type="default" themeColor="textSecondary">
+              Pick the regions you&rsquo;re planning around. You&rsquo;ll still be able to browse and vote on
+              everywhere else, and you can change this anytime.
+            </ThemedText>
+            {catalogLoading ? (
+              <ThemedText type="default" themeColor="textMuted">
+                Loading regions…
+              </ThemedText>
+            ) : (
+              <RegionPickerGrid options={options} selectedIds={regionIds} onToggle={toggleRegion} />
+            )}
+          </View>
+        )}
 
         {error && (
           <ThemedText type="small" themeColor="accent">
@@ -97,25 +139,54 @@ export default function CreateTripScreen() {
           </ThemedText>
         )}
 
-        <Pressable
-          onPress={onSubmit}
-          disabled={submitting || !name.trim()}
-          style={[styles.button, { backgroundColor: theme.accent, opacity: submitting ? 0.6 : 1 }]}>
-          <ThemedText type="default" style={{ color: '#fff', fontFamily: Fonts.headingMedium }}>
-            {submitting ? 'Creating…' : 'Create trip'}
+        <View style={styles.nav}>
+          {step > 1 ? (
+            <Pressable onPress={() => setStep(step - 1)} hitSlop={8}>
+              <ThemedText type="default" themeColor="textSecondary">
+                &lsaquo; Back
+              </ThemedText>
+            </Pressable>
+          ) : (
+            <View />
+          )}
+
+          {step < STEPS ? (
+            <Pressable
+              onPress={() => setStep(step + 1)}
+              disabled={!canAdvance}
+              style={[styles.primary, { backgroundColor: theme.accent, opacity: canAdvance ? 1 : 0.4 }]}>
+              <ThemedText type="default" style={styles.primaryLabel}>
+                Next &rsaquo;
+              </ThemedText>
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={onCreate}
+              disabled={submitting}
+              style={[styles.primary, { backgroundColor: theme.accent, opacity: submitting ? 0.6 : 1 }]}>
+              <ThemedText type="default" style={styles.primaryLabel}>
+                {submitting ? 'Creating…' : regionIds.size > 0 ? 'Create trip' : 'Skip for now'}
+              </ThemedText>
+            </Pressable>
+          )}
+        </View>
+
+        {step === 2 && start && end && (
+          <ThemedText type="small" themeColor="textMuted" style={styles.centered}>
+            {dayCount(start, end)} days in Georgia
           </ThemedText>
-        </Pressable>
-      </View>
-    </ScrollView>
+        )}
+      </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flexGrow: 1, padding: Spacing.lg, gap: Spacing.lg },
-  subtitle: { marginTop: -Spacing.sm },
-  form: { gap: Spacing.md },
-  row: { flexDirection: 'row', gap: Spacing.sm },
-  half: { flex: 1 },
+  dots: { flexDirection: 'row', gap: Spacing.xs, justifyContent: 'center' },
+  dot: { width: 28, height: 4, borderRadius: Radius.full },
+  stepBody: { gap: Spacing.md, flex: 1 },
+  centered: { textAlign: 'center' },
   input: {
     borderWidth: 1,
     borderRadius: Radius.md,
@@ -124,10 +195,12 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.body,
     fontSize: 16,
   },
-  button: {
+  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' },
+  primary: {
     borderRadius: Radius.full,
+    paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.sm + 4,
     alignItems: 'center',
-    marginTop: Spacing.sm,
   },
+  primaryLabel: { color: '#fff', fontFamily: Fonts.headingMedium },
 });
