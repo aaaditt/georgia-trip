@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { AddPlaceForm } from '@/components/add-place-form';
@@ -9,8 +9,7 @@ import { Radius, Spacing } from '@/constants/theme';
 import { useTrip } from '@/context/TripContext';
 import { useTheme } from '@/hooks/use-theme';
 import { setRegionSelected } from '@/lib/catalog';
-import { addExperience, useComments, useExperiences, useRatings, useRegions, useVotes } from '@/lib/hooks';
-import { usePlaceNotes } from '@/lib/notes';
+import { addExperience, useComments, useExperiences, useRegions, useVotes } from '@/lib/hooks';
 
 function Fact({ label, value }: { label: string; value: string }) {
   return (
@@ -31,9 +30,7 @@ export default function RegionScreen() {
   const { regions, refetch } = useRegions(activeTripId);
   const { experiences, loading } = useExperiences(activeTripId);
   const { votes } = useVotes(activeTripId);
-  const { ratings } = useRatings(activeTripId);
   const { comments } = useComments(activeTripId);
-  const { notes: placeNotes } = usePlaceNotes(activeTripId);
 
   const region = regions.find((r) => r.id === regionId);
   const regionExperiences = experiences.filter((e) => e.regionId === regionId);
@@ -89,9 +86,13 @@ export default function RegionScreen() {
                 tripId={activeTripId}
                 memberId={activeMember.id}
                 votes={votes}
-                ratings={ratings}
                 comments={comments}
-                placeNotes={placeNotes}
+                onPress={() =>
+                  router.push({
+                    pathname: '/trip/[tripId]/place/[placeId]',
+                    params: { tripId: activeTripId, placeId: item.id },
+                  })
+                }
               />
             </View>
           ) : null

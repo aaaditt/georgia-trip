@@ -1,61 +1,44 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-import { CommentBox } from '@/components/comment-box';
-import { PlaceNoteBox } from '@/components/place-note-box';
-import { StarRating } from '@/components/star-rating';
 import { TagPill } from '@/components/tag-pill';
 import { ThemedText } from '@/components/themed-text';
 import { VoteButtons } from '@/components/vote-buttons';
 import { Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import {
-  addComment,
-  getAverageRating,
   getCommentsForExperience,
-  getMemberRating,
   getMemberVote,
-  getRatingsForExperience,
   getVoteCounts,
-  upsertRating,
   upsertVote,
   type Comment,
   type Experience,
-  type Rating,
   type Vote,
 } from '@/lib/hooks';
-import { getPlaceNote, upsertPlaceNote, type PlaceNote } from '@/lib/notes';
-import { blockMember, reportComment, useBlockedMemberIds } from '@/lib/moderation';
 
 export function ExperienceCard({
   experience,
   tripId,
   memberId,
   votes,
-  ratings,
   comments,
-  placeNotes,
+  onPress,
 }: {
   experience: Experience;
   tripId: string;
   memberId: string;
   votes: Vote[];
-  ratings: Rating[];
   comments: Comment[];
-  placeNotes: PlaceNote[];
+  onPress: () => void;
 }) {
   const theme = useTheme();
-  const counts = getVoteCounts(votes, experience.id);
-  const myVote = getMemberVote(votes, memberId, experience.id);
-  const myRating = getMemberRating(ratings, memberId, experience.id);
-  const avgRating = getAverageRating(ratings, experience.id);
-  const experienceRatings = getRatingsForExperience(ratings, experience.id);
-  const { blockedIds } = useBlockedMemberIds(tripId, memberId);
-  const experienceComments = getCommentsForExperience(comments, experience.id).filter(
-    (c) => !blockedIds.has(c.member_id)
-  );
+  const commentCount = getCommentsForExperience(comments, experience.id).length;
+  const price = experience.priceLari && experience.priceLari !== '—' ? experience.priceLari : null;
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      style={[styles.card, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
       <View style={styles.headerRow}>
         <ThemedText type="default" style={{ flex: 1 }}>
           {experience.name}
@@ -65,9 +48,9 @@ export function ExperienceCard({
         </ThemedText>
       </View>
 
-      {!!experience.description && (
-        <ThemedText type="small" themeColor="textSecondary">
-          {experience.description}
+      {!!(experience.hook || experience.description) && (
+        <ThemedText type="small" themeColor="textSecondary" numberOfLines={2}>
+          {experience.hook || experience.description}
         </ThemedText>
       )}
 
@@ -79,50 +62,36 @@ export function ExperienceCard({
         </View>
       )}
 
-      <ThemedText type="small" themeColor="textMuted">
-        ₾{experience.priceLari}
-      </ThemedText>
+      <View style={styles.metaRow}>
+        {/* price_lari already reads "Free" or "₾20 + boat", so it is not
+            prefixed with a currency symbol here — the old card rendered
+            "₾Free". */}
+        <ThemedText type="small" themeColor="textMuted">
+          {price ?? 'Free'}
+        </ThemedText>
+        {commentCount > 0 && (
+          <ThemedText type="small" themeColor="textMuted">
+            💬 {commentCount}
+          </ThemedText>
+        )}
+        <ThemedText type="small" themeColor="accent" style={styles.more}>
+          Details &rsaquo;
+        </ThemedText>
+      </View>
 
       <VoteButtons
-        value={myVote}
-        counts={counts}
+        value={getMemberVote(votes, memberId, experience.id)}
+        counts={getVoteCounts(votes, experience.id)}
         onChange={(vote) => upsertVote(tripId, memberId, experience.id, vote)}
       />
-
-      <StarRating
-        value={myRating}
-        average={avgRating}
-        count={experienceRatings.length}
-        onChange={(rating) => upsertRating(tripId, memberId, experience.id, rating)}
-      />
-
-      <CommentBox
-        comments={experienceComments}
-        myMemberId={memberId}
-        onAdd={async (text) => {
-          await addComment(tripId, memberId, experience.id, text);
-        }}
-        onReport={(commentId) => reportComment(tripId, commentId, memberId)}
-        onBlock={(blockedMemberId) => blockMember(tripId, memberId, blockedMemberId)}
-      />
-
-      <PlaceNoteBox
-        note={getPlaceNote(placeNotes, experience.id)}
-        onSave={async (text) => {
-          await upsertPlaceNote(tripId, memberId, experience.id, text);
-        }}
-      />
-    </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    borderWidth: 1,
-    borderRadius: Radius.lg,
-    padding: Spacing.md,
-    gap: Spacing.sm,
-  },
+  card: { borderWidth: 1, borderRadius: Radius.lg, padding: Spacing.md, gap: Spacing.sm },
   headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.sm },
   tagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4 },
+  metaRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.md },
+  more: { marginLeft: 'auto' },
 });
