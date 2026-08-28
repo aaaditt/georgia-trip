@@ -1,21 +1,34 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { AddPlaceForm } from '@/components/add-place-form';
 import { ExperienceCard } from '@/components/experience-card';
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Radius, Spacing } from '@/constants/theme';
 import { useTrip } from '@/context/TripContext';
 import { useTheme } from '@/hooks/use-theme';
+import { setRegionSelected } from '@/lib/catalog';
 import { addExperience, useComments, useExperiences, useRatings, useRegions, useVotes } from '@/lib/hooks';
 import { usePlaceNotes } from '@/lib/notes';
+
+function Fact({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={styles.fact}>
+      <ThemedText type="smallBold" themeColor="textSecondary">
+        {label}
+      </ThemedText>
+      <ThemedText type="small">{value}</ThemedText>
+    </View>
+  );
+}
 
 export default function RegionScreen() {
   const { regionId } = useLocalSearchParams<{ tripId: string; regionId: string }>();
   const theme = useTheme();
   const { activeTripId, activeMember } = useTrip();
 
-  const { regions } = useRegions(activeTripId);
+  const { regions, refetch } = useRegions(activeTripId);
   const { experiences, loading } = useExperiences(activeTripId);
   const { votes } = useVotes(activeTripId);
   const { ratings } = useRatings(activeTripId);
@@ -26,7 +39,7 @@ export default function RegionScreen() {
   const regionExperiences = experiences.filter((e) => e.regionId === regionId);
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <Screen edges={['bottom']}>
       <Stack.Screen options={{ title: region ? `${region.icon} ${region.name}` : '' }} />
 
       <FlatList
@@ -34,10 +47,31 @@ export default function RegionScreen() {
         keyExtractor={(e) => e.id}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
-          region?.subtitle ? (
-            <ThemedText type="default" themeColor="textSecondary" style={styles.subtitle}>
-              {region.subtitle}
-            </ThemedText>
+          region ? (
+            <View style={styles.regionHeader}>
+              {!!region.subtitle && (
+                <ThemedText type="default" themeColor="textSecondary">
+                  {region.subtitle}
+                </ThemedText>
+              )}
+              {!!region.summary && <ThemedText type="default">{region.summary}</ThemedText>}
+              {!!region.whenToGo && <Fact label="When to go" value={region.whenToGo} />}
+              {!!region.gettingThere && <Fact label="Getting there" value={region.gettingThere} />}
+              {!!region.baseTowns && <Fact label="Where to stay" value={region.baseTowns} />}
+
+              {!region.isSelected && (
+                <Pressable
+                  onPress={async () => {
+                    await setRegionSelected(region.id, true);
+                    await refetch();
+                  }}
+                  style={[styles.addBanner, { backgroundColor: theme.accentGlow, borderColor: theme.accent }]}>
+                  <ThemedText type="small" themeColor="accent">
+                    + Add {region.name} to our trip
+                  </ThemedText>
+                </Pressable>
+              )}
+            </View>
           ) : null
         }
         ListEmptyComponent={
@@ -74,14 +108,15 @@ export default function RegionScreen() {
           ) : null
         }
       />
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
   list: { padding: Spacing.lg, gap: Spacing.sm },
-  subtitle: { marginBottom: Spacing.sm },
   empty: { textAlign: 'center', marginTop: Spacing.xl },
   cardWrap: { marginBottom: Spacing.sm },
+  regionHeader: { gap: Spacing.sm, marginBottom: Spacing.md },
+  fact: { gap: 2 },
+  addBanner: { borderWidth: 1, borderRadius: Radius.lg, padding: Spacing.md, alignItems: 'center' },
 });
