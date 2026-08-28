@@ -5,7 +5,15 @@ import { Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Region } from '@/lib/hooks';
 
-export function RegionCard({ region, onPress }: { region: Region; onPress: () => void }) {
+export function RegionCard({
+  region,
+  placeCount,
+  onPress,
+}: {
+  region: Region;
+  placeCount?: number;
+  onPress: () => void;
+}) {
   const theme = useTheme();
 
   return (
@@ -18,6 +26,11 @@ export function RegionCard({ region, onPress }: { region: Region; onPress: () =>
         {region.subtitle && (
           <ThemedText type="small" themeColor="textSecondary">
             {region.subtitle}
+          </ThemedText>
+        )}
+        {placeCount !== undefined && (
+          <ThemedText type="small" themeColor="textMuted">
+            {placeCount} {placeCount === 1 ? 'place' : 'places'}
           </ThemedText>
         )}
       </View>

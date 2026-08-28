@@ -21,6 +21,8 @@ export default function TripLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="region/[regionId]" options={{ headerShown: true, title: '' }} />
+      <Stack.Screen name="explore" options={{ headerShown: true, title: 'Explore Georgia' }} />
+      <Stack.Screen name="place/[placeId]" options={{ headerShown: true, title: '' }} />
       <Stack.Screen name="admin" options={{ headerShown: true, title: 'Admin' }} />
     </Stack>
   );
