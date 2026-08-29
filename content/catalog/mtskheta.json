@@ -24,11 +24,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Mtskheta",
-      "lat": 41.845000,
-      "lng": 44.718500,
+      "lat": 41.845,
+      "lng": 44.7185,
       "kid_note": "Flat and easy for little legs, with plenty of ice cream and churchkhela stalls to bribe with.",
       "booking_required": false,
-      "tags": ["walk", "kids"],
+      "tags": [
+        "walk",
+        "kids"
+      ],
       "sort_order": 1,
       "guide_script": null
     },
@@ -45,11 +48,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Mtskheta",
-      "lat": 41.845500,
-      "lng": 44.719100,
+      "lat": 41.8455,
+      "lng": 44.7191,
       "kid_note": "Interesting even for kids who normally balk at churches — giant stone pillars, royal tombs, and a carved dragon fresco give you things to point at.",
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 2,
       "guide_script": null
     },
@@ -66,11 +72,13 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Mtskheta",
-      "lat": 41.847900,
-      "lng": 44.720100,
+      "lat": 41.8479,
+      "lng": 44.7201,
       "kid_note": null,
       "booking_required": false,
-      "tags": ["walk"],
+      "tags": [
+        "walk"
+      ],
       "sort_order": 3,
       "guide_script": null
     },
@@ -87,11 +95,13 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Mtskheta",
-      "lat": 41.845900,
-      "lng": 44.716700,
+      "lat": 41.8383,
+      "lng": 44.7331,
       "kid_note": "The view is the payoff, not the church interior — good for restless kids who'd rather be outside than in another cathedral.",
       "booking_required": false,
-      "tags": ["scenic"],
+      "tags": [
+        "scenic"
+      ],
       "sort_order": 4,
       "guide_script": null
     },
@@ -108,11 +118,15 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Mtskheta",
-      "lat": 41.862500,
-      "lng": 44.640300,
+      "lat": 41.8625,
+      "lng": 44.6403,
       "kid_note": "The cave cell and canyon setting tend to land better with kids than another cathedral interior — frame it as a monk's hideout.",
       "booking_required": false,
-      "tags": ["cave", "scenic", "walk"],
+      "tags": [
+        "cave",
+        "scenic",
+        "walk"
+      ],
       "sort_order": 5,
       "guide_script": null
     },
@@ -129,11 +143,15 @@
       "price_gel_max": 35,
       "price_lari": "₾15-35 (grounds free; cellar tour ₾15; tour + tasting ~₾35)",
       "nearest_town": "Mukhrani",
-      "lat": 41.942000,
-      "lng": 44.581400,
+      "lat": 41.942,
+      "lng": 44.5814,
       "kid_note": "Grounds and gardens are easy for kids to run around; the cellar tasting is an adult interest, but the restaurant has kid-friendly Georgian staples.",
       "booking_required": true,
-      "tags": ["wine", "cool", "kids"],
+      "tags": [
+        "wine",
+        "cool",
+        "kids"
+      ],
       "sort_order": 6,
       "guide_script": null
     },
@@ -150,11 +168,13 @@
       "price_gel_max": 30,
       "price_lari": "₾20-30 per person",
       "nearest_town": "Mtskheta",
-      "lat": 41.828500,
-      "lng": 44.725290,
+      "lat": 41.8285,
+      "lng": 44.72529,
       "kid_note": "Big shareable portions and a relaxed, noisy atmosphere — no need for quiet-restaurant behavior.",
       "booking_required": false,
-      "tags": ["wine"],
+      "tags": [
+        "wine"
+      ],
       "sort_order": 7,
       "guide_script": null
     },
@@ -171,11 +191,15 @@
       "price_gel_max": 60,
       "price_lari": "₾40-60 per person (confirm on-site)",
       "nearest_town": "Zhinvali",
-      "lat": 42.220500,
-      "lng": 44.832100,
+      "lat": 42.2205,
+      "lng": 44.8321,
       "kid_note": "The calmest water option in the region — swimmable, shallow near the bank, and life jackets provided.",
       "booking_required": false,
-      "tags": ["water", "kids", "cool"],
+      "tags": [
+        "water",
+        "kids",
+        "cool"
+      ],
       "sort_order": 8,
       "guide_script": null
     },
@@ -192,11 +216,15 @@
       "price_gel_max": 180,
       "price_lari": "₾120-180 per person",
       "nearest_town": "Zhinvali",
-      "lat": 42.220500,
-      "lng": 44.832100,
+      "lat": 42.2205,
+      "lng": 44.8321,
       "kid_note": "Genuinely thrilling for kids but graded gentle by August; check the operator's minimum age before booking.",
       "booking_required": true,
-      "tags": ["water", "thrill", "kids"],
+      "tags": [
+        "water",
+        "thrill",
+        "kids"
+      ],
       "sort_order": 9,
       "guide_script": null
     },
@@ -213,11 +241,15 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Ananuri",
-      "lat": 42.163300,
-      "lng": 44.696700,
+      "lat": 42.1633,
+      "lng": 44.6967,
       "kid_note": "Kids love climbing the tower, but the stairs are steep and unguarded in places — hold hands on the way down.",
       "booking_required": false,
-      "tags": ["scenic", "water", "walk"],
+      "tags": [
+        "scenic",
+        "water",
+        "walk"
+      ],
       "sort_order": 10,
       "guide_script": null
     }
