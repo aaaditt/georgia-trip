@@ -26,6 +26,11 @@ const BOUNDS = { latMin: 41.0, latMax: 43.6, lngMin: 40.0, lngMax: 46.7 };
 
 const errors = [];
 const seenIds = new Set();
+// Two distinct places at the same 6dp coordinate is essentially always a
+// reused value rather than a real collision — found in the wild when a kayak
+// trip and a rafting trip were both pinned to 42.2205,44.8321. The bounding
+// box cannot catch it because both points are legitimately inside Georgia.
+const seenCoords = new Map();
 
 /** Single-quoted SQL literal, or NULL. */
 function sql(value) {
@@ -84,6 +89,16 @@ function validate(regionId, place) {
   }
   if (place.lng != null && (place.lng < BOUNDS.lngMin || place.lng > BOUNDS.lngMax)) {
     errors.push(`${where}: lng ${place.lng} is outside Georgia`);
+  }
+
+  if (place.lat != null && place.lng != null) {
+    const key = `${place.lat},${place.lng}`;
+    const firstSeen = seenCoords.get(key);
+    if (firstSeen) {
+      errors.push(`${where}: shares coordinates ${key} with ${firstSeen} — one of them is a reused value`);
+    } else {
+      seenCoords.set(key, place.id);
+    }
   }
 
   const words = wordCount(place.guide_script);
