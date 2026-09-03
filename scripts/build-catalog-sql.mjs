@@ -130,6 +130,11 @@ function validate(regionId, place) {
 let totalPlaces = 0;
 let totalWords = 0;
 
+// Bodies of each region's migration, reused verbatim to build the single
+// combined file below. Built from the same strings as the per-region files so
+// the two can never disagree.
+const sections = [];
+
 for (const file of readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.json')).sort()) {
   const doc = JSON.parse(readFileSync(join(CONTENT_DIR, file), 'utf8'));
   const { region, places } = doc;
@@ -154,16 +159,7 @@ for (const file of readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.json')).s
     );
   }
 
-  const out = `-- Migration 10 — Georgia catalog places: ${region.name}
---
--- GENERATED FILE. Source of truth is content/catalog/${region.id}.json.
--- Regenerate with: node scripts/build-catalog-sql.mjs
--- Do not hand-edit — your changes will be overwritten.
---
--- Run in Supabase Dashboard > SQL Editor after migration-09. Idempotent:
--- re-running is a no-op, and it will not overwrite an edited row.
-
-UPDATE catalog_regions SET
+  const body = `UPDATE catalog_regions SET
   subtitle      = ${sql(region.subtitle)},
   summary       = ${sql(region.summary)},
   when_to_go    = ${sql(region.when_to_go)},
@@ -179,7 +175,20 @@ INSERT INTO catalog_places (
 ) VALUES
 ${rows.join(',\n')}
 ON CONFLICT (id) DO NOTHING;
+`;
 
+  sections.push({ region, places, body });
+
+  const out = `-- Migration 10 — Georgia catalog places: ${region.name}
+--
+-- GENERATED FILE. Source of truth is content/catalog/${region.id}.json.
+-- Regenerate with: node scripts/build-catalog-sql.mjs
+-- Do not hand-edit — your changes will be overwritten.
+--
+-- Run in Supabase Dashboard > SQL Editor after migration-09. Idempotent:
+-- re-running is a no-op, and it will not overwrite an edited row.
+
+${body}
 -- Expect ${places.length}.
 SELECT count(*) AS ${region.id.replace(/-/g, '_')}_places
   FROM catalog_places WHERE region_id = ${sql(region.id)};
@@ -195,4 +204,55 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
+// One combined file, because pasting ten files into the SQL Editor one at a
+// time is where a step gets skipped. Written only after the validation gate
+// above passes, so the single-paste file is never produced from a catalog that
+// failed — if validation fails the previous, known-good copy is left alone.
+// Wrapped in a transaction: all ten regions land or none do.
+const combined = `-- Migration 10 — Georgia catalog places: ALL TEN REGIONS
+--
+-- GENERATED FILE. Source of truth is content/catalog/*.json.
+-- Regenerate with: node scripts/build-catalog-sql.mjs
+-- Do not hand-edit — your changes will be overwritten.
+--
+-- This is the ten per-region migration-10 files concatenated in one
+-- transaction, for a single paste into Supabase Dashboard > SQL Editor.
+-- Run it after migration-09 (or after migration-00-bootstrap-all).
+--
+-- Idempotent: every INSERT is ON CONFLICT (id) DO NOTHING, so re-running is a
+-- no-op and will not overwrite a row you have since edited by hand. The
+-- UPDATEs to catalog_regions DO overwrite, which is intended — the region
+-- prose is generated content.
+--
+-- Expect ${totalPlaces} places across ${sections.length} regions.
+
+BEGIN;
+
+${sections
+  .map(
+    ({ region, places, body }) =>
+      `-- ${'='.repeat(66)}
+-- ${region.name} — ${places.length} places
+-- ${'='.repeat(66)}
+
+${body}`
+  )
+  .join('\n')}
+COMMIT;
+
+-- Verification. Expect ${sections.length} rows summing to ${totalPlaces}, and no region at 0.
+SELECT r.sort_order,
+       r.id                AS region,
+       count(p.id)         AS places
+  FROM catalog_regions r
+  LEFT JOIN catalog_places p ON p.region_id = r.id
+ GROUP BY r.sort_order, r.id
+ ORDER BY r.sort_order;
+
+SELECT count(*) AS total_places FROM catalog_places;
+`;
+
+writeFileSync(join(OUT_DIR, 'migration-10-catalog-ALL.sql'), combined);
+
 console.log(`\n${totalPlaces} places, ${totalWords.toLocaleString()} script words. OK.`);
+console.log(`Combined single-paste file: ${join(OUT_DIR, 'migration-10-catalog-ALL.sql')}`);
