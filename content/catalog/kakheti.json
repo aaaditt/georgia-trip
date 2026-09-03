@@ -24,11 +24,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Sighnaghi",
-      "lat": 41.620500,
-      "lng": 45.916700,
+      "lat": 41.6205,
+      "lng": 45.9167,
       "kid_note": "Kids enjoy spotting the watchtowers and running the flatter stretches; nothing here needs supervision beyond normal wall-edge caution.",
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 1,
       "guide_script": null
     },
@@ -45,11 +48,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Sighnaghi",
-      "lat": 41.599800,
-      "lng": 45.903300,
+      "lat": 41.5998,
+      "lng": 45.9033,
       "kid_note": "The dress-code fuss and the request for quiet inside the church can be a lot for younger kids; the walk to the spring is the part they'll actually enjoy.",
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 2,
       "guide_script": null
     },
@@ -66,11 +72,15 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Sighnaghi",
-      "lat": 41.607000,
-      "lng": 45.905000,
+      "lat": 41.607,
+      "lng": 45.905,
       "kid_note": "The one stop on this list built entirely around kids having room to run around — no tasting, no church silence, no queue.",
       "booking_required": false,
-      "tags": ["scenic", "kids", "walk"],
+      "tags": [
+        "scenic",
+        "kids",
+        "walk"
+      ],
       "sort_order": 3,
       "guide_script": null
     },
@@ -79,19 +89,22 @@
       "name": "Pheasant's Tears",
       "hook": "Sighnaghi's destination dinner: qvevri natural wine and a long Georgian table in a converted old-town house.",
       "description": "Pheasant's Tears is a pioneer of Georgia's natural-wine revival, run out of a rustic dining room and courtyard in Sighnaghi's old town, pairing its own qvevri-made wines with a full spread of Georgian dishes — khinkali, lobio, badrijani, fresh bread from the on-site tone oven. It runs as a proper sit-down dinner rather than a quick tasting stop, with live music some evenings. Make it the anchor of an evening in Sighnaghi rather than a mid-day stop between sights.",
-      "tips": "Open daily 12:00–23:00 with the kitchen closing around 22:00. It's popular with tour groups in summer — reserve ahead or arrive right at opening if you want to avoid a wait.",
+      "tips": "Open daily 12:00–23:00 with the kitchen closing around 22:00. It's popular with tour groups in summer — reserve ahead or arrive right at opening if you want to avoid a wait. Around ₾40-80 a head for dinner, and wine is charged on top.",
       "best_time": "Dinner",
       "duration_min": 90,
       "time_needed": "1.5 hr",
       "price_gel_min": 40,
       "price_gel_max": 80,
-      "price_lari": "₾40–80 per person (dinner; wine extra)",
+      "price_lari": "₾40-80",
       "nearest_town": "Sighnaghi",
-      "lat": 41.621200,
-      "lng": 45.915300,
+      "lat": 41.6212,
+      "lng": 45.9153,
       "kid_note": "Kid-friendly menu overlap (bread, khinkali, cheese) but it's a slow, multi-course dinner — better for kids used to sitting through a long meal than for very young ones past bedtime.",
       "booking_required": false,
-      "tags": ["wine", "evening"],
+      "tags": [
+        "wine",
+        "evening"
+      ],
       "sort_order": 4,
       "guide_script": null
     },
@@ -106,13 +119,17 @@
       "time_needed": "1.5 hr",
       "price_gel_min": 5,
       "price_gel_max": 12,
-      "price_lari": "₾5–12",
+      "price_lari": "₾5-12",
       "nearest_town": "Telavi",
-      "lat": 41.883900,
-      "lng": 45.472800,
+      "lat": 41.8839,
+      "lng": 45.4728,
       "kid_note": "The gardens (and peacocks) are the real kid draw; the museum rooms and tasting room are a walk-through rather than hands-on, so budget more garden time than museum time for younger kids.",
       "booking_required": false,
-      "tags": ["wine", "scenic", "kids"],
+      "tags": [
+        "wine",
+        "scenic",
+        "kids"
+      ],
       "sort_order": 5,
       "guide_script": null
     },
@@ -129,11 +146,13 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Akhmeta",
-      "lat": 42.032500,
+      "lat": 42.0325,
       "lng": 45.377222,
       "kid_note": "Mostly a look-and-walk stop for kids — the scale of the cathedral (Georgia's tallest for centuries) is the thing worth pointing out to them.",
       "booking_required": false,
-      "tags": ["scenic"],
+      "tags": [
+        "scenic"
+      ],
       "sort_order": 6,
       "guide_script": null
     },
@@ -154,7 +173,10 @@
       "lng": 45.381111,
       "kid_note": "Ruins kids can actually clamber around near (with supervision) rather than a hushed interior — a good antidote after the more formal Bodbe/Alaverdi stops.",
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 7,
       "guide_script": null
     },
@@ -171,11 +193,13 @@
       "price_gel_max": 17,
       "price_lari": "₾17",
       "nearest_town": "Napareuli / Telavi",
-      "lat": 41.911100,
-      "lng": 45.607200,
+      "lat": 41.9111,
+      "lng": 45.6072,
       "kid_note": "Honest version: kids don't taste and there isn't a dedicated kids' activity here, so it works best for kids old enough (roughly 8+) to sit through an hour of adult conversation and pouring — bring something to occupy younger ones.",
       "booking_required": true,
-      "tags": ["wine"],
+      "tags": [
+        "wine"
+      ],
       "sort_order": 8,
       "guide_script": null
     },
@@ -190,13 +214,17 @@
       "time_needed": "1.5 hr",
       "price_gel_min": 15,
       "price_gel_max": 30,
-      "price_lari": "₾15–30",
+      "price_lari": "₾15-30",
       "nearest_town": "Kvareli",
-      "lat": 41.933000,
-      "lng": 45.822000,
+      "lat": 41.933,
+      "lng": 45.822,
       "kid_note": "The tunnel itself is the kid highlight (cool, cave-like, a bit spooky in a fun way); ask for grape juice instead of wine at the tasting table rather than expecting them to sit it out.",
       "booking_required": false,
-      "tags": ["wine", "cool", "kids"],
+      "tags": [
+        "wine",
+        "cool",
+        "kids"
+      ],
       "sort_order": 9,
       "guide_script": null
     },
@@ -211,13 +239,16 @@
       "time_needed": "1 hr",
       "price_gel_min": 30,
       "price_gel_max": 55,
-      "price_lari": "₾30–55 (workshop package, food included)",
+      "price_lari": "₾30-55",
       "nearest_town": "Kvareli",
-      "lat": 41.932500,
-      "lng": 45.822800,
+      "lat": 41.9325,
+      "lng": 45.8228,
       "kid_note": "This is the purely-for-kids stop on the list — no tasting room, no dress code, no sitting still.",
       "booking_required": true,
-      "tags": ["kids", "cool"],
+      "tags": [
+        "kids",
+        "cool"
+      ],
       "sort_order": 10,
       "guide_script": null
     },
@@ -235,10 +266,14 @@
       "price_lari": "₾10",
       "nearest_town": "Kvareli",
       "lat": 42.001944,
-      "lng": 45.660000,
+      "lng": 45.66,
       "kid_note": "The tower climb is the draw — steep, narrow stairs that most kids find genuinely exciting rather than a chore.",
       "booking_required": false,
-      "tags": ["scenic", "walk", "kids"],
+      "tags": [
+        "scenic",
+        "walk",
+        "kids"
+      ],
       "sort_order": 11,
       "guide_script": null
     },
@@ -259,7 +294,11 @@
       "lng": 45.356667,
       "kid_note": "The Lavra monastery itself is manageable for most kids; the steep, shadeless climb to the Udabno frescoes is a real hike better suited to kids roughly 8+ who can handle heat and exposure.",
       "booking_required": false,
-      "tags": ["cave", "hike", "scenic"],
+      "tags": [
+        "cave",
+        "hike",
+        "scenic"
+      ],
       "sort_order": 12,
       "guide_script": null
     }

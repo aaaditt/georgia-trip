@@ -35,6 +35,11 @@ You author `summary` (2-4 sentences), `when_to_go` (season + time of day, heat e
 - `price_gel_min`/`price_gel_max` integer GEL per person; BOTH null means free
 - `price_lari` display string, include the GEL symbol yourself; exactly "Free" when free.
   The app does NOT prepend a currency symbol.
+  **Keep it to 24 characters or fewer** — `₾20`, `₾15-30`, `₾2.5-5`. It renders on one
+  line in a card next to the comment count, so it is a price, not a sentence. Every
+  condition — per person, per vehicle, children's rates, what is extra, what to confirm
+  locally — belongs in `tips`, which wraps freely. A whole research run had to be
+  rewritten for getting this wrong.
 - `lat`/`lng` 6dp, FOR THE SITE ITSELF not the town centre
 - `kid_note` `null` if nothing specific
 - `tags` ONLY from: cool kids wine scenic water cave walk hike thrill evening
@@ -51,6 +56,8 @@ You author `summary` (2-4 sentences), `when_to_go` (season + time of day, heat e
 5. lat within 41.0-43.6 AND lng within 40.0-46.7 (Georgia's bounding box)
 6. no string contains the literal `$guide$`
 7. guide_script is null everywhere
+8. price_lari is at most 24 characters
+9. no two places anywhere in the catalog share a lat/lng
 
 ## Coordinates — the known failure mode
 

@@ -22,13 +22,17 @@
       "time_needed": "2 hr",
       "price_gel_min": 5,
       "price_gel_max": 5,
-      "price_lari": "₾5 entry (free under 8; free 6-9am); rides extra",
+      "price_lari": "₾5",
       "nearest_town": "Borjomi",
       "lat": 41.832216,
       "lng": 43.393669,
       "kid_note": "Playground, small carnival rides, and a spring most kids find hilarious rather than pleasant — a good icebreaker for the trip.",
       "booking_required": false,
-      "tags": ["kids", "cool", "walk"],
+      "tags": [
+        "kids",
+        "cool",
+        "walk"
+      ],
       "sort_order": 1,
       "guide_script": null
     },
@@ -43,13 +47,17 @@
       "time_needed": "45 min",
       "price_gel_min": 15,
       "price_gel_max": 25,
-      "price_lari": "₾15 one-way / ~₾25 return (confirm locally, prices vary by source)",
+      "price_lari": "₾15-25",
       "nearest_town": "Borjomi",
-      "lat": 41.834800,
-      "lng": 43.397200,
+      "lat": 41.8348,
+      "lng": 43.3972,
       "kid_note": "A short, exciting ride kids love; the old Ferris wheel at the top is a nice bonus if it happens to be running.",
       "booking_required": false,
-      "tags": ["scenic", "cool", "kids"],
+      "tags": [
+        "scenic",
+        "cool",
+        "kids"
+      ],
       "sort_order": 2,
       "guide_script": null
     },
@@ -64,13 +72,16 @@
       "time_needed": "1 hr",
       "price_gel_min": 15,
       "price_gel_max": 15,
-      "price_lari": "₾15 per person (free under 8)",
+      "price_lari": "₾15",
       "nearest_town": "Borjomi",
-      "lat": 41.845000,
-      "lng": 43.400000,
+      "lat": 41.845,
+      "lng": 43.4,
       "kid_note": "The sulfur smell can put younger kids off at first, but most come around once they're in the warm water.",
       "booking_required": false,
-      "tags": ["water", "cool"],
+      "tags": [
+        "water",
+        "cool"
+      ],
       "sort_order": 3,
       "guide_script": null
     },
@@ -87,11 +98,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Borjomi",
-      "lat": 41.826000,
-      "lng": 43.360000,
+      "lat": 41.826,
+      "lng": 43.36,
       "kid_note": "Shaded and mostly flat near the gate — a real forest walk without demanding much of little legs, as long as you turn back before the trail climbs.",
       "booking_required": false,
-      "tags": ["cool", "walk"],
+      "tags": [
+        "cool",
+        "walk"
+      ],
       "sort_order": 4,
       "guide_script": null
     },
@@ -112,7 +126,10 @@
       "lng": 43.309843,
       "kid_note": "Frame the walk-in as a hike to a hidden, forgotten monastery — the approach is half the appeal for kids.",
       "booking_required": false,
-      "tags": ["walk", "scenic"],
+      "tags": [
+        "walk",
+        "scenic"
+      ],
       "sort_order": 5,
       "guide_script": null
     },
@@ -133,7 +150,9 @@
       "lng": 43.382118,
       "kid_note": "Menu has simple grilled and khinkali options kids will actually eat, and an indoor table is a welcome break if they need to sit still for a bit.",
       "booking_required": false,
-      "tags": ["wine"],
+      "tags": [
+        "wine"
+      ],
       "sort_order": 6,
       "guide_script": null
     },
@@ -154,7 +173,11 @@
       "lng": 43.524837,
       "kid_note": "Amirani's Park gives kids room to run (or sled, in winter) right after the drive up — an easy way to burn energy before anything else.",
       "booking_required": false,
-      "tags": ["walk", "kids", "cool"],
+      "tags": [
+        "walk",
+        "kids",
+        "cool"
+      ],
       "sort_order": 7,
       "guide_script": null
     },
@@ -171,11 +194,15 @@
       "price_gel_max": 25,
       "price_lari": "₾25 return",
       "nearest_town": "Bakuriani",
-      "lat": 41.742000,
-      "lng": 43.548000,
+      "lat": 41.742,
+      "lng": 43.548,
       "kid_note": "An easy, enclosed cable-car ride with a big view payoff and no walking required.",
       "booking_required": false,
-      "tags": ["scenic", "cool", "evening"],
+      "tags": [
+        "scenic",
+        "cool",
+        "evening"
+      ],
       "sort_order": 8,
       "guide_script": null
     },
@@ -184,19 +211,22 @@
       "name": "Didveli Alpine Coaster",
       "hook": "A gravity-powered rail coaster twisting down the Didveli hillside — Bakuriani's one real adrenaline hit for kids.",
       "description": "This toboggan-style alpine coaster runs on a fixed rail through the forest at the Didveli lift base, with riders controlling their own speed via a hand brake. It's independent of the ski lifts and, unlike most of the region's attractions, is built specifically to be repeated — a short, queue-friendly ride that older kids will want to do more than once.",
-      "tips": "Price and which months it runs vary year to year — confirm locally, especially for a summer visit, since operating hours can be limited outside ski season. There's likely a minimum height or age for solo riders; check at the ticket booth.",
+      "tips": "Price and which months it runs vary year to year — confirm locally, especially for a summer visit, since operating hours can be limited outside ski season. There's likely a minimum height or age for solo riders; check at the ticket booth. The fare is charged per ride, not as a day pass.",
       "best_time": null,
       "duration_min": 30,
       "time_needed": "30 min",
       "price_gel_min": 15,
       "price_gel_max": 30,
-      "price_lari": "~₾15-30 per ride (confirm locally)",
+      "price_lari": "₾15-30",
       "nearest_town": "Bakuriani",
       "lat": 41.728042,
       "lng": 43.531597,
       "kid_note": "The single most thrilling five minutes in the region for kids old enough to ride solo; younger kids can usually ride tandem with an adult.",
       "booking_required": false,
-      "tags": ["thrill", "kids"],
+      "tags": [
+        "thrill",
+        "kids"
+      ],
       "sort_order": 9,
       "guide_script": null
     },
@@ -211,13 +241,16 @@
       "time_needed": "4 hr",
       "price_gel_min": 28,
       "price_gel_max": 55,
-      "price_lari": "₾28-55 lift pass per day (kids/adult); lessons ₾70-100/hr extra",
+      "price_lari": "₾28-55",
       "nearest_town": "Bakuriani",
-      "lat": 41.731500,
-      "lng": 43.528000,
+      "lat": 41.7315,
+      "lng": 43.528,
       "kid_note": "The '25 Ski Park' beginner slope and dedicated kids' instructors make this the easiest first-ever ski day in Georgia.",
       "booking_required": false,
-      "tags": ["thrill", "cool"],
+      "tags": [
+        "thrill",
+        "cool"
+      ],
       "sort_order": 10,
       "guide_script": null
     },
@@ -226,19 +259,22 @@
       "name": "Joyland Park",
       "hook": "A snow-tubing and family fun park with zones for toddlers up to bigger kids, right in Bakuriani.",
       "description": "Joyland is built squarely for families, split into three zones — Skyland, Tubingland, and Babyland — with tubing runs and rides scaled to different ages, plus an ATV rental kiosk nearby for older kids and adults. It's primarily a winter, snow-based attraction; some form of it may run in warmer months, but that's unconfirmed, so it's a stronger bet for a winter ski trip than a summer one.",
-      "tips": "Primarily a winter (snow-tubing) attraction — summer-season hours and which rides operate then are unconfirmed, so check locally before planning a summer visit around it.",
+      "tips": "Primarily a winter (snow-tubing) attraction — summer-season hours and which rides operate then are unconfirmed, so check locally before planning a summer visit around it. What you pay depends on which activities you actually do.",
       "best_time": "Winter",
       "duration_min": 90,
       "time_needed": "1.5 hr",
       "price_gel_min": 10,
       "price_gel_max": 30,
-      "price_lari": "~₾10-30 depending on activity (confirm locally)",
+      "price_lari": "₾10-30",
       "nearest_town": "Bakuriani",
-      "lat": 41.747590,
+      "lat": 41.74759,
       "lng": 43.526487,
       "kid_note": "Purpose-built for younger kids — the 'Babyland' zone is aimed at the littlest ones, with tubing runs for older siblings.",
       "booking_required": false,
-      "tags": ["kids", "thrill"],
+      "tags": [
+        "kids",
+        "thrill"
+      ],
       "sort_order": 11,
       "guide_script": null
     }

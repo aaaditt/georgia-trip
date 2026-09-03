@@ -24,11 +24,15 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Gori",
-      "lat": 41.986100,
-      "lng": 44.108060,
+      "lat": 41.9861,
+      "lng": 44.10806,
       "kid_note": "Kids enjoy scrambling along the walls, but there are unguarded drops in places — hold hands near the edges rather than letting them range freely.",
       "booking_required": false,
-      "tags": ["scenic", "walk", "kids"],
+      "tags": [
+        "scenic",
+        "walk",
+        "kids"
+      ],
       "sort_order": 1,
       "guide_script": null
     },
@@ -43,13 +47,16 @@
       "time_needed": "1.5 hr",
       "price_gel_min": 5,
       "price_gel_max": 15,
-      "price_lari": "₾5-15 (full complex incl. birth house & rail carriage with guide ₾15)",
+      "price_lari": "₾5-15",
       "nearest_town": "Gori",
       "lat": 41.987222,
       "lng": 44.113611,
       "kid_note": "The armored green railway carriage is the highlight for most kids; the exhibition halls move at a slow, guided pace, so temper expectations for younger children.",
       "booking_required": false,
-      "tags": ["cool", "kids"],
+      "tags": [
+        "cool",
+        "kids"
+      ],
       "sort_order": 2,
       "guide_script": null
     },
@@ -58,19 +65,22 @@
       "name": "Sergi Makalatia Gori Historical & Ethnographic Museum",
       "hook": "A quiet indoor museum on Gori's deeper history, including a sobering room on the 2008 war.",
       "description": "A low-traffic counterpart to the Stalin Museum a few streets away, this local history museum covers Gori and the wider Shida Kartli region through archaeological finds, traditional Georgian costumes and textiles, jewelry, and household furniture. A small dedicated room holds photographs and artifacts from the August 2008 Russia-Georgia war, when Gori itself was shelled and briefly occupied — a sober, factual counterpoint to the rest of the collection. It's compact enough to see properly in under an hour and rarely has more than a handful of other visitors, which makes it a genuine change of pace from the crowds at the Stalin Museum.",
-      "tips": "Open 10:00-18:00 Tuesday through Saturday; closed both Sunday and Monday, which is unusual for the region — plan around it. Address is 12 Kirion II Street, a few blocks from the Stalin Museum; the exact building isn't well mapped, so ask locally or at the tourist information office if you can't find it.",
+      "tips": "Open 10:00-18:00 Tuesday through Saturday; closed both Sunday and Monday, which is unusual for the region — plan around it. Address is 12 Kirion II Street, a few blocks from the Stalin Museum; the exact building isn't well mapped, so ask locally or at the tourist information office if you can't find it. Students and schoolchildren pay less than the ₾3 adult rate.",
       "best_time": null,
       "duration_min": 40,
       "time_needed": "40 min",
       "price_gel_min": 3,
       "price_gel_max": 3,
-      "price_lari": "₾3 (adults; discounted for students and schoolchildren)",
+      "price_lari": "₾3",
       "nearest_town": "Gori",
-      "lat": 41.983500,
-      "lng": 44.110800,
+      "lat": 41.9835,
+      "lng": 44.1108,
       "kid_note": "The 2008 war room includes photographs of shelling damage that may not suit the youngest visitors — worth a quick preview if traveling with small kids.",
       "booking_required": false,
-      "tags": ["cool", "walk"],
+      "tags": [
+        "cool",
+        "walk"
+      ],
       "sort_order": 3,
       "guide_script": null
     },
@@ -85,13 +95,16 @@
       "time_needed": "1 hr",
       "price_gel_min": 20,
       "price_gel_max": 30,
-      "price_lari": "₾20-30 per person (based on diner reports, not a published menu)",
+      "price_lari": "₾20-30",
       "nearest_town": "Gori",
       "lat": 41.987739,
       "lng": 44.114142,
       "kid_note": "Big, shareable Georgian classics and a casual, noisy room — no need to worry about restaurant manners here.",
       "booking_required": false,
-      "tags": ["wine", "kids"],
+      "tags": [
+        "wine",
+        "kids"
+      ],
       "sort_order": 4,
       "guide_script": null
     },
@@ -106,13 +119,18 @@
       "time_needed": "2 hr",
       "price_gel_min": 7,
       "price_gel_max": 15,
-      "price_lari": "₾7-15 (winter off-season discount to ₾7)",
+      "price_lari": "₾7-15",
       "nearest_town": "Gori",
-      "lat": 41.965530,
-      "lng": 44.171190,
+      "lat": 41.96553,
+      "lng": 44.17119,
       "kid_note": "Kids generally love clambering through the tunnels and pits, but the whole site is exposed rock with unguarded drops in places — keep a close hand on younger kids, especially in the heat.",
       "booking_required": false,
-      "tags": ["cave", "walk", "scenic", "kids"],
+      "tags": [
+        "cave",
+        "walk",
+        "scenic",
+        "kids"
+      ],
       "sort_order": 5,
       "guide_script": null
     },
@@ -129,11 +147,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Ateni",
-      "lat": 41.903900,
-      "lng": 44.096000,
+      "lat": 41.9039,
+      "lng": 44.096,
       "kid_note": null,
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 6,
       "guide_script": null
     },
@@ -154,7 +175,10 @@
       "lng": 44.093056,
       "kid_note": null,
       "booking_required": false,
-      "tags": ["wine", "scenic"],
+      "tags": [
+        "wine",
+        "scenic"
+      ],
       "sort_order": 7,
       "guide_script": null
     },
@@ -175,7 +199,11 @@
       "lng": 43.834309,
       "kid_note": null,
       "booking_required": false,
-      "tags": ["scenic", "walk", "cool"],
+      "tags": [
+        "scenic",
+        "walk",
+        "cool"
+      ],
       "sort_order": 8,
       "guide_script": null
     },
@@ -192,11 +220,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Kaspi",
-      "lat": 41.807500,
-      "lng": 44.224720,
+      "lat": 41.8075,
+      "lng": 44.22472,
       "kid_note": "The bridge crossing and cave scramble make this feel like a real adventure for kids, but there are no railings anywhere — hold hands on the bridge and near the cave opening.",
       "booking_required": false,
-      "tags": ["hike", "scenic"],
+      "tags": [
+        "hike",
+        "scenic"
+      ],
       "sort_order": 9,
       "guide_script": null
     },
@@ -213,11 +244,15 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Surami",
-      "lat": 42.025000,
-      "lng": 43.563900,
+      "lat": 42.025,
+      "lng": 43.5639,
       "kid_note": "Climbing around the ruined walls is the main appeal for kids — supervise near crumbled edges since there's no fencing.",
       "booking_required": false,
-      "tags": ["scenic", "walk", "kids"],
+      "tags": [
+        "scenic",
+        "walk",
+        "kids"
+      ],
       "sort_order": 10,
       "guide_script": null
     }

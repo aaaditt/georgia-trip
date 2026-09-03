@@ -22,13 +22,16 @@
       "time_needed": "2.5 hr",
       "price_gel_min": 15,
       "price_gel_max": 20,
-      "price_lari": "₾15-20 per person (upper castle; museum +₾2; lower town free; kids under 6 free)",
+      "price_lari": "₾15-20",
       "nearest_town": "Akhaltsikhe",
       "lat": 41.6392,
       "lng": 42.9762,
       "kid_note": "Ramparts and towers are great for kids to run and climb, but wear real shoes — the stone stairs are steep and uneven, and some upper wall sections have real drops with no barrier.",
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 1,
       "guide_script": null
     },
@@ -49,7 +52,10 @@
       "lng": 43.0906,
       "kid_note": "The forest setting and optional climb to the old tower give kids somewhere to burn energy, but the tower path has no railings and real drops — this is a hold-hands hike, not a let-them-run-ahead one.",
       "booking_required": false,
-      "tags": ["scenic", "hike"],
+      "tags": [
+        "scenic",
+        "hike"
+      ],
       "sort_order": 2,
       "guide_script": null
     },
@@ -70,7 +76,10 @@
       "lng": 43.2942,
       "kid_note": "Genuinely fun to explore, but the walls and old tunnel opening have real, unguarded drops — this is a hold-hands stop, not a free-range one.",
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 3,
       "guide_script": null
     },
@@ -85,13 +94,17 @@
       "time_needed": "2.5 hr",
       "price_gel_min": 15,
       "price_gel_max": 15,
-      "price_lari": "₾15 per person (audio guide +₾15, shuttle +₾2)",
+      "price_lari": "₾15",
       "nearest_town": "Vardzia (Aspindza municipality)",
       "lat": 41.2044,
       "lng": 43.2874,
       "kid_note": "Be honest with yourself about this one — there are many steep stairs, low tunnels you have to duck through, and stretches along an exposed cliff edge without barriers in places. Hold hands throughout; it is not stroller- or wheelchair-accessible, and isn't the place for a child who bolts.",
       "booking_required": false,
-      "tags": ["cave", "hike", "scenic"],
+      "tags": [
+        "cave",
+        "hike",
+        "scenic"
+      ],
       "sort_order": 4,
       "guide_script": null
     },
@@ -106,13 +119,16 @@
       "time_needed": "1.5 hr",
       "price_gel_min": 20,
       "price_gel_max": 40,
-      "price_lari": "₾20 day tour / ₾40 night stargazing per person (group minimums apply)",
+      "price_lari": "₾20-40",
       "nearest_town": "Abastumani",
       "lat": 41.7542,
       "lng": 42.8264,
       "kid_note": "The day tour suits any age; the night session is a real treat but runs until 1am, which is a late, cold, high-altitude night out for younger kids — dress warmly regardless of season.",
       "booking_required": true,
-      "tags": ["scenic", "evening"],
+      "tags": [
+        "scenic",
+        "evening"
+      ],
       "sort_order": 5,
       "guide_script": null
     },
@@ -133,7 +149,9 @@
       "lng": 42.8501,
       "kid_note": "Warm water and a low-key setting make this an easy win with tired kids, though the sulfur smell takes some getting used to.",
       "booking_required": false,
-      "tags": ["water"],
+      "tags": [
+        "water"
+      ],
       "sort_order": 6,
       "guide_script": null
     },
@@ -148,13 +166,16 @@
       "time_needed": "1.5 hr",
       "price_gel_min": 25,
       "price_gel_max": 45,
-      "price_lari": "₾25-45 per person (estimate — confirm locally)",
+      "price_lari": "₾25-45",
       "nearest_town": "Abastumani",
       "lat": 41.759,
       "lng": 42.854,
       "kid_note": "Kids can watch the trout in the holding pond before they're on the plate — a good pre-meal distraction, and the pavilions give shade to fidget under.",
       "booking_required": false,
-      "tags": ["wine", "water"],
+      "tags": [
+        "wine",
+        "water"
+      ],
       "sort_order": 7,
       "guide_script": null
     },
@@ -175,7 +196,10 @@
       "lng": 43.75,
       "kid_note": "Flat, open ground is easy for kids to run on, but there's no shade and the wind can be surprisingly strong — pack a windbreaker even in summer.",
       "booking_required": false,
-      "tags": ["scenic", "water"],
+      "tags": [
+        "scenic",
+        "water"
+      ],
       "sort_order": 8,
       "guide_script": null
     },
@@ -196,7 +220,9 @@
       "lng": 43.7439,
       "kid_note": "The cheese and sweets shop is an easy win with kids after a long, quiet drive across the plateau.",
       "booking_required": false,
-      "tags": ["walk"],
+      "tags": [
+        "walk"
+      ],
       "sort_order": 9,
       "guide_script": null
     },
@@ -217,7 +243,9 @@
       "lng": 43.689,
       "kid_note": "Better suited to older kids (10+) who can engage with the history — younger kids may find a small house museum with no interactive elements a quick in-and-out.",
       "booking_required": false,
-      "tags": ["walk"],
+      "tags": [
+        "walk"
+      ],
       "sort_order": 10,
       "guide_script": null
     }

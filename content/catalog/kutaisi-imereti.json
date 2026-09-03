@@ -22,13 +22,18 @@
       "time_needed": "2 hr",
       "price_gel_min": 40,
       "price_gel_max": 70,
-      "price_lari": "₾40-70 per person (₾40 entrance; +₾30 boat, seasonal)",
+      "price_lari": "₾40-70",
       "nearest_town": "Tsqaltubo",
       "lat": 42.376641,
       "lng": 42.600845,
       "kid_note": "Cool, flat, and lit throughout — an easy win for kids, and the boat ride at the end feels like a mini theme-park moment.",
       "booking_required": false,
-      "tags": ["cave", "cool", "kids", "scenic"],
+      "tags": [
+        "cave",
+        "cool",
+        "kids",
+        "scenic"
+      ],
       "sort_order": 1,
       "guide_script": null
     },
@@ -37,19 +42,23 @@
       "name": "Sataplia Nature Reserve",
       "hook": "Real Cretaceous dinosaur footprints under glass, a short cave, and a glass panoramic platform over Imereti.",
       "description": "Sataplia protects a set of genuine dinosaur tracks preserved in limestone, displayed under a protective pavilion as the reserve's headline attraction. From there a guided loop leads through a small karst cave with colored lighting, a stretch of relict Colchic forest, and out to a glass-floored panoramic terrace looking over the Kutaisi lowlands. It's compact and entirely guided — you can't wander off-route — which keeps the whole visit tight and family-friendly.",
-      "tips": "Open every day, 10:00-17:00, no closing day — the panoramic walkway simply closes in rain or snow for safety. Foreign-adult tickets run well above the resident rate; bring ID if you qualify for the local price.",
+      "tips": "Open every day, 10:00-17:00, no closing day — the panoramic walkway simply closes in rain or snow for safety. Foreign-adult tickets run well above the resident rate; bring ID if you qualify for the local price. Children aged 6-18 pay ₾5.50, and under-6s are free.",
       "best_time": null,
       "duration_min": 75,
       "time_needed": "1 hr 15 min",
       "price_gel_min": 30,
       "price_gel_max": 30,
-      "price_lari": "₾30 per person (children 6-18 ₾5.50, under 6 free)",
+      "price_lari": "₾30",
       "nearest_town": "Kutaisi",
       "lat": 42.316167,
       "lng": 42.672667,
       "kid_note": "The dinosaur footprints are the highlight for young kids — genuine tracks under glass, not replicas.",
       "booking_required": false,
-      "tags": ["cave", "kids", "scenic"],
+      "tags": [
+        "cave",
+        "kids",
+        "scenic"
+      ],
       "sort_order": 2,
       "guide_script": null
     },
@@ -58,19 +67,23 @@
       "name": "Okatse Canyon",
       "hook": "A steel walkway clipped to a cliff face, 100m above a river gorge, in Khoni's Dadiani forest.",
       "description": "Okatse's hanging trail is a 780 m steel walkway bolted directly into the canyon wall, with sections of mesh or glass flooring so you're looking straight down into the gorge. Getting there is part of the visit: it's roughly 2.3 km from the visitor centre through forest to the trailhead, walkable or covered by a shuttle van for a fee. Reviewers regularly compare the exposure and drop to something out of an adventure film — genuinely dramatic rather than a token viewpoint.",
-      "tips": "Budget for the approach walk, not just the walkway itself — most of the visit is the 2.3 km each-way trail through the forest before you even reach the hanging section. Closed to walkers outright in rain or snow. Entrance is ₾20 for foreigners (₾12 residents); the shuttle van is a separate, informally-priced service — confirm the fare on arrival rather than assuming a number.",
+      "tips": "Budget for the approach walk, not just the walkway itself — most of the visit is the 2.3 km each-way trail through the forest before you even reach the hanging section. Closed to walkers outright in rain or snow. Entrance is ₾20 for foreigners (₾12 residents); the shuttle van is a separate, informally-priced service — confirm the fare on arrival rather than assuming a number. Children aged 6-18 pay ₾5.50.",
       "best_time": "Morning, before tour groups arrive from Kutaisi",
       "duration_min": 150,
       "time_needed": "2.5 hr",
       "price_gel_min": 20,
       "price_gel_max": 20,
-      "price_lari": "₾20 per person (residents ₾12; children 6-18 ₾5.50)",
+      "price_lari": "₾20",
       "nearest_town": "Gordi",
       "lat": 42.451306,
       "lng": 42.550056,
       "kid_note": "Thrilling but genuinely exposed on a mesh/glass walkway high above the gorge — good for confident kids, not toddlers or anyone uneasy with heights.",
       "booking_required": false,
-      "tags": ["cave", "hike", "scenic"],
+      "tags": [
+        "cave",
+        "hike",
+        "scenic"
+      ],
       "sort_order": 3,
       "guide_script": null
     },
@@ -91,7 +104,11 @@
       "lng": 42.550528,
       "kid_note": "The walk is longer and less built-up than Okatse's — fine for kids who like a forest hike, less practical with a stroller.",
       "booking_required": false,
-      "tags": ["water", "walk", "scenic"],
+      "tags": [
+        "water",
+        "walk",
+        "scenic"
+      ],
       "sort_order": 4,
       "guide_script": null
     },
@@ -106,13 +123,18 @@
       "time_needed": "1.5 hr",
       "price_gel_min": 20,
       "price_gel_max": 40,
-      "price_lari": "₾20-40 per person (₾20 entrance; +₾20 boat)",
+      "price_lari": "₾20-40",
       "nearest_town": "Martvili",
-      "lat": 42.458560,
-      "lng": 42.377520,
+      "lat": 42.45856,
+      "lng": 42.37752,
       "kid_note": "The canoe section is calm, life-jacketed water — a highlight for kids, though the boat queue can run long in peak summer.",
       "booking_required": false,
-      "tags": ["cave", "water", "scenic", "kids"],
+      "tags": [
+        "cave",
+        "water",
+        "scenic",
+        "kids"
+      ],
       "sort_order": 5,
       "guide_script": null
     },
@@ -129,11 +151,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Kutaisi",
-      "lat": 42.294720,
-      "lng": 42.768060,
+      "lat": 42.29472,
+      "lng": 42.76806,
       "kid_note": null,
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 6,
       "guide_script": null
     },
@@ -150,11 +175,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Kutaisi",
-      "lat": 42.281940,
-      "lng": 42.759170,
+      "lat": 42.28194,
+      "lng": 42.75917,
       "kid_note": "The crawl-under-the-shrine tradition is a fun, harmless bit of ritual for kids to try.",
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 7,
       "guide_script": null
     },
@@ -171,11 +199,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Kutaisi",
-      "lat": 42.277300,
-      "lng": 42.704300,
+      "lat": 42.2773,
+      "lng": 42.7043,
       "kid_note": null,
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 8,
       "guide_script": null
     },
@@ -192,11 +223,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Chiatura",
-      "lat": 42.287500,
-      "lng": 43.215600,
+      "lat": 42.2875,
+      "lng": 43.2156,
       "kid_note": "No climbing involved for visitors, so it's an easy stop — the appeal for kids is mostly the 'how do the monks even live up there' story.",
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 9,
       "guide_script": null
     },
@@ -217,7 +251,11 @@
       "lng": 42.700381,
       "kid_note": "Flat, pedestrian-only, and lively in the evening — easy with kids in tow, with ice cream stalls along the way.",
       "booking_required": false,
-      "tags": ["walk", "evening", "kids"],
+      "tags": [
+        "walk",
+        "evening",
+        "kids"
+      ],
       "sort_order": 10,
       "guide_script": null
     },
@@ -238,7 +276,10 @@
       "lng": 42.702041,
       "kid_note": "Big shareable plates and a relaxed two-floor layout suit kids fine, though the ground-floor live-jazz nights skew toward an adult evening vibe.",
       "booking_required": false,
-      "tags": ["wine", "evening"],
+      "tags": [
+        "wine",
+        "evening"
+      ],
       "sort_order": 11,
       "guide_script": null
     },
@@ -253,13 +294,16 @@
       "time_needed": "2.5 hr",
       "price_gel_min": 40,
       "price_gel_max": 70,
-      "price_lari": "₾40-70 per person (tasting only; the wine-and-dine package with a meal costs more — confirm when booking)",
+      "price_lari": "₾40-70",
       "nearest_town": "Baghdati",
       "lat": 42.123031,
       "lng": 42.896887,
       "kid_note": "A working winery visit, not built for kids — the cellar walk and seated tasting run long for younger children.",
       "booking_required": true,
-      "tags": ["wine", "cool"],
+      "tags": [
+        "wine",
+        "cool"
+      ],
       "sort_order": 12,
       "guide_script": null
     }

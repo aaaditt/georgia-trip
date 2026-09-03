@@ -65,12 +65,18 @@ export function ExperienceCard({
       <View style={styles.metaRow}>
         {/* price_lari already reads "Free" or "₾20 + boat", so it is not
             prefixed with a currency symbol here — the old card rendered
-            "₾Free". */}
-        <ThemedText type="small" themeColor="textMuted">
+            "₾Free".
+
+            Clamped to one line and allowed to shrink: the catalog's price
+            strings are meant to be compact, but a long one must not be able
+            to wrap this row and shove the comment count and Details out of
+            alignment. The full nuance lives in the place page's Cost fact
+            and its tips, both of which wrap freely. */}
+        <ThemedText type="small" themeColor="textMuted" numberOfLines={1} style={styles.price}>
           {price ?? 'Free'}
         </ThemedText>
         {commentCount > 0 && (
-          <ThemedText type="small" themeColor="textMuted">
+          <ThemedText type="small" themeColor="textMuted" style={styles.noShrink}>
             💬 {commentCount}
           </ThemedText>
         )}
@@ -93,5 +99,7 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.sm },
   tagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4 },
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.md },
-  more: { marginLeft: 'auto' },
+  price: { flexShrink: 1 },
+  noShrink: { flexShrink: 0 },
+  more: { marginLeft: 'auto', flexShrink: 0 },
 });

@@ -28,7 +28,11 @@
       "lng": 41.634536,
       "kid_note": "Playgrounds, wide flat paths for scooters, and ice cream stalls the whole way — an easy win with kids of any age.",
       "booking_required": false,
-      "tags": ["walk", "scenic", "kids"],
+      "tags": [
+        "walk",
+        "scenic",
+        "kids"
+      ],
       "sort_order": 1,
       "guide_script": null
     },
@@ -49,7 +53,9 @@
       "lng": 41.641122,
       "kid_note": "Flat, traffic-free, and full of gelato stalls — an easy stroll for tired legs.",
       "booking_required": false,
-      "tags": ["walk"],
+      "tags": [
+        "walk"
+      ],
       "sort_order": 2,
       "guide_script": null
     },
@@ -70,7 +76,9 @@
       "lng": 41.633863,
       "kid_note": null,
       "booking_required": false,
-      "tags": ["cool"],
+      "tags": [
+        "cool"
+      ],
       "sort_order": 3,
       "guide_script": null
     },
@@ -91,7 +99,10 @@
       "lng": 41.643066,
       "kid_note": "Kids get a kick out of watching the two figures \"walk through\" each other — worth timing your evening around it.",
       "booking_required": false,
-      "tags": ["evening", "scenic"],
+      "tags": [
+        "evening",
+        "scenic"
+      ],
       "sort_order": 4,
       "guide_script": null
     },
@@ -112,7 +123,9 @@
       "lng": 41.642639,
       "kid_note": null,
       "booking_required": false,
-      "tags": ["evening"],
+      "tags": [
+        "evening"
+      ],
       "sort_order": 5,
       "guide_script": null
     },
@@ -133,7 +146,9 @@
       "lng": 41.633507,
       "kid_note": "Rich and filling — one order shared between two kids is usually plenty.",
       "booking_required": false,
-      "tags": ["wine"],
+      "tags": [
+        "wine"
+      ],
       "sort_order": 6,
       "guide_script": null
     },
@@ -148,13 +163,17 @@
       "time_needed": "2.5 hr",
       "price_gel_min": 10,
       "price_gel_max": 20,
-      "price_lari": "₾10-20 (Georgian citizens ₾10, foreign visitors ₾20)",
+      "price_lari": "₾10-20",
       "nearest_town": "Mtsvane Kontskhi",
       "lat": 41.692008,
       "lng": 41.707329,
       "kid_note": "Big and hilly with a lot of ground to cover — the electric buggy is worth it with tired kids.",
       "booking_required": false,
-      "tags": ["walk", "scenic", "cool"],
+      "tags": [
+        "walk",
+        "scenic",
+        "cool"
+      ],
       "sort_order": 7,
       "guide_script": null
     },
@@ -175,7 +194,10 @@
       "lng": 41.573816,
       "kid_note": "Open walls to climb and a lot of grassy space to run around, but little shade — bring water in summer.",
       "booking_required": false,
-      "tags": ["walk", "scenic"],
+      "tags": [
+        "walk",
+        "scenic"
+      ],
       "sort_order": 8,
       "guide_script": null
     },
@@ -196,7 +218,9 @@
       "lng": 41.548288,
       "kid_note": "Pebble beach rather than sand — water shoes make it much more comfortable.",
       "booking_required": false,
-      "tags": ["water"],
+      "tags": [
+        "water"
+      ],
       "sort_order": 9,
       "guide_script": null
     },
@@ -217,7 +241,10 @@
       "lng": 41.860252,
       "kid_note": "The full hike is long for young kids; the visitor-center area and short zipline are a better match for younger children.",
       "booking_required": false,
-      "tags": ["hike", "water"],
+      "tags": [
+        "hike",
+        "water"
+      ],
       "sort_order": 10,
       "guide_script": null
     },
@@ -238,7 +265,10 @@
       "lng": 41.858308,
       "kid_note": "Flat, short walk right to the viewing point — easy going with kids.",
       "booking_required": false,
-      "tags": ["water", "walk"],
+      "tags": [
+        "water",
+        "walk"
+      ],
       "sort_order": 11,
       "guide_script": null
     },
@@ -259,7 +289,10 @@
       "lng": 41.860057,
       "kid_note": "Low walls in places on the arch itself — hold hands near the edges.",
       "booking_required": false,
-      "tags": ["scenic", "walk"],
+      "tags": [
+        "scenic",
+        "walk"
+      ],
       "sort_order": 12,
       "guide_script": null
     }

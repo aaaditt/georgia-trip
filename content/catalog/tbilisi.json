@@ -28,7 +28,10 @@
       "lng": 44.807525,
       "kid_note": "Flat-ish and easy to bail out of early if legs give out — there's an ice cream or churchkhela stall every block.",
       "booking_required": false,
-      "tags": ["walk", "evening"],
+      "tags": [
+        "walk",
+        "evening"
+      ],
       "sort_order": 1,
       "guide_script": null
     },
@@ -43,13 +46,16 @@
       "time_needed": "1 hr 15 min",
       "price_gel_min": 3,
       "price_gel_max": 5,
-      "price_lari": "₾2.5-5 (cable car one-way/return)",
+      "price_lari": "₾2.5-5",
       "nearest_town": "Tbilisi",
-      "lat": 41.687780,
-      "lng": 44.808610,
+      "lat": 41.68778,
+      "lng": 44.80861,
       "kid_note": "The cable car ride itself is the highlight for most kids; the ramparts have some unguarded drops, so keep a hand on younger ones.",
       "booking_required": false,
-      "tags": ["scenic", "kids"],
+      "tags": [
+        "scenic",
+        "kids"
+      ],
       "sort_order": 2,
       "guide_script": null
     },
@@ -64,13 +70,15 @@
       "time_needed": "1 hr 15 min",
       "price_gel_min": 15,
       "price_gel_max": 200,
-      "price_lari": "₾15-200/hour per room (varies by bathhouse)",
+      "price_lari": "₾15-200",
       "nearest_town": "Tbilisi",
       "lat": 41.687454,
       "lng": 44.810772,
       "kid_note": "Fine for kids as a novelty soak, but the scrub is intense and the sulfur smell is strong — let younger kids opt out rather than push it.",
       "booking_required": false,
-      "tags": ["cool"],
+      "tags": [
+        "cool"
+      ],
       "sort_order": 3,
       "guide_script": null
     },
@@ -87,11 +95,15 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Tbilisi",
-      "lat": 41.692900,
-      "lng": 44.808200,
+      "lat": 41.6929,
+      "lng": 44.8082,
       "kid_note": "Flat and stroller-friendly, with a playground in Rike Park to burn off pre-dinner energy.",
       "booking_required": false,
-      "tags": ["evening", "scenic", "walk"],
+      "tags": [
+        "evening",
+        "scenic",
+        "walk"
+      ],
       "sort_order": 4,
       "guide_script": null
     },
@@ -106,13 +118,17 @@
       "time_needed": "2.5 hr",
       "price_gel_min": 10,
       "price_gel_max": 40,
-      "price_lari": "₾10-40 (funicular + a few rides)",
+      "price_lari": "₾10-40",
       "nearest_town": "Tbilisi",
-      "lat": 41.693300,
-      "lng": 44.780200,
+      "lat": 41.6933,
+      "lng": 44.7802,
       "kid_note": "One of the best kid stops in the city — funicular plus fairground rides plus donuts; pace it so the youngest doesn't melt down before sunset.",
       "booking_required": false,
-      "tags": ["kids", "evening", "scenic"],
+      "tags": [
+        "kids",
+        "evening",
+        "scenic"
+      ],
       "sort_order": 5,
       "guide_script": null
     },
@@ -129,11 +145,13 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Tbilisi",
-      "lat": 41.697500,
-      "lng": 44.816670,
+      "lat": 41.6975,
+      "lng": 44.81667,
       "kid_note": "The sheer size registers with kids even when the theology doesn't — good for a quick, low-effort stop.",
       "booking_required": false,
-      "tags": ["scenic"],
+      "tags": [
+        "scenic"
+      ],
       "sort_order": 6,
       "guide_script": null
     },
@@ -154,7 +172,9 @@
       "lng": 44.810438,
       "kid_note": "The giant carved pillars and open hilltop are a hit, but there are no railings in places — hold hands near the edges.",
       "booking_required": false,
-      "tags": ["scenic"],
+      "tags": [
+        "scenic"
+      ],
       "sort_order": 7,
       "guide_script": null
     },
@@ -175,7 +195,9 @@
       "lng": 44.800221,
       "kid_note": "The gold Treasury room holds younger kids' attention better than the general history halls do — lead with that.",
       "booking_required": false,
-      "tags": ["cool"],
+      "tags": [
+        "cool"
+      ],
       "sort_order": 8,
       "guide_script": null
     },
@@ -192,11 +214,14 @@
       "price_gel_max": null,
       "price_lari": "Free",
       "nearest_town": "Tbilisi",
-      "lat": 41.701240,
+      "lat": 41.70124,
       "lng": 44.803312,
       "kid_note": "More interesting for older kids who can browse independently than for younger ones — it's a lot of standing and looking, not touching.",
       "booking_required": false,
-      "tags": ["evening", "walk"],
+      "tags": [
+        "evening",
+        "walk"
+      ],
       "sort_order": 9,
       "guide_script": null
     },
@@ -213,11 +238,15 @@
       "price_gel_max": 6,
       "price_lari": "₾4-6",
       "nearest_town": "Tbilisi",
-      "lat": 41.686110,
-      "lng": 44.807500,
+      "lat": 41.68611,
+      "lng": 44.8075,
       "kid_note": "Shaded, easy walking, and a real waterfall at the end — one of the better cool-off, low-effort stops for younger kids.",
       "booking_required": false,
-      "tags": ["cool", "walk", "kids"],
+      "tags": [
+        "cool",
+        "walk",
+        "kids"
+      ],
       "sort_order": 10,
       "guide_script": null
     },
@@ -238,7 +267,11 @@
       "lng": 44.754455,
       "kid_note": "Pedal boats and open grass to run on make this one of the more relaxed, low-stakes afternoons for younger kids.",
       "booking_required": false,
-      "tags": ["kids", "water", "walk"],
+      "tags": [
+        "kids",
+        "water",
+        "walk"
+      ],
       "sort_order": 11,
       "guide_script": null
     },
@@ -253,13 +286,16 @@
       "time_needed": "1.5 hr",
       "price_gel_min": 45,
       "price_gel_max": 80,
-      "price_lari": "₾45-80 per person with wine",
+      "price_lari": "₾45-80",
       "nearest_town": "Tbilisi",
       "lat": 41.704825,
-      "lng": 44.788570,
+      "lng": 44.78857,
       "kid_note": "Family-style ordering and familiar dishes (bread, dumplings, grilled meat) make this an easy sell for kids despite the more elevated setting.",
       "booking_required": true,
-      "tags": ["wine", "evening"],
+      "tags": [
+        "wine",
+        "evening"
+      ],
       "sort_order": 12,
       "guide_script": null
     }

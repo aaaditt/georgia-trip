@@ -24,6 +24,12 @@ const TAGS = new Set([
 // renders them in the Indian Ocean.
 const BOUNDS = { latMin: 41.0, latMax: 43.6, lngMin: 40.0, lngMax: 46.7 };
 
+// Longest price_lari the experience card can show on one line without
+// truncating. Set from the content, not guessed: after normalising, the
+// longest legitimate value in the catalog is exactly 24 characters
+// ("₾25 return (both stages)").
+const MAX_PRICE_LARI = 24;
+
 const errors = [];
 const seenIds = new Set();
 // Two distinct places at the same 6dp coordinate is essentially always a
@@ -82,6 +88,20 @@ function validate(regionId, place) {
   const isFree = lo == null && hi == null;
   if (isFree !== (place.price_lari === 'Free')) {
     errors.push(`${where}: price_lari "${place.price_lari}" disagrees with the numeric price being ${isFree ? 'absent' : 'present'}`);
+  }
+
+  // price_lari renders inside the experience card's meta row, a single flex
+  // line shared with the comment count and the Details affordance. Research
+  // agents naturally write explanatory prices ("₾40-70 per person (tasting
+  // only; the wine-and-dine package ...)") and the catalog had grown thirty-six
+  // of them, up to 105 characters against a median of 4. The card now clamps to
+  // one line, so a long value truncates rather than breaking the layout — but a
+  // price truncated mid-sentence is still bad. Keep the value compact and put
+  // the conditions in `tips`, which wraps freely on the place page.
+  if (place.price_lari != null && place.price_lari.length > MAX_PRICE_LARI) {
+    errors.push(
+      `${where}: price_lari is ${place.price_lari.length} chars, max ${MAX_PRICE_LARI} — keep the value compact and move the conditions into tips`
+    );
   }
 
   if (place.lat != null && (place.lat < BOUNDS.latMin || place.lat > BOUNDS.latMax)) {
