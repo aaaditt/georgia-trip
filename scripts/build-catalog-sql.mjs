@@ -51,23 +51,28 @@ function sqlLong(value) {
   return `$guide$${value}$guide$`;
 }
 
+/** Formats numeric value or returns SQL NULL literal. */
 function num(value) {
   return value === null || value === undefined ? 'NULL' : String(value);
 }
 
+/** Formats boolean value as SQL boolean literal string. */
 function bool(value) {
   return value ? 'true' : 'false';
 }
 
+/** Formats array of tag strings as PostgreSQL text array literal. */
 function tagArray(tags) {
   if (!tags || tags.length === 0) return `'{}'::TEXT[]`;
   return `ARRAY[${tags.map(sql).join(', ')}]::TEXT[]`;
 }
 
+/** Counts whitespace-separated words in a text string. */
 function wordCount(text) {
   return text ? text.trim().split(/\s+/).length : 0;
 }
 
+/** Validates a catalog place schema against strict regional bounds and content rules. */
 function validate(regionId, place) {
   const where = `${regionId}/${place.id}`;
   if (!/^[a-z0-9-]+$/.test(place.id)) errors.push(`${where}: id is not lowercase kebab-case`);
