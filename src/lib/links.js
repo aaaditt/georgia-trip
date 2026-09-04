@@ -67,15 +67,23 @@ const MAPS_QUERIES = {
   "custom-gori-fortress-mr7miqfw": "Gori Fortress, Gori",
 };
 
+/**
+ * Resolves the Google Maps query string for an experience.
+ * @param {{ id: string, name: string, regionId: string }} experience
+ * @returns {string}
+ */
 export function queryFor(experience) {
   if (MAPS_QUERIES[experience.id]) return MAPS_QUERIES[experience.id];
   const region = REGIONS.find((r) => r.id === experience.regionId);
   return `${experience.name}, ${region ? region.name + ", " : ""}Georgia`;
 }
 
-// Google Maps directions chaining stops in order (origin → waypoints →
-// destination). The URL API allows at most 9 waypoints, so trim from the
-// middle if a day ever exceeds that.
+/**
+ * Generates a Google Maps directions URL for an ordered list of stop locations.
+ * @param {string[]} stops - Array of location names/queries in sequence
+ * @param {string} [mode="driving"] - Travel mode (driving, walking, etc.)
+ * @returns {string|null} Google Maps directions URL or null if fewer than 2 stops
+ */
 export function getRouteUrl(stops, mode = "driving") {
   // Drop consecutive repeats only — a loop legitimately revisits stops
   const unique = stops.filter((s, i) => i === 0 || s !== stops[i - 1]);
@@ -93,6 +101,11 @@ export function getRouteUrl(stops, mode = "driving") {
   return `https://www.google.com/maps/dir/?${params.toString()}`;
 }
 
+/**
+ * Builds a Google Maps search URL for an experience.
+ * @param {{ id: string, name: string, regionId: string }} experience
+ * @returns {string}
+ */
 export function getMapsUrl(experience) {
   return (
     "https://www.google.com/maps/search/?api=1&query=" +
@@ -100,6 +113,11 @@ export function getMapsUrl(experience) {
   );
 }
 
+/**
+ * Builds a Google Images search URL for an experience.
+ * @param {{ id: string, name: string, regionId: string }} experience
+ * @returns {string}
+ */
 export function getPhotosUrl(experience) {
   return (
     "https://www.google.com/search?udm=2&q=" +
