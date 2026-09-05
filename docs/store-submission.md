@@ -3,9 +3,15 @@
 Scope added 2026-09-03. The implementation plan (`docs/superpowers/plans/2026-08-23-georgia-catalog.md`)
 explicitly excluded EAS builds and store submission, so this file tracks it instead.
 
-Everything below marked **YOU** needs an account, a credential, a device or a
-judgement call that is not mine to make. Everything marked **DONE** was verified
-against the actual code or config, not assumed.
+> **Decision, 2026-09-05: Google Play only.** One-time 25 USD, no recurring fee.
+> Apple is out of scope — 99 USD/year is unavoidable for iOS in any form, including
+> TestFlight, and is not worth it for this app right now. Nothing here forecloses it:
+> the iOS config in `app.json` is left in place and inert, so adding Apple later is
+> a purchase and a build, not a rewrite.
+
+Everything marked **YOU** needs an account, a credential, a device or a judgement
+call that is not mine to make. Everything marked **DONE** was verified against the
+actual code or config, not assumed.
 
 ---
 
@@ -14,139 +20,123 @@ against the actual code or config, not assumed.
 | Item | State | Evidence |
 |---|---|---|
 | EAS project linked | **DONE** | `mobile/app.json` → `extra.eas.projectId`, owner `aaaditts-team` |
-| iOS bundle identifier | **DONE** | `com.aaaditt.tripplanner` |
+| App name | **DONE** | `Wonder Georgia` — applied to app.json, web `<title>`, legal pages, listing copy |
 | Android package | **DONE** | `com.aaaditt.tripplanner` |
-| App icon (iOS) | **DONE** | `./assets/expo.icon` bundle |
-| App icon (Android) | **DONE** | Adaptive icon with foreground, background *and* monochrome layers |
+| App icon | **DONE** | Adaptive icon with foreground, background *and* monochrome layers — Play requires the mono layer for themed icons |
 | Splash screen | **DONE** | `expo-splash-screen` plugin configured |
 | Build profiles | **DONE** | `mobile/eas.json` — development, preview, production (`autoIncrement: true`) |
-| Version source | **DONE** | `appVersionSource: "remote"` — EAS owns the build number, so you never bump it by hand |
-| **Apple 5.1.1(v)** in-app account deletion | **DONE** | `account.tsx:34-53` → `supabase.rpc('delete_own_account')`, real deletion of `auth.users` |
-| **Apple 1.2** UGC report + block | **DONE** | `src/lib/moderation.ts` — `reportComment`, `blockMember`, `unblockMember` |
-| Privacy policy URL | **DONE** | `/privacy` on the Vercel deployment — publicly reachable, no login |
+| Version source | **DONE** | `appVersionSource: "remote"` — EAS owns the version code, so you never bump it by hand |
+| In-app account deletion | **DONE** | `account.tsx:34-53` → `supabase.rpc('delete_own_account')`. Play requires this for any app with accounts, same as Apple |
+| Content reporting + user blocking | **DONE** | `src/lib/moderation.ts` — `reportComment`, `blockMember`, `unblockMember`. Needed for the UGC content-rating answers |
+| Privacy policy URL | **DONE** | `/privacy` on the Vercel deployment — publicly reachable, no login. Play **requires** this |
 | Support URL | **DONE** | `/support` on the Vercel deployment |
-| Export compliance | **DONE** | `ios.infoPlist.ITSAppUsesNonExemptEncryption: false` — HTTPS only, so exempt. Stops ASC asking on every build |
-| Device form factor | **DONE** | `ios.supportsTablet: false` — iPhone only, so no iPad screenshots needed |
 
-Those two Apple guidelines are the usual multi-week rejection cause for an app of
-this shape, and both were already satisfied by existing code. That is the single
-biggest thing in your favour here.
+Account deletion and UGC moderation were both already implemented. Those are the two
+things most likely to bounce an app like this, and neither needs building.
 
 ---
 
-## 2. Decisions I need from you
+## 2. Still needed from you
 
-**App name: DECIDED — Wonder Georgia** (2026-09-05). Applied to `mobile/app.json`,
-the web `<title>`, both legal pages and the listing copy below. The previous
-`"Trip Planner"` would have been rejected at the metadata stage, since App Store
-names must be globally unique.
+**Three placeholder values**, marked with a loud dashed-yellow style on `/privacy`
+and `/support` so they cannot ship unnoticed:
 
-Still to check before submitting: search the App Store and Play Store for "Wonder
-Georgia" to confirm nothing else holds it. If it is taken, the fallbacks are
-*Wander Georgia*, *Sakartvelo*, *Georgia Together* or *Kartuli*.
+- `[OPERATOR NAME]` — the legal person responsible for the app and its data (the
+  "data controller"). With no company, your own full legal name.
+- `[CONTACT EMAIL]` — a support address. Play publishes it on the listing and it
+  appears in the privacy policy, so it becomes public. Use a fresh dedicated
+  address, not your personal one.
+- `[HOSTING REGION]` — Supabase Dashboard → Project Settings → General.
 
-The home-screen name under the icon is the same string today. Anything over about
-12 characters truncates on iOS, and "Wonder Georgia" is 14, so it will likely show
-as "Wonder Geor…". If that bothers you, we can set a shorter home-screen name while
-keeping the full name on the store listing.
-
-**Three placeholder values** are marked with a loud dashed-yellow style on
-`/privacy` and `/support` so they cannot ship unnoticed:
-
-- `[OPERATOR NAME]` — you personally, or a company name if you have one
-- `[CONTACT EMAIL]` — a support address. Both stores publish this. Consider a
-  dedicated address rather than your personal one, since it becomes public
-- `[HOSTING REGION]` — your Supabase project's region, from Supabase → Project
-  Settings → General
+**Name availability**: search Play for "Wonder Georgia" before you commit. Fallbacks
+if taken: *Wander Georgia*, *Sakartvelo*, *Georgia Together*, *Kartuli*. The name is
+14 characters, so it may truncate under the launcher icon; a shorter home-screen
+name can be set separately if that bothers you.
 
 ---
 
-## 3. Accounts and credentials — **YOU**
+## 3. Google Play account — **YOU**
 
-- [ ] **Apple Developer Program** — 99 USD/year, and enrolment identity verification
-      can take a few days. Start this first if it is not already done; everything
-      iOS blocks on it.
-- [ ] **Google Play Developer** — 25 USD one-time. New personal accounts also need
-      12 testers for 14 days before production access, so start this early too.
-- [ ] **App Store Connect app record** — create the app, get the **ASC App ID** and
-      your **Apple Team ID**.
-- [ ] **Play Console app record** — create the app, then a **Google service account
-      JSON key** for `eas submit`.
-- [ ] `npm i -g eas-cli` then `eas login`. Not installed locally right now, and the
-      login is interactive so it has to be you.
+- [ ] **Google Play Developer account** — 25 USD one-time, at
+      play.google.com/console. Needs identity verification (ID document), which can
+      take a few days.
+- [ ] **⚠️ The 14-day closed test.** New *personal* developer accounts must run a
+      closed test with **at least 12 testers opted in continuously for 14 days**
+      before they can apply for production access. Organisation accounts are exempt.
+      This is the single longest lead time in the whole process — start the account
+      and the closed test as early as possible, because everything else can be done
+      in parallel but this clock cannot be compressed. Verify the current rule in
+      the Console; Google has changed the numbers before.
+- [ ] **Create the app record** in Play Console.
+- [ ] **Google service account JSON key** for `eas submit` — Play Console → Setup →
+      API access. Without it, submission is a manual upload each time.
+- [ ] `npm i -g eas-cli` then `eas login`. Not installed locally, and the login is
+      interactive so it has to be you.
 
-Once you have the four identifiers, tell me and I will fill in `eas.json`'s
-`submit.production` block — it is an empty object today, which means `eas submit`
-will interrogate you interactively every time instead.
+Once you have the service account key, tell me and I will wire `eas.json`'s
+`submit.production` block — it is an empty object today.
 
 ---
 
-## 4. Build and submit — commands
+## 4. Build and submit
 
-Run from `mobile/`. I can run the builds; the submissions need your credentials.
+Run from `mobile/`. I can run the build; submission needs your credentials.
 
 ```bash
-# Sanity gate first — all three must be clean
+# Sanity gate first
 npx tsc --noEmit && npm test
 
-# Production builds (cloud, ~15-30 min each)
-eas build --platform ios --profile production
+# Production build (cloud, ~15-30 min). Produces an AAB, which is what Play wants.
 eas build --platform android --profile production
 
-# Submit
-eas submit --platform ios --profile production
+# A shareable APK instead, for the closed test or direct sideloading
+eas build --platform android --profile preview
+
 eas submit --platform android --profile production
 ```
 
-**After the first Android build**, check the generated manifest for permissions
-Expo's prebuild added that the app does not use. I deliberately did *not* set
-`android.permissions: []` pre-emptively — an over-aggressive value there can strip
-`INTERNET` and break all networking, and I cannot verify a native build from here.
-Check it once, then we prune from evidence.
+**After the first build**, check the generated `AndroidManifest.xml` for permissions
+Expo's prebuild added that the app does not use — every extra permission is another
+line you must justify on the Data safety form. I deliberately did *not* set
+`android.permissions: []` pre-emptively, because an over-aggressive value there can
+strip `INTERNET` and break all networking, and I cannot verify a native build from
+here. We prune from evidence, once.
 
-**Also drop `expo-device`** — it is in `mobile/package.json` but imported nowhere
-in `src/`. Unused native dependencies that read device information are exactly what
-complicates Apple's privacy manifest for no benefit. Say the word and I will remove it.
-
----
-
-## 5. A demo account for the reviewers — **easy to miss, blocks review**
-
-This app is invite-only. A reviewer who signs up sees an empty state and no way in,
-and "we could not test the app's features" is a straight rejection.
-
-So before submitting, create a real account with a trip that has content in it, and
-put the credentials in App Store Connect's **App Review Information → Sign-in
-required** box, and in Play Console's **App access** section.
-
-The trip should already contain: two or three members, a shortlist of two regions
-with their places, a few votes and ratings, one comment, and a couple of itinerary
-entries. Otherwise the reviewer sees a working app with nothing in it and cannot
-exercise voting or consensus at all.
-
-I can script the creation of that demo trip's content once the catalogue is loaded —
-it is the same seeding path the app itself uses.
+**Also drop `expo-device`** — it is in `mobile/package.json` but imported nowhere in
+`src/`. An unused dependency that reads device information is exactly the kind of
+thing that complicates the Data safety declaration for no benefit. Say the word.
 
 ---
 
-## 6. Store listing copy — drafted, edit freely
+## 5. App access — reviewers need a way in
 
-Names below assume you keep "Georgia" in the title; I will rewrite once you pick.
+The app is invite-only. A reviewer who signs up sees an empty state with no way
+into a trip, and "we could not evaluate the app" is a rejection.
 
-**Subtitle (iOS, 30 char max)**
-> Plan Georgia as a group
+Fill Play Console's **App access** section with credentials for a real account that
+is already a member of a populated trip. The trip should contain two or three
+members, a shortlist of two regions with their places, some votes and ratings, a
+comment, and a couple of itinerary entries — otherwise the reviewer sees a working
+app with nothing in it and cannot exercise voting or consensus at all.
 
-**Short description (Play, 80 char max)**
+I can seed that demo trip once the catalogue is loaded, using the same path the app
+itself uses.
+
+---
+
+## 6. Play listing copy — drafted, edit freely
+
+**App name (30 char max)**
+> Wonder Georgia
+
+**Short description (80 char max)**
 > Plan a trip through Georgia together. Shortlist regions, vote, agree on a plan.
 
-**Promotional text (iOS, 170 char, changeable without review)**
-> Now with a researched catalogue of places across all ten regions of Georgia — from Tbilisi's sulphur baths to the Svan towers of Ushguli.
-
-**Description**
+**Full description (4000 char max)**
 
 > Planning a trip with other people usually means a group chat that scrolls past
-> every good idea. Wonder Georgia turns that into something you can actually
-> decide from.
+> every good idea. Wonder Georgia turns that into something you can actually decide
+> from.
 >
 > One person creates the trip, everyone else joins with a code, and the group works
 > through the country together.
@@ -157,8 +147,8 @@ Names below assume you keep "Georgia" in the title; I will rewrite once you pick
 > typing in a list before you can start.
 >
 > **Shortlist first, then decide.** Pick the regions you care about and the app fills
-> your trip with what is there. Everything else stays browsable in Explore, so
-> nobody is locked out of an idea that turns out to be good.
+> your trip with what is there. Everything else stays browsable in Explore, so nobody
+> is locked out of an idea that turns out to be good.
 >
 > **Vote instead of arguing.** Go, maybe or skip on every place, plus a rating out of
 > five. The consensus screen shows what the group genuinely agrees on rather than
@@ -172,16 +162,28 @@ Names below assume you keep "Georgia" in the title; I will rewrite once you pick
 > the Kazbegi mountains, Svaneti's towers, the Black Sea coast at Batumi, and the
 > cave towns and canyons in between.
 
-**Keywords (iOS, 100 chars total, comma-separated, no spaces)**
-> georgia,tbilisi,travel,itinerary,group,trip,vote,caucasus,batumi,kazbegi,planner
-
-**Category**
-- iOS: Primary **Travel**, secondary **Productivity**
-- Play: **Travel & Local**
+**Category**: Travel & Local
+**Tags**: trip planning, travel, itinerary, group
 
 ---
 
-## 7. Play Store Data safety form — answers, pre-filled
+## 7. Graphic assets — **YOU** (I can advise, not produce)
+
+Verify exact specs in the Console, they do shift:
+
+- [ ] **App icon** — 512 × 512 PNG, 32-bit with alpha
+- [ ] **Feature graphic** — 1024 × 500 PNG or JPG. Mandatory. No transparency, and
+      keep text away from the edges since it gets cropped in places
+- [ ] **Phone screenshots** — at least 2, up to 8. The five worth showing, in order:
+      the region picker mid-selection, the dashboard with a shortlist, a place detail
+      page, the consensus ranking, the calendar with days filled
+
+Take screenshots from the real production build, not the simulator, so the status
+bar and safe-area insets look right.
+
+---
+
+## 8. Data safety form — answers, pre-filled
 
 Derived from the actual schema and a grep for privacy-sensitive APIs, so these are
 accurate rather than cautious guesses.
@@ -191,62 +193,57 @@ accurate rather than cautious guesses.
 | Does your app collect or share user data? | **Yes** |
 | Is data encrypted in transit? | **Yes** |
 | Can users request data deletion? | **Yes** — in-app, Account → Delete my account |
-| **Personal info → Name** | Collected. Not shared. Required. For app functionality |
-| **Personal info → Email address** | Collected. Not shared. Required. For account management |
-| **App activity → Other user-generated content** | Collected. Not shared. Required. For app functionality (votes, ratings, comments, notes, itinerary) |
-| Location | **Not collected** — no `expo-location`, app never requests it |
+| **Personal info → Name** | Collected. Not shared. Required. App functionality |
+| **Personal info → Email address** | Collected. Not shared. Required. Account management |
+| **App activity → Other user-generated content** | Collected. Not shared. Required. App functionality (votes, ratings, comments, notes, itinerary) |
+| Location | **Not collected** — no `expo-location`, never requested |
 | Photos / videos / audio | **Not collected** |
 | Contacts, calendar, SMS, call logs | **Not collected** |
 | Device or other IDs | **Not collected** |
 | Financial info | **Not collected** |
 | Health, fitness, messages, files | **Not collected** |
-| Analytics / crash logs | **Not collected** — no analytics or crash SDK is installed |
-| Is any data shared with third parties? | **No.** Supabase is a processor acting on your instructions, which Google's form does not count as sharing |
-
-**Target audience**: 13+. Not designed for children, so it should stay out of the
-Families programme — children appear in a trip only as names added by a parent, with
-no login.
-
-**Content rating questionnaire**: the one that matters is *"does your app allow users
-to interact or exchange content?"* — answer **yes** (comments within a private trip),
-and declare that reporting and blocking are available. Expect a Teen / PEGI 12 style
-rating because of the user interaction, which is normal and fine.
+| Analytics / crash logs | **Not collected** — no analytics or crash SDK installed |
+| Shared with third parties? | **No.** Supabase is a processor acting on your instructions, which Google's form does not count as sharing |
 
 ---
 
-## 8. Apple App Store specifics
+## 9. Content rating and target audience
 
-- [ ] **Screenshots** — iPhone only, since `supportsTablet: false`. Apple currently
-      wants 6.9" display shots (1290 × 2796). Verify the exact set in App Store
-      Connect when you get there; the requirement list changes. Best five to show, in
-      order: the region picker mid-selection, the dashboard with a shortlist, a place
-      detail page, the consensus ranking, the calendar with days filled.
-- [ ] **Age rating questionnaire** — the relevant answers are user-generated content
-      **yes**, with moderation, reporting and blocking all **yes**. No violence, no
-      gambling, no unrestricted web access.
-- [ ] **Privacy "Nutrition Label"** (App Privacy section) — mirrors the table in §7.
-      Contact info (name, email) and User Content, both **linked to identity**, both
-      **not used for tracking**. Answer **no** to the tracking question — nothing in
-      this app tracks anyone across apps or sites.
-- [ ] **App Review Information** — the demo account from §5, plus a note saying the
-      app is invite-only and the demo account is already a member of a populated trip.
-- [ ] Support URL → `/support`, Privacy Policy URL → `/privacy`, on your Vercel domain.
+- **Target age group**: 13+. Do **not** opt into the Families programme — children
+  appear in a trip only as names added by a parent, with no login and no contact
+  details, and Families brings a much stricter review.
+- **Content rating questionnaire**: the question that matters is whether users can
+  interact or exchange content — answer **yes** (comments inside a private trip), and
+  declare that reporting and blocking are both available. Expect a Teen / PEGI 12
+  style rating as a result. That is normal and not a problem.
+- **Ads**: none. Declare no ads.
+- **In-app purchases**: none.
 
 ---
 
-## 9. Order of operations
+## 10. Order of operations
 
-1. Finish the catalogue content and load it into Supabase (Tasks 9 and 11 — in flight)
-2. Pick the app name, and fill the three placeholders on `/privacy` and `/support`
-3. Enrol in both developer programmes — the long lead time, start it in parallel with 1
-4. Create both app records, collect the four identifiers, fill `eas.json`
-5. Create the demo trip and account
-6. Production builds on both platforms
-7. Install the builds and walk the app end to end on a real device — this is also
-   where the deferred device checks from Tasks 5, 6, 7 and 8 finally get done
-8. Screenshots from the real build
-9. Listing metadata, data safety, age rating
-10. Submit
+1. Load the catalogue into Supabase — **currently blocked**, see the SQL error below
+2. Create the Play Developer account and **start the 12-tester closed test
+   immediately** — 14-day clock, longest lead time, everything else runs in parallel
+3. Fill the three placeholders on `/privacy` and `/support`
+4. Production build, install it, walk the app end to end on a real device — this is
+   also where the deferred device checks from Tasks 5, 6, 7 and 8 finally get done
+5. Seed the demo trip and fill App access
+6. Screenshots and feature graphic from the real build
+7. Listing copy, Data safety, content rating
+8. Apply for production access once the closed test has run its 14 days
+9. Submit
 
-Steps 1, 2, 4, 6, 8 and 9 I can do most of. Step 3 and the credentials in 4 are
-yours; step 7 needs your hands on a device.
+Steps 1, 4, 5 and 7 I can do most of. Steps 2, 3, 6 and 8 are yours.
+
+---
+
+## Open blocker
+
+`migration-10-catalog-ALL.sql` failed with `42P01: relation "catalog_regions" does
+not exist`, despite the bootstrap having reportedly succeeded on 2026-08-28 with
+"18/18 tables, 10 regions, 0 places". Verified locally that the bootstrap does
+create the table unqualified (line 1644) with no file-scope `SET search_path`, and
+that all three configs point at project `hktblcqdfzzeqflbmrqm`. Diagnostic query
+issued; root cause not yet established. Most likely a different or reset project.
