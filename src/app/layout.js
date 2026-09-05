@@ -3,9 +3,9 @@ import { UserProvider } from "@/context/UserContext";
 import { AdminProvider } from "@/context/AdminContext";
 
 export const metadata = {
-  title: "🇬🇪 Georgia Trip 2026 — Plan Together",
+  title: "🇬🇪 Wonder Georgia — Plan Together",
   description:
-    "Collaborative trip planner for our Georgia adventure. Vote, rate, and comment on experiences to build the perfect itinerary.",
+    "Collaborative trip planner for the country of Georgia. Shortlist regions, vote, rate and comment to build an itinerary your whole group agrees on.",
 };
 
 export default function RootLayout({ children }) {

@@ -1,4 +1,4 @@
-# Store submission — Georgia Trip Planner
+# Store submission — Wonder Georgia
 
 Scope added 2026-09-03. The implementation plan (`docs/superpowers/plans/2026-08-23-georgia-catalog.md`)
 explicitly excluded EAS builds and store submission, so this file tracks it instead.
@@ -36,16 +36,19 @@ biggest thing in your favour here.
 
 ## 2. Decisions I need from you
 
-**The app name is a problem.** `app.json` says `"name": "Trip Planner"`. App Store
-names must be globally unique and "Trip Planner" is certainly taken, so this will
-be rejected at the metadata stage. It is also weak positioning for what the app
-actually is. Pick something and I will change it everywhere (`app.json`, the web
-`<title>`, the listing copy below). Suggestions, all checked for being descriptive
-rather than generic: *Sakartvelo*, *Georgia Together*, *Tbilisi & Beyond*,
-*Kartuli*, *Wander Georgia*.
+**App name: DECIDED — Wonder Georgia** (2026-09-05). Applied to `mobile/app.json`,
+the web `<title>`, both legal pages and the listing copy below. The previous
+`"Trip Planner"` would have been rejected at the metadata stage, since App Store
+names must be globally unique.
 
-The display name under the icon can be shorter than the App Store name if you want
-(`Georgia Trip` fits on one line; anything over about 12 characters truncates).
+Still to check before submitting: search the App Store and Play Store for "Wonder
+Georgia" to confirm nothing else holds it. If it is taken, the fallbacks are
+*Wander Georgia*, *Sakartvelo*, *Georgia Together* or *Kartuli*.
+
+The home-screen name under the icon is the same string today. Anything over about
+12 characters truncates on iOS, and "Wonder Georgia" is 14, so it will likely show
+as "Wonder Geor…". If that bothers you, we can set a shorter home-screen name while
+keeping the full name on the store listing.
 
 **Three placeholder values** are marked with a loud dashed-yellow style on
 `/privacy` and `/support` so they cannot ship unnoticed:
@@ -142,7 +145,7 @@ Names below assume you keep "Georgia" in the title; I will rewrite once you pick
 **Description**
 
 > Planning a trip with other people usually means a group chat that scrolls past
-> every good idea. Georgia Trip Planner turns that into something you can actually
+> every good idea. Wonder Georgia turns that into something you can actually
 > decide from.
 >
 > One person creates the trip, everyone else joins with a code, and the group works

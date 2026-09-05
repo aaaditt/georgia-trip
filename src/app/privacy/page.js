@@ -11,9 +11,9 @@ import styles from "../legal.module.css";
 // change with it.
 
 export const metadata = {
-  title: "Privacy Policy — Georgia Trip Planner",
+  title: "Privacy Policy — Wonder Georgia",
   description:
-    "What the Georgia Trip Planner app collects, why, who processes it, and how to delete your account and data.",
+    "What the Wonder Georgia app collects, why, who processes it, and how to delete your account and data.",
 };
 
 const LAST_UPDATED = "3 September 2026";
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
   return (
     <main className={styles.page}>
       <article className={styles.sheet}>
-        <p className={styles.eyebrow}>Georgia Trip Planner</p>
+        <p className={styles.eyebrow}>Wonder Georgia</p>
         <h1 className={styles.title}>Privacy Policy</h1>
         <p className={styles.updated}>Last updated {LAST_UPDATED}</p>
 
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
 
         <h2>Who this applies to</h2>
         <p>
-          This policy covers the Georgia Trip Planner mobile app and its companion website. The
+          This policy covers the Wonder Georgia mobile app and its companion website. The
           service is operated by <span className={styles.todo}>[OPERATOR NAME]</span>, who you can
           reach at <span className={styles.todo}>[CONTACT EMAIL]</span>. Where data protection law
           uses the term, that operator is the data controller.
@@ -166,7 +166,7 @@ export default function PrivacyPage() {
         </p>
 
         <p className={styles.footer}>
-          Georgia Trip Planner · <a href="/support">Support</a>
+          Wonder Georgia · <a href="/support">Support</a>
         </p>
       </article>
     </main>

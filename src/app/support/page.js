@@ -7,16 +7,16 @@ import styles from "../legal.module.css";
 // member, unblock them again) rather than promising a process we do not have.
 
 export const metadata = {
-  title: "Support — Georgia Trip Planner",
+  title: "Support — Wonder Georgia",
   description:
-    "Help with the Georgia Trip Planner app: getting started, joining a trip, reporting content, and deleting your account.",
+    "Help with the Wonder Georgia app: getting started, joining a trip, reporting content, and deleting your account.",
 };
 
 export default function SupportPage() {
   return (
     <main className={styles.page}>
       <article className={styles.sheet}>
-        <p className={styles.eyebrow}>Georgia Trip Planner</p>
+        <p className={styles.eyebrow}>Wonder Georgia</p>
         <h1 className={styles.title}>Support</h1>
         <p className={styles.updated}>
           Email <span className={styles.todo}>[CONTACT EMAIL]</span> — we aim to reply within two
@@ -25,7 +25,7 @@ export default function SupportPage() {
 
         <div className={styles.callout}>
           <p>
-            Georgia Trip Planner is a group trip planner for the country of Georgia. One person
+            Wonder Georgia is a group trip planner for the country of Georgia. One person
             creates a trip, invites everyone else with a code, and the group shortlists regions
             and votes on places until an itinerary falls out of it. It ships with a researched
             catalogue of places across ten regions, so nobody has to type in a list to get
@@ -125,7 +125,7 @@ export default function SupportPage() {
         </p>
 
         <p className={styles.footer}>
-          Georgia Trip Planner · <a href="/privacy">Privacy Policy</a>
+          Wonder Georgia · <a href="/privacy">Privacy Policy</a>
         </p>
       </article>
     </main>
